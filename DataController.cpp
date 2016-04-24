@@ -324,6 +324,48 @@ int DataController::addAttribute(QString id, QString attr_name)
 	}
 }
 
+int DataController::addKey(QString id, QString key_name)
+{
+	if(essenceIsExist(id) == false)
+	{
+		qDebug() << "Сущность: " << id <<" не существует";
+		return 10;
+	}
+
+	QList<QString> l1,l2;
+	l1.append(key_name);
+	if(keyOrAttributeIsExist(l1, l2) == true)
+	{
+		qDebug() << "Ключ должен быть уникальным";
+		return 11;
+	}
+
+	EREssenceData * e = search(id);
+	if(e == nullptr)
+	{
+		qDebug() << "__ERROR__: in int DataController::addKey(QString id, QString key_name); e == nullptr;";
+		return 12;
+	}
+
+	switch (e->getType())
+	{
+		case essence_type::Characteristic:
+		{
+			e->addKey(key_name);
+			qDebug() << "Ключ: " << key_name << " успешно добавлен в " << id <<" Процедура добавления ключа в характеристику выволнена";
+			return 0;
+		}
+
+		case essence_type::Designation:
+		{
+
+		}
+	}
+
+	qDebug() << "__ERROR__: in int DataController::addKey(QString id, QString key_name); Undifine behavior;";
+	return 100;
+}
+
 void DataController::printAllEssence()
 {
 	qDebug() << "DataController output: ";
@@ -348,4 +390,9 @@ void DataController::printRelations()
 {
 	qDebug()<<"Связи диаграмы: ";
 	relation_table.print();
+}
+
+void DataController::insertRelation(QString A, QString B)
+{
+
 }

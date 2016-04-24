@@ -7,6 +7,19 @@
 #include <EREssenceData.h>
 #include <ERRelationsData.h>
 
+/**
+ * @brief The DataController class
+ * Запрещается:
+ *	дублирование имен сущностей
+ *	дублирование имен атрубутов
+ *	дублирование имен ключей
+ *		за исключением создания системных дублей при установке связей.
+ *	Запрещается ручное редактирование системных ключей и атрубутов. Системный атрибет имеет в имени название родителя. A::id
+ *	запрещается характеризовать характеристику
+ *  запрещается обозначать обозначение
+ *	рекурсивно соединять сущность с собой
+ *
+ */
 class DataController
 {
 	public:
@@ -43,6 +56,7 @@ class DataController
 		void printAllEssence();
 		void printEssenceByID(QString id);
 		void printRelations();
+		void insertRelation(QString A, QString B);
 
 	private:
 		QList<EREssenceData*> list_essences;
