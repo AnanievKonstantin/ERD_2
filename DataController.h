@@ -25,18 +25,6 @@ class DataController
 	public:
 		DataController();
 
-		//checks
-		int checkBeforeCreationEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
-		int checkBeforeCreationRelation(QString id_first, QString id_second, int cord_one, int cord_two);
-		bool essenceIsExist(QString id);
-		bool relationIsExist(QString id_first, QString id_second);
-		bool keyISattr(QList<QString> keys, QList<QString> attributes);
-		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
-		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
-
-
-
-
 		//actrions
 		int createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
 		int removeEssence(QString id);
@@ -50,8 +38,6 @@ class DataController
 		int removeKey(QString id, QString key_name);
 		int addKey(QString id, QString key_name);
 
-		EREssenceData * search(QString id);
-
 		//debug - print
 		void printAllEssence();
 		void printEssenceByID(QString id);
@@ -59,6 +45,26 @@ class DataController
 		void insertRelation(QString A, QString B);
 
 	private:
+
+
+
+		//checks
+		int checkBeforeCreationEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
+		int checkBeforeCreationRelation(QString id_first, QString id_second, int cord_one, int cord_two);
+		bool essenceIsExist(QString id);
+		bool relationIsExist(QString id_first, QString id_second);
+		bool keyISattr(QList<QString> keys, QList<QString> attributes);
+		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
+		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
+
+		void insertKeyInCharacteristic(EREssenceData * e, QString key);
+		void insertKeyInDesignation(EREssenceData * e, QString key);
+		void insertKeyInBase(EREssenceData * e, QString key);
+		void insertKeyInAssociation(EREssenceData * e, QString key);
+
+		EREssenceData * search(QString id);
+
+
 		QList<EREssenceData*> list_essences;
 		ERRelationsData relation_table;
 

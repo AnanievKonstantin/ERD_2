@@ -42,20 +42,44 @@ int ERRelationsData::addRelation(QString first, QString second, int cordinalityF
 
 }
 
-QList<std::tuple<QString, QString, int, int> > &ERRelationsData::getAllAjasencyFor(QString id)
+QList<std::tuple<QString, QString, int, int> > ERRelationsData::getAllAjasencyFor(QString id)
 {
 
 	QList<std::tuple<QString, QString, int, int>> ajesency;
 	for(int i = 0; i < cordinality_table.length(); i++)
 	{
 		std::tuple<QString, QString, int, int> row = cordinality_table.at(i);
-		if(std::get<0>(row) == id)
+		if(std::get<0>(row) == id || std::get<1>(row) == id)
 		{
 			ajesency.append(row);
 		}
 	}
 
 	return ajesency;
+}
+
+QList<QString> ERRelationsData::getAjasencyByName(QString id)
+{
+	QList<std::tuple<QString, QString, int, int>> ajesency;
+	QList<QString> names;
+
+	for(int i = 0; i < cordinality_table.length(); i++)
+	{
+		std::tuple<QString, QString, int, int> row = cordinality_table.at(i);
+
+		if(std::get<0>(row) == id)
+		{
+			names.append(std::get<1>(row));
+			continue;
+		}
+		if(std::get<1>(row) == id)
+		{
+			names.append(std::get<0>(row));
+			continue;
+		}
+	}
+
+	return names;
 }
 
 bool ERRelationsData::isExist(QString first, QString second)
@@ -81,6 +105,15 @@ void ERRelationsData::print()
 	for(int i = 0; i < cordinality_table.length(); i++)
 	{
 		std::tuple<QString, QString, int, int> row = cordinality_table.at(i);
-		qDebug() <<std::get<0>(row) <<" <-> "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";\n";
+		qDebug() <<std::get<0>(row) <<" <-> "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
+	}
+}
+
+void ERRelationsData::printList(QList<std::tuple<QString, QString, int, int> > list)
+{
+	for(int i = 0; i < list.length(); i++)
+	{
+		std::tuple<QString, QString, int, int> row = list.at(i);
+		qDebug() <<std::get<0>(row) <<" <-> "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
 	}
 }

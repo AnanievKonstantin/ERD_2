@@ -177,6 +177,83 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	return dublicatesIsExist;
 }
 
+void DataController::insertKeyInCharacteristic(EREssenceData * e, QString key)
+{
+	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	e->addKey(key);
+	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в характеристику выполнена";
+}
+
+void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
+{
+
+	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	e->addKey(key);
+	QList<std::tuple<QString, QString, int, int> > ajasencyList = relation_table.getAllAjasencyFor(e->getId());
+
+	qDebug() << e->getId() << "смежен с:";
+	relation_table.printList(ajasencyList);
+	QList<QString> adjList = relation_table.getAjasencyByName(e->getId());
+	qDebug() << e->getId() << "смежен с:";
+	qDebug() << adjList;
+
+	foreach (QString next, adjList)
+	{
+		EREssenceData * e = search(next);
+		if(e == nullptr)
+		{
+			qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;";
+			exit(10);
+		}
+
+		switch (e->getType())
+		{
+			case essence_type::Base:
+			{
+				insertKeyInBase(e, e->getId() + "::" +key);
+				break;
+			}
+			case essence_type::Association:
+			{
+				insertKeyInAssociation(e, e->getId() + "::" +key);
+				break;
+			}
+			case essence_type::Designation:
+			{
+				qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Возникло обозначение обозначения;";
+				exit(10);
+			}
+			case essence_type::Characteristic:
+			{
+				insertKeyInCharacteristic(e, e->getId() + "::" +key);
+				break;
+			}
+			default:
+				qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Неизвестный тип сущности";
+				exit(11);
+		}
+	}
+
+	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в обозначение выполнена";
+
+}
+
+void DataController::insertKeyInBase(EREssenceData * e, QString key)
+{
+	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+
+	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в стержневую сущность выполнена";
+}
+
+void DataController::insertKeyInAssociation(EREssenceData * e, QString key)
+{
+	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+
+
+
+	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в ассоциацию выполнена";
+}
+
 EREssenceData *DataController::search(QString id)
 {
 	foreach (EREssenceData *e, list_essences)
@@ -260,7 +337,8 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 
 		if(f != nullptr && s != nullptr)
 		{
-
+			relation_table.addRelation(f->getId(), s->getId(), cord_one, cord_two);
+			return 0;
 		}
 	}
 
@@ -351,14 +429,14 @@ int DataController::addKey(QString id, QString key_name)
 	{
 		case essence_type::Characteristic:
 		{
-			e->addKey(key_name);
-			qDebug() << "Ключ: " << key_name << " успешно добавлен в " << id <<" Процедура добавления ключа в характеристику выволнена";
+			insertKeyInCharacteristic(e, key_name);
 			return 0;
 		}
 
 		case essence_type::Designation:
 		{
-
+			insertKeyInDesignation(e, key_name);
+			return 0;
 		}
 	}
 
@@ -368,17 +446,18 @@ int DataController::addKey(QString id, QString key_name)
 
 void DataController::printAllEssence()
 {
-	qDebug() << "DataController output: ";
+	qDebug() << "Сущности диаграммы:";
 	foreach (EREssenceData * d, list_essences)
 	{
 		d->print();
 	}
 
-	relation_table.print();
+//	relation_table.print();
 }
 
 void DataController::printEssenceByID(QString id)
 {
+	qDebug() << "Сущность: " << id;
 	EREssenceData * e = this->search(id);
 	if(e != nullptr)
 	{

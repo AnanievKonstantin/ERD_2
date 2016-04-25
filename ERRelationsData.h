@@ -13,9 +13,11 @@ class ERRelationsData
 		ERRelationsData();
 		bool deleteRelation(QString first, QString second);
 		int addRelation(QString first, QString second, int cordinalityFirst, int cordinalitySecond);
-		QList<std::tuple<QString, QString, int, int>> & getAllAjasencyFor(QString id);
+		QList<std::tuple<QString, QString, int, int>> getAllAjasencyFor(QString id);
+		QList<QString> getAjasencyByName(QString id);
 		bool isExist(QString first, QString second);
 		void print();
+		void printList(QList<std::tuple<QString, QString, int, int>> list);
 	private:
 		QList<std::tuple<QString, QString, int, int>> cordinality_table;
 };
