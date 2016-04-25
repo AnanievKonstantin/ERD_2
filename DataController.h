@@ -9,10 +9,6 @@
 
 
 
-//to do
-
-//не работает!!!
-//int joinBaseToExistAssociation(QString essence, QString association, int cord);
 
 /**
  * @brief The DataController class
@@ -46,7 +42,7 @@ class DataController
 		int removeKey(QString id, QString key_name);
 		int addKey(QString id, QString key_name);
 
-
+		int joinBaseToExistAssociation(QString essence, QString association, int cord);
 
 		//debug - print
 		void printAllEssence();
@@ -79,6 +75,7 @@ class DataController
 		int createRelationBetweeAssociationAndDesignation(		EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 		int createRelationBetweenAssociationAndCharacteristic(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 		int createRelationBetweenBaseAndBaseWithNewRelation(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+
 
 
 		EREssenceData * search(QString id);
