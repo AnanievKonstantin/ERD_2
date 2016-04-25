@@ -54,6 +54,9 @@ QString Support::cardinalityToString(int cordinals)
 		case cordinalyty::ZeroMany:
 			return "ZeroMany";
 			break;
+		case cordinalyty::hiddenCord:
+			return "";
+			break;
 		default:
 			return "Error: unexpected cordinality type";
 			break;

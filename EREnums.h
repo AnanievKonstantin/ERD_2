@@ -19,7 +19,8 @@ enum cordinalyty
 	OneZero,
 	OneOne,
 	ZeroMany,
-	OneMany
+	OneMany,
+	hiddenCord
 };
 
 

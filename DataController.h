@@ -7,6 +7,13 @@
 #include <EREssenceData.h>
 #include <ERRelationsData.h>
 
+
+
+//to do
+
+//не работает!!!
+//int joinBaseToExistAssociation(QString essence, QString association, int cord);
+
 /**
  * @brief The DataController class
  * Запрещается:
@@ -18,6 +25,7 @@
  *	запрещается характеризовать характеристику
  *  запрещается обозначать обозначение
  *	рекурсивно соединять сущность с собой
+ *  Запрещено создавать ассоцоации с более чем двумя связываемыми сущностями
  *
  */
 class DataController
@@ -38,6 +46,8 @@ class DataController
 		int removeKey(QString id, QString key_name);
 		int addKey(QString id, QString key_name);
 
+
+
 		//debug - print
 		void printAllEssence();
 		void printEssenceByID(QString id);
@@ -57,13 +67,21 @@ class DataController
 		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
 		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
 
+
+		//to perform action
 		void insertKeyInCharacteristic(EREssenceData * e, QString key);
 		void insertKeyInDesignation(EREssenceData * e, QString key);
 		void insertKeyInBase(EREssenceData * e, QString key);
 		void insertKeyInAssociation(EREssenceData * e, QString key);
 
-		EREssenceData * search(QString id);
+		int createRelationBetweenBaseAndDesignation(			EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+		int createRelationBetweenBaseAndCharacteristic(			EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+		int createRelationBetweeAssociationAndDesignation(		EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+		int createRelationBetweenAssociationAndCharacteristic(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+		int createRelationBetweenBaseAndBaseWithNewRelation(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 
+
+		EREssenceData * search(QString id);
 
 		QList<EREssenceData*> list_essences;
 		ERRelationsData relation_table;
