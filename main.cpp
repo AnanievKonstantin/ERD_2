@@ -65,9 +65,18 @@ int main(int argc, char *argv[])
 //	data.createRelation("A", "B", cordinalyty::OneMany, cordinalyty::OneMany);
 
 	data.createRelation("A", "C", cordinalyty::OneOne, cordinalyty::OneOne);
+	data.createRelation("D1", "C", cordinalyty::OneOne, cordinalyty::OneOne);
 	data.createRelation("A<->C", "E1", cordinalyty::OneOne, cordinalyty::OneOne);
 	data.createRelation("A<->C", "D", cordinalyty::OneOne, cordinalyty::OneOne);
+	data.createRelation("B","E3", cordinalyty::OneOne, cordinalyty::OneOne);
 	data.joinBaseToExistAssociation("B", "A<->C", cordinalyty::OneMany);
+
+	data.removeKey("D", "dk2");
+	data.removeKey("D", "dk");
+
+	//not work
+	data.removeKey("D1", "d1k");
+
 //	data.createRelation("R", "E1", cordinalyty::OneOne, cordinalyty::OneOne);
 //	data.createRelation("C", "E2", cordinalyty::OneOne, cordinalyty::OneOne);
 //	data.createRelation("A", "C", cordinalyty::OneOne, cordinalyty::OneOne);
@@ -82,6 +91,7 @@ int main(int argc, char *argv[])
 
 	data.printAllEssence();
 	data.printRelations();
+
 
 
 	return appl.exec();

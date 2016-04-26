@@ -392,7 +392,7 @@ int DataController::createRelationBetweeAssociationAndDesignation(EREssenceData 
 
 	foreach (QString key, des->getKeys())
 	{
-		addKey(as->getId(), des->getId() + "::" + key);
+		addKey(as->getId(), as->getId() + "::" + key);
 	}
 
 	relation_table.addRelation(e1->getId(), e2->getId(), cord_one, cord_two);
@@ -416,7 +416,7 @@ int DataController::createRelationBetweenAssociationAndCharacteristic(EREssenceD
 
 	foreach (QString key, as->getKeys())
 	{
-		addKey(ch->getId(), as->getId() + "::" + key);
+		addKey(ch->getId(), key);
 	}
 
 	relation_table.addRelation(e1->getId(), e2->getId(), cord_one, cord_two);
@@ -425,7 +425,7 @@ int DataController::createRelationBetweenAssociationAndCharacteristic(EREssenceD
 
 int DataController::createRelationBetweenBaseAndBaseWithNewRelation(EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two)
 {
-	QList<QString> keys; keys << e1->getId() + "<->" + e2->getId()+"_id";
+	QList<QString> keys;
 	QList<QString> attrs; attrs << e1->getId() + "<->" + e2->getId()+"_date";
 
 	this->createEssence(e1->getId() + "<->" + e2->getId(), essence_type::Association, keys, attrs);
@@ -444,6 +444,44 @@ int DataController::createRelationBetweenBaseAndBaseWithNewRelation(EREssenceDat
 	return 0;
 }
 
+int DataController::removeKeyFrom(QString id, QString key)
+{
+
+	EREssenceData * e = search(id);
+	if(e == nullptr)
+	{
+		qDebug() << "Попытка удаления ключа из не существующей сущности";
+		qDebug() << "Удаление ключа прервано.";
+		return 10;
+	}
+
+	if(e->getKeys().contains(key) != true)
+	{
+
+		qDebug() << "В сущности: " << e->getId() << "нет ключа: "<< key;
+		qDebug() << "Удаление ключа прервано.";
+		return 11;
+	}
+
+
+	foreach (EREssenceData * e, list_essences)
+	{
+		QList<QString> & keys = e->getKeys();
+		foreach (QString k, keys)
+		{
+			if(k.lastIndexOf(key) != -1)
+			{
+				e->removeKey(k);
+				qDebug() << "удалено: " << k << " из " << e->getId();
+			}
+		}
+	}
+
+	qDebug() << "Удаление ключа " << key << " выполнено.";
+	return 0;
+}
+
+
 
 EREssenceData *DataController::search(QString id)
 {
@@ -461,6 +499,7 @@ EREssenceData *DataController::search(QString id)
 int DataController::createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes)
 {
 
+	keys.append(id+"_id");
 	qDebug() << "Создание сущности: " << id;
 	qDebug() << "-------------------------------------";
 	if(checkBeforeCreationEssence(id, type, keys, attributes) == 0)
@@ -632,6 +671,23 @@ int DataController::addAttribute(QString id, QString attr_name)
 	}
 }
 
+int DataController::removeKey(QString id, QString key_name)
+{
+
+	if(key_name.lastIndexOf("::") != -1 || key_name.lastIndexOf("_") != -1)
+	{
+		qDebug() << "Попытка напрямую удалить системный ключ. Удаление системных ключей производится через операции редактирования диаграмы";
+		return 10;
+	}
+
+	if(removeKeyFrom(id, key_name) == 0)
+	{
+		return 0;
+	}
+
+	return 11;
+}
+
 int DataController::addKey(QString id, QString key_name)
 {
 	if(essenceIsExist(id) == false)
@@ -703,19 +759,19 @@ int DataController::joinBaseToExistAssociation(QString essence, QString associat
 
 	if(e == nullptr || a == nullptr)
 	{
-		qDebug() << "__RROR__:  in DataController::joinBaseToExistAssociation: сущностей: " << essence << " и(или) " << association << "не существует";
+		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущностей: " << essence << " и(или) " << association << "не существует";
 		return 10;
 	}
 
 	if(e->getType() != essence_type::Base)
 	{
-		qDebug() << "__RROR__:  in DataController::joinBaseToExistAssociation: сущность: " << essence << " не является стержневой";
+		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " << essence << " не является стержневой";
 		return 20;
 	}
 
 	if(a->getType() != essence_type::Association)
 	{
-		qDebug() << "__RROR__:  in DataController::joinBaseToExistAssociation: сущность: " << association << " не является ассаоциативной";
+		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " << association << " не является ассаоциативной";
 		return 30;
 	}
 

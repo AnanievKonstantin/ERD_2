@@ -77,6 +77,9 @@ class DataController
 		int createRelationBetweenBaseAndBaseWithNewRelation(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 
 
+		int removeKeyFrom(QString id, QString key);
+
+
 
 		EREssenceData * search(QString id);
 

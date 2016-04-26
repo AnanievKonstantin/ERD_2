@@ -24,3 +24,6 @@ HEADERS  += \
     ERRelationsData.h \
     Support.h \
     DataController.h
+
+DISTFILES += \
+    ToDo

@@ -74,3 +74,8 @@ bool EREssenceData::addKey(QString key)
 	keys.append(key);
 	return true;
 }
+
+void EREssenceData::removeKey(QString key)
+{
+	keys.removeOne(key);
+}

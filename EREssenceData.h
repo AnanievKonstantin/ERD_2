@@ -26,6 +26,8 @@ class EREssenceData
 		bool addAtribute(QString attr);
 		bool addKey(QString key);
 
+		void removeKey(QString key);
+
 	private:
 		QString id;
 		int type;
