@@ -82,21 +82,14 @@ int main(int argc, char *argv[])
 //	data.createRelation("B", "A", cordinalyty::OneOne, cordinalyty::OneOne);
 //	data.createRelation("A", "C", cordinalyty::OneOne, cordinalyty::OneOne);
 //	data.joinBaseToExistAssociation("E", "A<->C",cordinalyty::OneOne);
+	data.createRelation("A<->C", "DES1", cordinalyty::OneOne, cordinalyty::OneOne);
 	data.createRelation("A<->C", "CHAR1", cordinalyty::OneOne, cordinalyty::OneOne);
-//	data.createRelation("DES1", "A", cordinalyty::OneOne, cordinalyty::OneOne);
+	//	data.createRelation("DES1", "A", cordinalyty::OneOne, cordinalyty::OneOne);
 
-//	data.addKey("E", "key");
-//	data.removeKey("E", "key");
-
-
-
+	data.addKey("DES1", "key");
+	data.removeKey("DES1", "key");
 
 	data.printAllEssence();
-
-
-
-
-
 
 //	data.addKey("DES1", "key");
 //	data.printAllEssence();
