@@ -79,3 +79,17 @@ void EREssenceData::removeKey(QString key)
 {
 	keys.removeOne(key);
 }
+
+bool EREssenceData::removeAttributeWithSubStr(QString attr)
+{
+	foreach (QString a, attributes)
+	{
+		if(a.lastIndexOf(attr) != -1)
+		{
+			attributes.removeOne(a);
+			return true;
+		}
+	}
+
+	return false;
+}

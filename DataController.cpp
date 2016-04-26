@@ -205,7 +205,8 @@ void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
 		{
 			case essence_type::Base:
 			{
-				insertKeyInBase(e, e->getId() + "::" +key);
+//				insertKeyInBase(e, e->getId() + "::" +key);
+				e->addAtribute(e->getId() + "::" +key);
 				break;
 			}
 			case essence_type::Association:
@@ -416,7 +417,7 @@ int DataController::createRelationBetweenAssociationAndCharacteristic(EREssenceD
 
 	foreach (QString key, as->getKeys())
 	{
-		addKey(ch->getId(), key);
+		addKey(ch->getId(), ch->getId() + "::" + key);
 	}
 
 	relation_table.addRelation(e1->getId(), e2->getId(), cord_one, cord_two);
@@ -441,6 +442,31 @@ int DataController::createRelationBetweenBaseAndBaseWithNewRelation(EREssenceDat
 
 	relation_table.addRelation(e1->getId(), e1->getId() + "<->" + e2->getId(), cord_one, cordinalyty::hiddenCord);
 	relation_table.addRelation(e2->getId(), e1->getId() + "<->" + e2->getId(), cord_two, cordinalyty::hiddenCord);
+	return 0;
+}
+
+int DataController::createRelationBetweenDesignationAndCharacteristic(EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two)
+{
+	EREssenceData * des;
+	EREssenceData * ch;
+	if(e1->getType() == essence_type::Designation)
+	{
+		des = e1;
+		ch = e2;
+	}
+	else
+	{
+		des = e2;
+		ch = e1;
+	}
+
+	qDebug() << "Insert in:" << ch->getId();
+	foreach (QString key, des->getKeys())
+	{
+		addKey(ch->getId(), ch->getId() + "::" + key);
+	}
+
+	relation_table.addRelation(e1->getId(), e2->getId(), cord_one, cord_two);
 	return 0;
 }
 
@@ -476,6 +502,30 @@ int DataController::removeKeyFrom(QString id, QString key)
 			}
 		}
 	}
+
+	if(e->getType() == essence_type::Designation)
+	{
+		QList<QString> adj = relation_table.getAjasencyByName(e->getId());
+		foreach (QString name, adj)
+		{
+			EREssenceData * adjEssence = search(name);
+			if(adjEssence != nullptr)
+			{
+				if(adjEssence->getType() == essence_type::Base)
+				{
+					adjEssence->removeAttributeWithSubStr(key);
+					qDebug() << "Удаление атрибута " << key << " из " << adjEssence->getId()<< " выполнено.";
+					return 0;
+				}
+			}
+			else
+			{
+				qDebug("__ERROR__: in int DataController::removeKeyFrom(QString id, QString key). Bad designation pointer");
+				return 10;
+			}
+		}
+	}
+
 
 	qDebug() << "Удаление ключа " << key << " выполнено.";
 	return 0;
@@ -607,6 +657,14 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				return 0;
 			}
 
+			if(f->getType() == essence_type::Designation && s->getType() == essence_type::Characteristic||
+			   s->getType() == essence_type::Designation && f->getType() == essence_type::Characteristic)
+			{
+				qDebug() << "Создание связи между обозначающей и характерисической сущностями:";
+				createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
+				return 0;
+			}
+
 			qDebug() << "Попытка cоздания неизвестного типа соединения. Проверьте ошибки.";
 		}
 	}
@@ -674,6 +732,7 @@ int DataController::addAttribute(QString id, QString attr_name)
 int DataController::removeKey(QString id, QString key_name)
 {
 
+	qDebug() << "\nУдаление ключа: " << key_name << " из " << id;
 	if(key_name.lastIndexOf("::") != -1 || key_name.lastIndexOf("_") != -1)
 	{
 		qDebug() << "Попытка напрямую удалить системный ключ. Удаление системных ключей производится через операции редактирования диаграмы";
@@ -692,7 +751,7 @@ int DataController::addKey(QString id, QString key_name)
 {
 	if(essenceIsExist(id) == false)
 	{
-		qDebug() << "Сущность: " << id <<" не существует";
+		qDebug() << "Сущность: " << id <<" не существует. Ключ не добавлен";
 		return 10;
 	}
 
@@ -700,7 +759,7 @@ int DataController::addKey(QString id, QString key_name)
 	l1.append(key_name);
 	if(keyOrAttributeIsExist(l1, l2) == true)
 	{
-		qDebug() << "Ключ должен быть уникальным";
+		qDebug() << "Ключ должен быть уникальным. Ключ не добавлен. Проверьте ошибки";
 		return 11;
 	}
 

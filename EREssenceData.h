@@ -28,6 +28,8 @@ class EREssenceData
 
 		void removeKey(QString key);
 
+		bool removeAttributeWithSubStr(QString attr);
+
 	private:
 		QString id;
 		int type;

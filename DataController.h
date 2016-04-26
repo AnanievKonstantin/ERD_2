@@ -75,6 +75,7 @@ class DataController
 		int createRelationBetweeAssociationAndDesignation(		EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 		int createRelationBetweenAssociationAndCharacteristic(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 		int createRelationBetweenBaseAndBaseWithNewRelation(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
+		int createRelationBetweenDesignationAndCharacteristic(	EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two);
 
 
 		int removeKeyFrom(QString id, QString key);
