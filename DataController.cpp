@@ -470,6 +470,89 @@ int DataController::createRelationBetweenDesignationAndCharacteristic(EREssenceD
 	return 0;
 }
 
+int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceData *e2)
+{
+	qDebug() << "Удаление связи";
+
+	if(e1->getType() == essence_type::Designation && e2->getType() == essence_type::Base ||
+			e1->getType() == essence_type::Base && e2->getType() == essence_type::Designation)
+	{
+		qDebug() <<"между стержневой и обозначающей сущностями:" << e1->getId() << " " << e2->getId();
+		if(removeRelationBetweenBaseAndDesignation(e1, e2) == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -10;
+		}
+	}
+
+	qDebug() <<"между :" << e1->getId() << " и " << e2->getId();
+
+	foreach (QString key, e1->getKeys())
+	{
+		removeKeyFrom(e2->getId(), e2->getId()+"::"+key);
+	}
+
+	foreach (QString key, e2->getKeys())
+	{
+		removeKeyFrom(e1->getId(), e1->getId()+"::"+key);
+	}
+
+	if(relation_table.deleteRelation(e1->getId(), e2->getId()) == true)
+	{
+		qDebug() << "Связь удалена успешно";
+		return 0;
+	}
+	else
+	{
+		qDebug() << "Ошибка при удалении связи";
+		return -10;
+	}
+
+	return 0;
+
+
+}
+
+int DataController::removeRelationBetweenBaseAndDesignation(EREssenceData *e1, EREssenceData *e2)
+{
+	EREssenceData * des;
+	EREssenceData * base;
+
+	if(e1->getType() == essence_type::Base)
+	{
+		base = e1;
+		des = e2;
+	}
+	else
+	{
+		base = e2;
+		des = e1;
+	}
+
+	foreach (QString key, des->getKeys())
+	{
+		removeAttribute(base->getId(), base->getId()+"::"+key);
+	}
+
+	if(relation_table.deleteRelation(base->getId(), des->getId()) == true)
+	{
+		qDebug() << "Связь удалена успешно";
+		return 0;
+	}
+	else
+	{
+		qDebug() << "Ошибка при удалении связи";
+		return -10;
+	}
+
+	return -20;
+}
+
+
+
 int DataController::removeKeyFrom(QString id, QString key)
 {
 
@@ -671,6 +754,29 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 
 	qDebug() << "Cоздание связи между " << id_first << " и " << id_second <<" прервано. Проверьте ошибки";
 	return -1;
+
+}
+
+int DataController::removeRelation(QString id_first, QString id_second)
+{
+	EREssenceData * e1 = search(id_first);
+	EREssenceData * e2 = search(id_second);
+
+	if(e1 == nullptr || e2 == nullptr)
+	{
+		qDebug() << "Не удалось найти сущность(ти) " << id_first <<" , "<< id_second;
+		return -10;
+	}
+
+	if(relation_table.isExist(id_first, id_second))
+	{
+		removeRelationBetweenEssences(e1,e2);
+	}
+	else
+	{
+		qDebug() << "Удаляемая связь не обнаружена. Проверьте ошибки.";
+		return -11;
+	}
 
 }
 

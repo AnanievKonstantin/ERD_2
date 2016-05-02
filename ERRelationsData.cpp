@@ -17,6 +17,11 @@ bool ERRelationsData::deleteRelation(QString first, QString second)
 			cordinality_table.removeOne(row);
 			return true;
 		}
+		if(std::get<1>(row) == first && std::get<0>(row) == second)
+		{
+			cordinality_table.removeOne(row);
+			return true;
+		}
 	}
 
 	return false;

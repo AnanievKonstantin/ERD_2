@@ -117,8 +117,10 @@ int main(int argc, char *argv[])
 //	data.addKey("A", "newAkey");
 
 
+//	data.printRelations();
+	data.remove("A<->C", "A");
+	data.printAllEssence();
 	data.printRelations();
-
 
 
 	return appl.exec();
