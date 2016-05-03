@@ -472,12 +472,11 @@ int DataController::createRelationBetweenDesignationAndCharacteristic(EREssenceD
 
 int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceData *e2)
 {
-	qDebug() << "Удаление связи";
 
 	if(e1->getType() == essence_type::Designation && e2->getType() == essence_type::Base ||
 			e1->getType() == essence_type::Base && e2->getType() == essence_type::Designation)
 	{
-		qDebug() <<"между стержневой и обозначающей сущностями:" << e1->getId() << " " << e2->getId();
+//		qDebug() <<"между стержневой и обозначающей сущностями:" << e1->getId() << " " << e2->getId();
 		if(removeRelationBetweenBaseAndDesignation(e1, e2) == 0)
 		{
 			return 0;
@@ -488,7 +487,7 @@ int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceDa
 		}
 	}
 
-	qDebug() <<"между :" << e1->getId() << " и " << e2->getId();
+//	qDebug() <<"между :" << e1->getId() << " и " << e2->getId();
 
 	foreach (QString key, e1->getKeys())
 	{
@@ -502,12 +501,12 @@ int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceDa
 
 	if(relation_table.deleteRelation(e1->getId(), e2->getId()) == true)
 	{
-		qDebug() << "Связь удалена успешно";
+		qDebug() << "Связь удалена успешно"<<"\n ===================";;
 		return 0;
 	}
 	else
 	{
-		qDebug() << "Ошибка при удалении связи";
+		qDebug() << "Ошибка при удалении связи"<<"\n ===================";;
 		return -10;
 	}
 
@@ -691,6 +690,34 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 	return -1;
 }
 
+int DataController::removeEssence(QString id)
+{
+
+	qDebug () << "Удаление сущности " << id;
+	EREssenceData * e = search(id);
+
+	if(e == nullptr)
+	{
+		qDebug() << "Удаляемая сущность не сущенствует";
+		return -10;
+	}
+
+	QList<QString> adj = relation_table.getAjasencyByName(id);
+
+	qDebug() << "Производится удаление связей со смежными сущностями";
+	foreach (QString name, adj)
+	{
+		removeRelation(id, name);
+	}
+	qDebug() << "Удаление смежных связей завершено";
+
+	list_essences.removeOne(e);
+
+	qDebug() << "Сущность удалена успешно";
+
+	return 0;
+}
+
 int DataController::createRelation(QString id_first, QString id_second, int cord_one, int cord_two)
 {
 	if(checkBeforeCreationRelation(id_first, id_second, cord_one, cord_two) == 0)
@@ -762,9 +789,10 @@ int DataController::removeRelation(QString id_first, QString id_second)
 	EREssenceData * e1 = search(id_first);
 	EREssenceData * e2 = search(id_second);
 
+	qDebug() << "Удаление связи между: " << id_first <<" , "<< id_second <<"\n ===================";
 	if(e1 == nullptr || e2 == nullptr)
 	{
-		qDebug() << "Не удалось найти сущность(ти) " << id_first <<" , "<< id_second;
+		qDebug() << "Не удалось найти сущность(ти) " <<"\n ===================";
 		return -10;
 	}
 
@@ -774,7 +802,7 @@ int DataController::removeRelation(QString id_first, QString id_second)
 	}
 	else
 	{
-		qDebug() << "Удаляемая связь не обнаружена. Проверьте ошибки.";
+		qDebug() << "Удаляемая связь не обнаружена. Проверьте ошибки." <<"\n ===================";
 		return -11;
 	}
 
@@ -957,34 +985,80 @@ int DataController::joinBaseToExistAssociation(QString essence, QString associat
 	return 0;
 }
 
+int DataController::renameEssence(QString id_to_rename, QString new_id)
+{
+	qDebug() << "Переименование сущности " << id_to_rename << " в " << new_id;
+
+	if(essenceIsExist(id_to_rename) == false)
+	{
+		qDebug() << "Сущность " << id_to_rename << " не существует";
+		return -10;
+	}
+
+	if(essenceIsExist(new_id) == true)
+	{
+		qDebug() << "Новое имя перекрывает старое";
+		return -20;
+	}
+
+
+	EREssenceData * esse = search(id_to_rename);
+
+	esse->setId(new_id);
+	qDebug() << "Сущность переименована";
+
+	foreach (EREssenceData * e, list_essences)
+	{
+		QList<QString>  & keys = e->getKeys();
+
+		for (QList<QString>::iterator i = keys.begin(); i != keys.end(); ++i)
+		{
+			(*i).replace(id_to_rename, new_id);
+		}
+
+		QList<QString>  & attrs = e->getAttributes();
+
+		for (QList<QString>::iterator i = attrs.begin(); i != attrs.end(); ++i)
+		{
+			(*i).replace(id_to_rename, new_id);
+		}
+	}
+	qDebug() << "Ключи и атрибуты переименованы";
+
+
+
+	relation_table.renameEssence(id_to_rename, new_id);
+	qDebug() << "Связи переименованы";
+
+	return 0;
+}
+
 void DataController::printAllEssence()
 {
-	qDebug() << "Сущности диаграммы:";
+	qDebug() << "\nСущности диаграммы:";
 	foreach (EREssenceData * d, list_essences)
 	{
 		d->print();
 	}
-
+	qDebug() <<"\n";
 //	relation_table.print();
 }
 
 void DataController::printEssenceByID(QString id)
 {
-	qDebug() << "Сущность: " << id;
+	qDebug() << "\nСущность: " << id;
 	EREssenceData * e = this->search(id);
 	if(e != nullptr)
 	{
 		e->print();
 	}
+	qDebug() <<"\n";
 }
 
 void DataController::printRelations()
 {
-	qDebug()<<"Связи диаграмы: ";
+	qDebug()<<"\nСвязи диаграмы: ";
 	relation_table.print();
+	qDebug() <<"\n";
 }
 
-void DataController::insertRelation(QString A, QString B)
-{
-
-}

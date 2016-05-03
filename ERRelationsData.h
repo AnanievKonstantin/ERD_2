@@ -16,6 +16,8 @@ class ERRelationsData
 		QList<std::tuple<QString, QString, int, int>> getAllAjasencyFor(QString id);
 		QList<QString> getAjasencyByName(QString id);
 		bool isExist(QString first, QString second);
+		bool renameEssence(QString old_name, QString new_name);
+
 		void print();
 		void printList(QList<std::tuple<QString, QString, int, int>> list);
 	private:

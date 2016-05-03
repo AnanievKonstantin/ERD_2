@@ -105,6 +105,22 @@ bool ERRelationsData::isExist(QString first, QString second)
 	return false;
 }
 
+bool ERRelationsData::renameEssence(QString old_name, QString new_name)
+{
+	for(std::tuple<QString, QString, int, int> & t: cordinality_table)
+	{
+		if(std::get<0>(t) == old_name)
+		{
+			std::get<0>(t) = new_name;
+		}
+
+		if(std::get<1>(t) == old_name)
+		{
+			std::get<1>(t) = new_name;
+		}
+	}
+}
+
 void ERRelationsData::print()
 {
 	for(int i = 0; i < cordinality_table.length(); i++)

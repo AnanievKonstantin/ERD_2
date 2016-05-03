@@ -44,11 +44,12 @@ class DataController
 
 		int joinBaseToExistAssociation(QString essence, QString association, int cord);
 
+
+		int renameEssence(QString id_to_rename, QString new_id);
 		//debug - print
 		void printAllEssence();
 		void printEssenceByID(QString id);
 		void printRelations();
-		void insertRelation(QString A, QString B);
 
 	private:
 
