@@ -58,12 +58,16 @@ class DataController
 		//checks
 		int checkBeforeCreationEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
 		int checkBeforeCreationRelation(QString id_first, QString id_second, int cord_one, int cord_two);
+
 		bool essenceIsExist(QString id);
 		bool relationIsExist(QString id_first, QString id_second);
+
 		bool keyISattr(QList<QString> keys, QList<QString> attributes);
 		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
 		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
 
+		bool oneOfTwoIs(int type_first, int type_second, int condition_type);
+		int checkCordinality(QString first, QString second,int first_type, int second_type, int cord_first, int cord_second);
 
 		//to perform action
 		void insertKeyInCharacteristic(EREssenceData * e, QString key);

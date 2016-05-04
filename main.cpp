@@ -72,14 +72,14 @@ int main(int argc, char *argv[])
 	data.createEssence(d1, type_d1, keys_d1, attrs_d1);
 	data.createEssence(e1, type_e1, keys_e1, attrs_e1);
 
-	data.createRelation("A", "B", 1,1);
-	data.createRelation("A<->B", "DES1", 1,1);
-	data.createRelation("A<->B", "CHAR1", 1,1);
+//	data.createRelation("A", "B", 1,1);
+	data.createRelation("A", "DES1", cordinalyty::ZeroOne,cordinalyty::OneMany);
+	data.createRelation("A", "CHAR1", cordinalyty::OneMany,cordinalyty::OneOne);
 
 
-	data.createRelation("A", "D1", 1,1);
-	data.createRelation("A", "E1", 1,1);
-	data.joinBaseToExistAssociation("C", "A<->B", 1);
+	data.createRelation("A", "D1", cordinalyty::OneOne,cordinalyty::OneOne);
+//	data.createRelation("A", "E1", 1,1);
+//	data.joinBaseToExistAssociation("C", "A<->B", 1);
 //	data.removeRelation("DES1", "CHAR1");
 
 	data.printAllEssence();
@@ -90,12 +90,12 @@ int main(int argc, char *argv[])
 
 //	data.removeEssence("A<->B");
 
-	data.renameEssence("A<->B", "Поставка");
-	data.renameEssence("Поставка", "Приход");
-	data.removeEssence("Приход");
+//	data.renameEssence("A<->B", "Поставка");
+//	data.renameEssence("Поставка", "Приход");
+//	data.removeEssence("Приход");
 
-	data.printAllEssence();
-	data.printRelations();
+//	data.printAllEssence();
+//	data.printRelations();
 
 	return appl.exec();
 }

@@ -14,7 +14,7 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 		error = true;
 	}
 
-	if(Support::enumCheck(type) == false)
+	if(Support::checkTypeEssence(type) == false)
 	{
 		qDebug() << "Указан не известный тип сущности";
 		error = true;
@@ -175,6 +175,48 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	}
 
 	return dublicatesIsExist;
+}
+
+bool DataController::oneOfTwoIs(int type_first, int type_second, int condition_type)
+{
+	if(Support::checkTypeEssence(type_first) && Support::checkTypeEssence(type_second) && Support::checkTypeEssence(condition_type))
+	{
+		if(type_first == condition_type)	return true;
+		if(type_second == condition_type)	return true;
+	}
+	else
+	{
+		qDebug() << "Указаны не известные кардинальности";
+		return false;
+	}
+
+	return false;
+}
+
+int DataController::checkCordinality(QString first, QString second, int first_type, int second_type, int cord_first, int cord_second)
+{
+	if(Support::checkTypeCordinality(cord_first) != true || Support::checkTypeCordinality(cord_second) != true)
+	{
+		qDebug() << "Задана неизвестная кординальность";
+		return -10;
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Designation) == true || oneOfTwoIs(first_type, second_type, essence_type::Characteristic))
+	{
+		if(	(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne))
+		{
+			return 0;
+		}
+		else
+		{
+			qDebug() << "Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+			return -10;
+		}
+	}
+
+	return 0;
 }
 
 void DataController::insertKeyInCharacteristic(EREssenceData * e, QString key)
@@ -473,8 +515,8 @@ int DataController::createRelationBetweenDesignationAndCharacteristic(EREssenceD
 int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceData *e2)
 {
 
-	if(e1->getType() == essence_type::Designation && e2->getType() == essence_type::Base ||
-			e1->getType() == essence_type::Base && e2->getType() == essence_type::Designation)
+	if((e1->getType() == essence_type::Designation && e2->getType() == essence_type::Base) ||
+			(e1->getType() == essence_type::Base && e2->getType() == essence_type::Designation))
 	{
 //		qDebug() <<"между стержневой и обозначающей сущностями:" << e1->getId() << " " << e2->getId();
 		if(removeRelationBetweenBaseAndDesignation(e1, e2) == 0)
@@ -727,59 +769,62 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 
 		if(f != nullptr && s != nullptr)
 		{
-			if(f->getType() == essence_type::Base && s->getType() == essence_type::Base)
-			{
-				qDebug() << "Создание связи между стержневой и стержневой сущностями:";
-				qDebug() << "Для соединения будет создана новая ассоциация с именем: " << id_first + "<->" +id_second;
-				createRelationBetweenBaseAndBaseWithNewRelation(f,s,cord_one, cord_two);
-				return 0;
-			}
 
-			if(f->getType() == essence_type::Base && s->getType() == essence_type::Designation ||
-			   s->getType() == essence_type::Base && f->getType() == essence_type::Designation)
+			if(checkCordinality(f->getId(), s->getId(), f->getType(), s->getType(), cord_one, cord_two) == 0)
 			{
-				qDebug() << "Создание связи между стержневой и обозначающей сущностями:";
-				createRelationBetweenBaseAndDesignation(f,s,cord_one, cord_two);
-				return 0;
-			}
+				if(f->getType() == essence_type::Base && s->getType() == essence_type::Base)
+				{
+					qDebug() << "Создание связи между стержневой и стержневой сущностями:";
+					qDebug() << "Для соединения будет создана новая ассоциация с именем: " << id_first + "<->" +id_second;
+					createRelationBetweenBaseAndBaseWithNewRelation(f,s,cord_one, cord_two);
+					return 0;
+				}
 
-			if(f->getType() == essence_type::Base && s->getType() == essence_type::Characteristic||
-			   s->getType() == essence_type::Base && f->getType() == essence_type::Characteristic)
-			{
-				qDebug() << "Создание связи между стержневой и характерисической сущностями:";
-				createRelationBetweenBaseAndCharacteristic(f,s,cord_one, cord_two);
-				return 0;
-			}
+				if((f->getType() == essence_type::Base && s->getType() == essence_type::Designation) ||
+				   (s->getType() == essence_type::Base && f->getType() == essence_type::Designation))
+				{
+					qDebug() << "Создание связи между стержневой и обозначающей сущностями:";
+					createRelationBetweenBaseAndDesignation(f,s,cord_one, cord_two);
+					return 0;
+				}
 
-			if(f->getType() == essence_type::Association && s->getType() == essence_type::Designation ||
-			   s->getType() == essence_type::Association && f->getType() == essence_type::Designation)
-			{
-				qDebug() << "Создание связи между ассоциативной и обозначающей сущностями:";
-				createRelationBetweeAssociationAndDesignation(f,s,cord_one, cord_two);
-				return 0;
-			}
+				if((f->getType() == essence_type::Base && s->getType() == essence_type::Characteristic) ||
+				   (s->getType() == essence_type::Base && f->getType() == essence_type::Characteristic))
+				{
+					qDebug() << "Создание связи между стержневой и характерисической сущностями:";
+					createRelationBetweenBaseAndCharacteristic(f,s,cord_one, cord_two);
+					return 0;
+				}
 
-			if(f->getType() == essence_type::Association && s->getType() == essence_type::Characteristic||
-			   s->getType() == essence_type::Association && f->getType() == essence_type::Characteristic)
-			{
-				qDebug() << "Создание связи между ассоциативной и характерисической сущностями:";
-				createRelationBetweenAssociationAndCharacteristic(f,s,cord_one, cord_two);
-				return 0;
-			}
+				if((f->getType() == essence_type::Association && s->getType() == essence_type::Designation) ||
+					(s->getType() == essence_type::Association && f->getType() == essence_type::Designation))
+				{
+					qDebug() << "Создание связи между ассоциативной и обозначающей сущностями:";
+					createRelationBetweeAssociationAndDesignation(f,s,cord_one, cord_two);
+					return 0;
+				}
 
-			if(f->getType() == essence_type::Designation && s->getType() == essence_type::Characteristic||
-			   s->getType() == essence_type::Designation && f->getType() == essence_type::Characteristic)
-			{
-				qDebug() << "Создание связи между обозначающей и характерисической сущностями:";
-				createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
-				return 0;
-			}
+				if((f->getType() == essence_type::Association && s->getType() == essence_type::Characteristic) ||
+				   (s->getType() == essence_type::Association && f->getType() == essence_type::Characteristic))
+				{
+					qDebug() << "Создание связи между ассоциативной и характерисической сущностями:";
+					createRelationBetweenAssociationAndCharacteristic(f,s,cord_one, cord_two);
+					return 0;
+				}
 
+				if((f->getType() == essence_type::Designation && s->getType() == essence_type::Characteristic) ||
+				   (s->getType() == essence_type::Designation && f->getType() == essence_type::Characteristic))
+				{
+					qDebug() << "Создание связи между обозначающей и характерисической сущностями:";
+					createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
+					return 0;
+				}
+			}
 			qDebug() << "Попытка cоздания неизвестного типа соединения. Проверьте ошибки.";
 		}
 	}
 
-	qDebug() << "Cоздание связи между " << id_first << " и " << id_second <<" прервано. Проверьте ошибки";
+	qDebug() << "Cоздание связи между " << id_first << " и " << id_second <<" прервано. Проверьте ошибки\n";
 	return -1;
 
 }

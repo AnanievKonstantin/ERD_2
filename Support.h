@@ -9,7 +9,8 @@ class Support
 		Support();
 		static QString typeToString(int type);
 		static QString cardinalityToString(int cordinals);
-		static bool enumCheck(int type);
+		static bool checkTypeEssence(int type);
+		static bool checkTypeCordinality(int type);
 };
 
 #endif // SUPPORT_H

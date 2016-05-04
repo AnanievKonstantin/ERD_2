@@ -63,11 +63,22 @@ QString Support::cardinalityToString(int cordinals)
 	}
 }
 
-bool Support::enumCheck(int type)
+bool Support::checkTypeEssence(int type)
 {
 	if(type == essence_type::Base || type == essence_type::Association || type == essence_type::Designation
 			|| type == essence_type::Property_combinated_key || type == essence_type::Property_default
 			|| type == essence_type::Property_key || type == essence_type::Characteristic)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Support::checkTypeCordinality(int type)
+{
+	if(type == cordinalyty::ZeroOne || type == cordinalyty::OneZero|| type == cordinalyty::OneOne
+			|| type == cordinalyty::OneMany || type == cordinalyty::ZeroMany || type == cordinalyty::hiddenCord)
 	{
 		return true;
 	}
