@@ -18,9 +18,12 @@ class ERRelationsData
 		bool isExist(QString first, QString second);
 		bool renameEssence(QString old_name, QString new_name);
 
+
 		void print();
 		void printList(QList<std::tuple<QString, QString, int, int>> list);
-	private:
+		QList<std::tuple<QString, QString, int, int> > getCordinality_table() const;
+
+private:
 		QList<std::tuple<QString, QString, int, int>> cordinality_table;
 };
 

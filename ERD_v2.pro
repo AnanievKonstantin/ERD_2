@@ -16,14 +16,36 @@ SOURCES += main.cpp \
     EREssenceData.cpp \
     ERRelationsData.cpp \
     Support.cpp \
-    DataController.cpp
+    DataController.cpp \
+    Arrow.cpp \
+    EREssence.cpp \
+    EREssenceBase.cpp \
+    EREssenceCharacteristic.cpp \
+    EREssenceDesignation.cpp \
+    EREssenceProperty.cpp \
+    EREssenceRelation.cpp \
+    ERGraphicsView.cpp \
+    EssenceGraphicsController.cpp \
+    EssenseCreateWindow.cpp \
+    widget.cpp
 
 HEADERS  += \
     EREnums.h \
     EREssenceData.h \
     ERRelationsData.h \
     Support.h \
-    DataController.h
+    DataController.h \
+    Arrow.h \
+    EREssence.h \
+    EREssenceBase.h \
+    EREssenceCharacteristic.h \
+    EREssenceDesignation.h \
+    EREssenceProperty.h \
+    EREssenceRelation.h \
+    ERGraphicsView.h \
+    EssenceGraphicsController.h \
+    EssenseCreateWindow.h \
+    widget.h
 
 DISTFILES += \
     ToDo

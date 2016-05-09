@@ -10,6 +10,7 @@ enum essence_type
 	Characteristic,
 	Property_key,
 	Property_combinated_key,
+	Property_foreign_key,
 	Property_default
 };
 

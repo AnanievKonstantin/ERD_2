@@ -19,6 +19,11 @@ QString EREssenceData::getId() const
 	return id;
 }
 
+QString &EREssenceData::getNonConstId()
+{
+	return id;
+}
+
 void EREssenceData::setId(const QString & value)
 {
 	id = value;

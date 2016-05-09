@@ -30,6 +30,9 @@ QString Support::typeToString(int type)
 		case essence_type::Property_default:
 			return "Property_default";
 			break;
+		case essence_type::Property_foreign_key:
+			return "Property_foreign_key";
+			break;
 		default:
 			return "Error: unexpected type";
 			break;
@@ -67,7 +70,7 @@ bool Support::checkTypeEssence(int type)
 {
 	if(type == essence_type::Base || type == essence_type::Association || type == essence_type::Designation
 			|| type == essence_type::Property_combinated_key || type == essence_type::Property_default
-			|| type == essence_type::Property_key || type == essence_type::Characteristic)
+			|| type == essence_type::Property_key || type == essence_type::Characteristic || type == essence_type::Property_foreign_key)
 	{
 		return true;
 	}

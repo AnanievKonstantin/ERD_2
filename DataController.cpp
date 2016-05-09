@@ -1,5 +1,7 @@
 #include "DataController.h"
 
+DataController * DataController::self = nullptr;
+
 DataController::DataController()
 {
 
@@ -7,7 +9,15 @@ DataController::DataController()
 
 int DataController::checkBeforeCreationEssence(QString id, int type, QList<QString> keys, QList<QString> attributes)
 {
+
+
 	bool error = false;
+	if(id == "")
+	{
+		qDebug() << "Имя сущности не может быть пустым";
+		error = true;
+	}
+
 	if(essenceIsExist(id) == true)
 	{
 		qDebug() << "Сущность с таким именем уже существует";
@@ -670,8 +680,31 @@ EREssenceData *DataController::search(QString id)
 	return nullptr;
 }
 
+DataController *DataController::getInstance()
+{
+	if(self == nullptr)
+	{
+		self = new DataController;
+		return self;
+	}
+
+	return self;
+}
+
+QList<std::tuple<QString, QString, int, int> > DataController::getRelationTable()
+{
+	return relation_table.getCordinality_table();
+}
+
+
 int DataController::createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes)
 {
+
+	if(keys.contains(id+"_id") == true)
+	{
+		qDebug("Создание ключа вида: <Имя сузности>_id запрещено. Ключ автоматически добавится системмой.");
+		return -10;
+	}
 
 	keys.append(id+"_id");
 	qDebug() << "Создание сущности: " << id;
@@ -723,6 +756,7 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 				return 0;
 			}
 			default:
+				qDebug() << "__ERROR__: in int DataController::createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes) def brunch";
 				break;
 		}
 	}
@@ -1105,5 +1139,47 @@ void DataController::printRelations()
 	qDebug()<<"\nСвязи диаграмы: ";
 	relation_table.print();
 	qDebug() <<"\n";
+}
+
+QList<QString> DataController::getEssences()
+{
+	QList<QString> essences;
+	foreach (EREssenceData * e, list_essences)
+	{
+		essences.append(e->getId());
+	}
+
+	return essences;
+}
+
+QList<QString> DataController::getProperties(int mode)
+{
+	QList<QString> properties;
+	if(mode == 1)
+	{
+		foreach (EREssenceData * e, list_essences)
+		{
+			foreach (QString s, e->getKeys())
+			{
+				properties.append(s);
+			}
+		}
+		return properties;
+	}
+
+	if(mode == 2)
+	{
+		foreach (EREssenceData * e, list_essences)
+		{
+			foreach (QString s, e->getAttributes())
+			{
+				properties.append(s);
+			}
+		}
+		return properties;
+	}
+
+
+
 }
 

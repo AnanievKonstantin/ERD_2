@@ -138,3 +138,8 @@ void ERRelationsData::printList(QList<std::tuple<QString, QString, int, int> > l
 		qDebug() <<std::get<0>(row) <<" <-> "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
 	}
 }
+
+QList<std::tuple<QString, QString, int, int> > ERRelationsData::getCordinality_table() const
+{
+	return cordinality_table;
+}

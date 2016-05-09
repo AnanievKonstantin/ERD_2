@@ -12,6 +12,7 @@ class EREssenceData
 		EREssenceData(QString id, int type);
 		void print();
 		QString getId() const;
+		QString & getNonConstId();
 		void setId(const QString & value);
 
 		int getType() const;

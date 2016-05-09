@@ -27,8 +27,10 @@
 class DataController
 {
 	public:
-		DataController();
 
+		static DataController * getInstance();
+
+		QList<std::tuple<QString, QString, int, int> > getRelationTable();
 		//actrions
 		int createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
 		int removeEssence(QString id);
@@ -51,9 +53,17 @@ class DataController
 		void printEssenceByID(QString id);
 		void printRelations();
 
+		QList<QString> getEssences();
+		QList<QString> getProperties(int mode);
+
+
+		EREssenceData * search(QString id);
 	private:
 
-
+		DataController();
+		DataController(DataController const&){}
+		DataController& operator=(DataController const&){}
+		static DataController * self;
 
 		//checks
 		int checkBeforeCreationEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
@@ -90,7 +100,6 @@ class DataController
 
 
 
-		EREssenceData * search(QString id);
 
 		QList<EREssenceData*> list_essences;
 		ERRelationsData relation_table;
