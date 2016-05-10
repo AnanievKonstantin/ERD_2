@@ -4,7 +4,7 @@
 
 enum essence_type
 {
-	Base,
+	Base = 0,
 	Association,
 	Designation,
 	Characteristic,
@@ -16,7 +16,7 @@ enum essence_type
 
 enum cordinalyty
 {
-	ZeroOne,
+	ZeroOne = 0,
 	OneZero,
 	OneOne,
 	ZeroMany,

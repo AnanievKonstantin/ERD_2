@@ -41,6 +41,8 @@ void EssenceGraphicsController::setScene(QGraphicsScene *_scene)
 
 void EssenceGraphicsController::syncWithDataContriller()
 {
+
+	//отчиска списков
 	foreach (EREssence *e, essenceList)
 	{
 		scene->removeItem(e);
@@ -76,7 +78,7 @@ void EssenceGraphicsController::syncWithDataContriller()
 	propertyList.clear();
 	arrowList.clear();
 
-
+	//заполнение списков
 	foreach (QString s, DataController::getInstance()->getEssences())
 	{
 		EREssenceData * d = DataController::getInstance()->search(s);
@@ -131,6 +133,7 @@ void EssenceGraphicsController::syncWithDataContriller()
 		scene->addItem(p);
 		continue;
 	}
+
 
 	QList<std::tuple<QString, QString, int, int> > table = DataController::getInstance()->getRelationTable();
 	for(int i =0 ; i < table.length() ; i++)

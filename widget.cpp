@@ -14,6 +14,7 @@ Widget::Widget(QWidget *parent)
 bool Widget::setUpSignalsAndSlots()
 {
 	QObject::connect(this->erView, SIGNAL(doCreation(int)), this, SLOT(createEssence(int)));
+	QObject::connect(this->erView, SIGNAL(doRelationOperation(int)), this, SLOT(performRelationOperation(int)));
 
 }
 
@@ -96,6 +97,54 @@ void Widget::addEssenceOnScreen(QString id)
 void Widget::removeEssence(QString id)
 {
 //	erView->getScene()->removeItem(EssenceGraphicsController::instance()->getEssence(id));
-//	qDebug() << "Deleted: " << id <<"\n";
+	//	qDebug() << "Deleted: " << id <<"\n";
+}
+
+void Widget::performRelationOperation(int action_code)
+{
+	switch (action_code) {
+		case 3:
+		{
+			RelationOperationWindow * w = new RelationOperationWindow(action_code);
+			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			w->show();
+			//qDebug("Создаю: связь");
+			break;
+		}
+		case 4:
+		{
+			RelationOperationWindow * w = new RelationOperationWindow(action_code);
+			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			w->show();
+			break;
+
+		}
+		case 5:
+		{
+			RelationOperationWindow * w = new RelationOperationWindow(action_code);
+			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			w->show();
+			//qDebug("Удаляю связь");
+			break;
+		}
+		case 6:
+		{
+			RelationOperationWindow * w = new RelationOperationWindow(action_code);
+			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			w->show();
+			//qDebug("изменяю кардинальность");
+			break;
+
+		}
+		default:
+			qDebug("__ERROR_: in void Widget::performRelationOperation(int action_code) error action code");
+			break;
+	}
+
+}
+
+void Widget::afterPerformRelationOperation(bool test)
+{
+	EssenceGraphicsController::instance()->syncWithDataContriller();
 }
 

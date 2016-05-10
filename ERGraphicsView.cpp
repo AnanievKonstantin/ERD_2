@@ -29,11 +29,11 @@ void ERGraphicsView::initMenu()
 	a0->setData(0);
 	topMenu->addAction(a0);
 
-	QAction * a1 = new QAction(*(new QString("Обозначить")), 0);
+	QAction * a1 = new QAction(*(new QString("Создать обозначение")), 0);
 	a1->setData(1);
 	topMenu->addAction(a1);
 
-	QAction * a2 = new QAction(*(new QString("Характеризовать")), 0);
+	QAction * a2 = new QAction(*(new QString("Создать характеристику")), 0);
 	a2->setData(2);
 	topMenu->addAction(a2);
 
@@ -45,7 +45,7 @@ void ERGraphicsView::initMenu()
 	a4->setData(4);
 	topMenu->addAction(a4);
 
-	QAction * a5 = new QAction(*(new QString("Удалить связь")), 0);
+	QAction * a5 = new QAction(*(new QString("Удалить связь между...")), 0);
 	a5->setData(5);
 	topMenu->addAction(a5);
 
@@ -87,8 +87,20 @@ void ERGraphicsView::whatCreate(QAction * action)
 			qDebug("Создаю: характеристику");
 			break;
 		case 3:
-			emit doCreation(essence_type::Association);
-			qDebug("Создаю: ассоциацию");
+			emit doRelationOperation(3);
+			qDebug("Создаю: связь");
+			break;
+		case 4:
+			emit doRelationOperation(4);
+			qDebug("Включаю в ассоциацию");
+			break;
+		case 5:
+			emit doRelationOperation(5);
+			qDebug("Удаляю связь");
+			break;
+		case 6:
+			emit doRelationOperation(6);
+			qDebug("изменяю кардинальность");
 			break;
 		default:
 			qDebug("Ошибка в void ERGraphicsView::whatCreate(QAction * action), неверный тип сущности");

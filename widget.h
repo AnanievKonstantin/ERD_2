@@ -15,6 +15,7 @@
 #include <DataController.h>
 #include <EssenceGraphicsController.h>
 #include <EssenseCreateWindow.h>
+#include <RelationOperationWindow.h>
 
 class Widget : public QWidget
 {
@@ -35,6 +36,8 @@ class Widget : public QWidget
 		void createEssence(int type);
 		void addEssenceOnScreen(QString id);
 		void removeEssence(QString id);
+		void performRelationOperation(int action_code);
+		void afterPerformRelationOperation(bool);
 
 };
 

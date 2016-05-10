@@ -43,19 +43,19 @@ QString Support::cardinalityToString(int cordinals)
 {
 	switch (cordinals) {
 		case cordinalyty::ZeroOne:
-			return "ZeroOne";
+			return "0/1";
 			break;
 		case cordinalyty::OneZero:
-			return "OneZero";
+			return "1/0";
 			break;
 		case cordinalyty::OneOne:
-			return "OneOne";
+			return "1/1";
 			break;
 		case cordinalyty::OneMany:
-			return "OneMany";
+			return "1/M";
 			break;
 		case cordinalyty::ZeroMany:
-			return "ZeroMany";
+			return "0/M";
 			break;
 		case cordinalyty::hiddenCord:
 			return "";

@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     ERGraphicsView.cpp \
     EssenceGraphicsController.cpp \
     EssenseCreateWindow.cpp \
-    widget.cpp
+    widget.cpp \
+    RelationOperationWindow.cpp
 
 HEADERS  += \
     EREnums.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     ERGraphicsView.h \
     EssenceGraphicsController.h \
     EssenseCreateWindow.h \
-    widget.h
+    widget.h \
+    RelationOperationWindow.h
 
 DISTFILES += \
     ToDo

@@ -24,6 +24,7 @@ class ERGraphicsView: public QGraphicsView
 		QMenu * createSubMenu;
 	signals:
 		void doCreation(int type);
+		void doRelationOperation(int type);
 	public slots:
 		void whatCreate(QAction* action);
 };
