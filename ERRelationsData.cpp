@@ -121,6 +121,24 @@ bool ERRelationsData::renameEssence(QString old_name, QString new_name)
 	}
 }
 
+bool ERRelationsData::setCordFromAToB(QString A, QString B, int cord)
+{
+	for(int i =0; i < cordinality_table.length() ; i++)
+	{
+		std::tuple<QString, QString, int, int> & row = cordinality_table[i];
+		if(std::get<0>(row) == A && std::get<1>(row) == B )
+		{
+			std::get<2>(row) = cord;
+			break;
+		}
+		if(std::get<0>(row) == B && std::get<1>(row) == A )
+		{
+			std::get<3>(row) = cord;
+			break;
+		}
+	}
+}
+
 void ERRelationsData::print()
 {
 	for(int i = 0; i < cordinality_table.length(); i++)

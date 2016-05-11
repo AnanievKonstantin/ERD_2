@@ -27,17 +27,19 @@ class EssenceCreateWindow : public QWidget
 		QPushButton submit;
 		QPushButton cancel;
 		QPushButton remove;
-		QString currentID;
-		int currentType;
 
+		QString old_id;
+		int current_type;
+		QList<QString> old_keys;
+		QList<QString> old_attrs;
 		bool editMode = false;
 		std::tuple<QString, int, QList<QString>, QList<QString>> old_data;
 signals:
 		void endSuccessCreation(QString id);
+		void endSuccessEditation(QString id);
 		void toDeleteEssence(QString id);
 	public slots:
 		void submitCreation(bool);
-		void succesCreation(bool);
 		void cancelCreation(bool);
 		void removeEssence();
 

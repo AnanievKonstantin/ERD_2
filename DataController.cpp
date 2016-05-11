@@ -702,7 +702,7 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 
 	if(keys.contains(id+"_id") == true)
 	{
-		qDebug("Создание ключа вида: <Имя сузности>_id запрещено. Ключ автоматически добавится системмой.");
+		qDebug("Создание ключа вида: <Имя сущности>_id запрещено. Ключ автоматически добавится системмой.");
 		return -10;
 	}
 
@@ -875,9 +875,12 @@ int DataController::removeRelation(QString id_first, QString id_second)
 		return -10;
 	}
 
-	if(relation_table.isExist(id_first, id_second))
+	if(relation_table.isExist(id_first, id_second) == true)
 	{
-		removeRelationBetweenEssences(e1,e2);
+		if(removeRelationBetweenEssences(e1,e2) == 0)
+		{
+			return 0;
+		}
 	}
 	else
 	{
@@ -885,6 +888,7 @@ int DataController::removeRelation(QString id_first, QString id_second)
 		return -11;
 	}
 
+	return -20;
 }
 
 int DataController::removeAttribute(QString id, QString attr_name)
@@ -934,12 +938,16 @@ int DataController::addAttribute(QString id, QString attr_name)
 		{
 			e->addAtribute(attr_name);
 			qDebug() << "Атрибут: " << attr_name << " добавлен к: " << id;
+			return 0;
 		}
 	}
 	else
 	{
 		qDebug() << "Сущность: " << id << "не существует";
+		return 20;
 	}
+
+	return 30;
 }
 
 int DataController::removeKey(QString id, QString key_name)
@@ -1062,6 +1070,75 @@ int DataController::joinBaseToExistAssociation(QString essence, QString associat
 	relation_table.addRelation(essence, association, cord, cordinalyty::hiddenCord);
 	qDebug() << "Сущность: " << essence << "включена в связь: " << association << "\n";
 	return 0;
+}
+
+int DataController::setCordinalityFromTo(QString id_a, QString id_b, int cord_to_b)
+{
+	qDebug() << "Производится установка кардинальности: " << Support::cardinalityToString(cord_to_b) << " от " << id_a << " к " << id_b;
+
+	if(essenceIsExist(id_a) == false || essenceIsExist(id_b) == false)
+	{
+		qDebug() << "Сущностей(ти) с таким именем не обнаружено";
+		return -20;
+	}
+	QList<QString> adj = relation_table.getAjasencyByName(id_a);
+	if(adj.contains(id_b) == false)
+	{
+		qDebug() << "Сущности не смежны. Проверьте ошибки";
+		return -10;
+	}
+
+	if(search(id_a)->getType() == essence_type::Association)
+	{
+		qDebug() << "Установка связей для ассоциаций не допускатся";
+		return -30;
+	}
+
+	if(search(id_a)->getType() == essence_type::Designation || search(id_b)->getType() == essence_type::Designation)
+	{
+		if(cord_to_b == cordinalyty::OneOne || cord_to_b == cordinalyty::OneMany)
+		{
+
+		}
+		else
+		{
+			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1 или 1/M";
+			return -40;
+		}
+	}
+
+	if(search(id_b)->getType() == essence_type::Designation)
+	{
+		if(cord_to_b == cordinalyty::OneOne || cord_to_b == cordinalyty::OneMany)
+		{
+
+		}
+		else
+		{
+			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1 или 1/M";
+			return -40;
+		}
+	}
+
+
+	if(search(id_a)->getType() == essence_type::Characteristic || search(id_b)->getType() == essence_type::Characteristic)
+	{
+		if(cord_to_b == cordinalyty::OneOne)
+		{
+
+		}
+		else
+		{
+			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1";
+			return -40;
+		}
+	}
+
+
+	relation_table.setCordFromAToB(id_a, id_b, cord_to_b);
+	qDebug() << "Кардинальность установлена";
+	return 0;
+
 }
 
 int DataController::renameEssence(QString id_to_rename, QString new_id)

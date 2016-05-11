@@ -8,6 +8,11 @@ EssenceGraphicsController::EssenceGraphicsController(QObject *parent) : QObject(
 
 }
 
+void EssenceGraphicsController::emitEditEssenceSignal(QString id)
+{
+	emit startEditEssence(id);
+}
+
 EssenceGraphicsController *EssenceGraphicsController::instance()
 {
 	if(self == nullptr)
@@ -110,6 +115,7 @@ void EssenceGraphicsController::syncWithDataContriller()
 				break;
 			}
 		essenceList.append(switch_pointer);
+		QObject::connect(switch_pointer, SIGNAL(edit(QString)), this, SLOT(emitEditEssenceSignal(QString)));
 		scene->addItem(switch_pointer);
 	}
 

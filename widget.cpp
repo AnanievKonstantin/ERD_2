@@ -15,6 +15,7 @@ bool Widget::setUpSignalsAndSlots()
 {
 	QObject::connect(this->erView, SIGNAL(doCreation(int)), this, SLOT(createEssence(int)));
 	QObject::connect(this->erView, SIGNAL(doRelationOperation(int)), this, SLOT(performRelationOperation(int)));
+	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startEditEssence(QString)), this, SLOT(editEssence(QString)));
 
 }
 
@@ -25,22 +26,22 @@ Widget::~Widget()
 
 void Widget::editEssence(QString id)
 {
+	qDebug() <<"in edit";
 	int type = DataController::getInstance()->search(id)->getType();
 	EssenceCreateWindow * win = new EssenceCreateWindow(id, type);
-	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
+//	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
+	QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
+	QObject::connect(win, SIGNAL(endSuccessEditation(QString)), this, SLOT(addEssenceOnScreen(QString)));
 	win->show();
 }
 
 void Widget::createEssence(int type)
 {
 
-	QList<QString> keys;
-	static int i = 0;
-	QList<QString> attributes; attributes << "def_attr" + i;
-		EssenceCreateWindow * win = new EssenceCreateWindow("", type);
-		QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
-//		QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
-		win->show();
+	EssenceCreateWindow * win = new EssenceCreateWindow("", type);
+	QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
+//	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
+	win->show();
 
 
 }

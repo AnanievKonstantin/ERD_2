@@ -51,8 +51,9 @@ class EssenceGraphicsController : public QObject
 
 
 	signals:
-
+		void startEditEssence(QString id);
 	public slots:
+		void emitEditEssenceSignal(QString);
 };
 
 #endif // ESSENCEGRAPHICSCONTROLLER_H

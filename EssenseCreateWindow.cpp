@@ -3,8 +3,8 @@
 EssenceCreateWindow::EssenceCreateWindow(QString id, int type, QWidget *parent) : QWidget(parent)
 {
 
-	currentID = id;
-	currentType = type;
+	old_id = id;
+	current_type = type;
 	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
 	attributes.setRowCount(200);
 	attributes.setColumnCount(1);
@@ -69,17 +69,31 @@ EssenceCreateWindow::EssenceCreateWindow(QString id, int type, QWidget *parent) 
 
 bool EssenceCreateWindow::loadData(QString id)
 {
+	keys.clear();
+	attributes.clear();
+
 	qDebug() << "load\n";
 //	EssenceDataController::instance()->getInfoAboutEssence(id);
 	EREssenceData * p_data  = DataController::getInstance()->search(id);
 
 	old_data = std::make_tuple(p_data->getId(), p_data->getType(), p_data->getKeys(), p_data->getAttributes());
+	old_attrs = p_data->getAttributes();
+	old_keys = p_data->getKeys();
 
 	this->name.setText(std::get<0>(old_data));
 
 	for(int i = 0; i < std::get<2>(old_data).length(); i++)
 	{
-		keys.setItem(i,0, new QTableWidgetItem(std::get<2>(old_data).at(i)));
+		if(std::get<2>(old_data).at(i).contains("::") == true || (std::get<2>(old_data).at(i).contains("_id") == true))
+		{
+			QTableWidgetItem * it = new QTableWidgetItem(std::get<2>(old_data).at(i));
+//			it->setSelected(false);
+			it->setFlags(it->flags() &  ~Qt::ItemIsEditable);
+			keys.setItem(i,0, it);
+			it = nullptr;
+		}
+		else
+			keys.setItem(i,0, new QTableWidgetItem(std::get<2>(old_data).at(i)));
 	}
 
 	for(int i = 0; i < std::get<3>(old_data).length(); i++)
@@ -91,6 +105,11 @@ bool EssenceCreateWindow::loadData(QString id)
 
 void EssenceCreateWindow::submitCreation(bool)
 {
+
+//	old_attrs.clear();
+//	old_keys.clear();
+
+	qDebug() << "Проверка введенных данных";
 	QString new_id = this->name.text();
 	QList<QString> new_keys;
 	QList<QString> new_attributes;
@@ -121,50 +140,136 @@ void EssenceCreateWindow::submitCreation(bool)
 
 	if(editMode == true)
 	{
-		qDebug() << "Проверка при редактировании сущности";
+		qDebug() << "\nПроверка при редактировании сущности: ";
 
-		if(currentID != new_id)
+		qDebug() <<"Old_keys: "<<old_keys;
+		qDebug() <<"old_attrs: "<<old_attrs;
+		qDebug() <<"old_id: "<<old_id;
+
+		qDebug() <<"new_keys: "	<<	new_keys;
+		qDebug() <<"new_attrs: "<<	new_attributes;
+		qDebug() <<"new_id: "	<<	new_id;
+
+		int error_dubl_key		= 0;
+		int error_dubl_attr		= 0;
+		int error_add_key		= 0;
+		int error_add_attr		= 0;
+		int error_remove_key	= 0;
+		int error_remove_attr	= 0;
+
+		//add new keys
+		foreach (QString key, new_keys)
 		{
-			DataController::getInstance()->renameEssence(currentID, new_id);
-//			EssenceGraphicsController::instance()->renameEssence(currentID, new_id);
+			if(old_keys.contains(key) == false)
+			{
+				error_add_key = DataController::getInstance()->addKey(old_id, key);
+				if(error_add_key != 0)
+				{
+					error_add_key = 1;
+					break;
+				}
+
+			}
+			if(new_keys.count(key) > 1)
+			{
+				qDebug() << "Ключ: " << key << "Дуюлируется. Проверьте ошибки";
+				error_dubl_key = 1;
+				break;
+			}
 		}
-//		foreach (QString new_key, new_keys)
-//		{
-//			if(std::get<2>(old_data).contains(new_key))
-//			{
-//				continue;
-//			}
-//			else
-//			{
 
-//			}
-//		}
-		DataController::getInstance()->printAllEssence();
+		//add new attrs
+		foreach (QString attr, new_attributes)
+		{
+			if(old_attrs.contains(attr) == false)
+			{
+				error_add_attr = DataController::getInstance()->addAttribute(old_id, attr);
+				if(error_add_attr != 0)
+				{
+					error_add_attr = 1;
+					break;
+				}
+			}
+
+			if(new_attributes.count(attr) > 1)
+			{
+				qDebug() << "Атрибут: " << attr<< "Дуюлируется. Проверьте ошибки";
+				error_dubl_attr = 1; break;
+			}
+		}
+
+		//remove key
+		foreach (QString key, old_keys)
+		{
+			if(new_keys.contains(key) == false)
+			{
+				error_remove_key = DataController::getInstance()->removeKey(old_id, key);
+				if(error_remove_key != 0)
+				{
+					error_remove_key = 1;
+					break;
+				}
+			}
+		}
+
+		//remove attrs
+		foreach (QString attr, old_attrs)
+		{
+			if(new_attributes.contains(attr) == false)
+			{
+				error_remove_attr = DataController::getInstance()->removeAttribute(old_id, attr);
+				if(error_remove_attr != 0)
+				{
+					error_remove_attr = 1;
+					break;
+				}
+			}
+		}
+
+		int error_rename = 0;
+		if(old_id != new_id)
+		{
+			error_rename = DataController::getInstance()->renameEssence(old_id, new_id);
+			if(error_rename != 0)
+			{
+				error_rename = 1;
+			}
+		}
+
+		if(error_rename == 1 || error_add_attr == 1 || error_add_key == 1 || error_dubl_attr == 1|| error_dubl_key == 1 || error_remove_attr == 1 || error_remove_key == 1)
+		{
+			loadData(old_id);
+			qDebug() << "error_dubl_key	  " << error_dubl_key	  ;
+			qDebug() << "error_dubl_attr  " << error_dubl_attr    ;
+			qDebug() << "error_add_key	  " << error_add_key	  ;
+			qDebug() << "error_add_attr	  " << error_add_attr	  ;
+			qDebug() << "error_remove_key " << error_remove_key   ;
+			qDebug() << "error_remove_attr" << error_remove_attr  ;
+			qDebug() << "\nERROR";
+		}
+		else
+		{
+			qDebug() << "\nПроверка пройдена";
+			emit endSuccessEditation(new_id);
+			this->close();
+		}
 	}
-	else
-	{
-		qDebug() << "Проверка при создании сущности";
 
-		int error = DataController::getInstance()->createEssence(new_id, currentType, new_keys, new_attributes);
+	if(editMode == false)
+	{
+		qDebug() << "\nПроверка при создании сущности: ";
+
+		int error = DataController::getInstance()->createEssence(new_id, current_type, new_keys, new_attributes);
 		DataController::getInstance()->printAllEssence();
-		qDebug() << "Error: " << error;
 		if(error == 0)
 		{
-			emit succesCreation(true);
+			qDebug() << "\nПроверка пройдена";
+			emit endSuccessCreation(new_id);
+			this->close();
 		}
 	}
 }
 
-void EssenceCreateWindow::succesCreation(bool)
-{
-	qDebug("Загрузка из формы создания сущности");
-
-	QString new_id = this->name.text();
-
-	emit endSuccessCreation(new_id);
-
-	this->hide();
-}
 
 void EssenceCreateWindow::cancelCreation(bool)
 {
@@ -174,7 +279,7 @@ void EssenceCreateWindow::cancelCreation(bool)
 
 void EssenceCreateWindow::removeEssence()
 {
-	qDebug() <<"in void EssenceCreateWindow::removeEssence(bool) delete" << currentID;
+	qDebug() <<"in void EssenceCreateWindow::removeEssence(bool) delete" << old_id;
 //	emit toDeleteEssence(currentID);
 }
 
