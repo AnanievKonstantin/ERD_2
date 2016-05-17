@@ -16,6 +16,16 @@ QString EREssence::getId() const
 	return data->getId();
 }
 
+QString EREssence::getIdWithoutPath() const
+{
+
+	QString name = data->getId();
+	QString id = name.right(name.length() - name.lastIndexOf(":") - 1);
+	return id;
+//	return data->getId();
+}
+
+
 QString &EREssence::getNonConstId()
 {
 	return data->getNonConstId();

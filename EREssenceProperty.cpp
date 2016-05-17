@@ -38,7 +38,8 @@ void EREssenceProperty::paint(QPainter * painter, const QStyleOptionGraphicsItem
 
 	QPen pen(QColor(0,0,0));
 	painter->setPen(pen);
-	painter->drawText(0,0,size().width(), size().height(),Qt::AlignCenter,getId());
+	painter->setFont(QFont(Support::fontFamilie, Support::fontSizeProperty));
+	painter->drawText(0,0,size().width(), size().height(),Qt::AlignCenter,getIdWithoutPath());
 }
 
 QRectF EREssenceProperty::boundingRect() const
@@ -69,9 +70,8 @@ void EREssenceProperty::initEssence()
 	setFlag(QGraphicsItem::ItemIsMovable, true);
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-
-	int width = getId().length() * 30;
-	setGeometry(0,0,200,40);
+//	int width = getId().length()*10;
+	setGeometry(0,0,180,50);
 
 
 

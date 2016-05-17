@@ -26,6 +26,7 @@ class EREssence: public QGraphicsWidget
 	public:
 		EREssence(EREssenceData * data, QGraphicsWidget * parent = 0);
 		QString getId() const;
+		QString getIdWithoutPath() const;
 		QString & getNonConstId();
 		void addArrow(Arrow *arrow);
 		virtual QPolygonF getPolygon() = 0;

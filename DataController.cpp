@@ -12,13 +12,6 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 
 
 	bool error = false;
-	QRegExp r("[A-Z,a-z,А-Я,а-я]{1,20}");
-
-	if(r.exactMatch(id) == false)
-	{
-		qDebug() << "Имя сущности не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,20}.";
-		error = true;
-	}
 	if(id == "")
 	{
 		qDebug() << "Имя сущности не может быть пустым";
@@ -194,33 +187,6 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	return dublicatesIsExist;
 }
 
-bool DataController::keyOrAttributeFromViewerIsIncorrect(QList<QString> keys, QList<QString> attrs)
-{
-	bool incorrected = false;
-	QRegExp r("[A-Z,a-z,А-Я,а-я]{1,15}");
-
-	foreach (QString key, keys)
-	{
-
-		if(r.exactMatch(key) == false)
-		{
-			qDebug() << "Ключ: " << key << " не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,15}.";
-			incorrected = true;
-		}
-	}
-
-	foreach (QString attr, attrs)
-	{
-
-		if(r.exactMatch(attr) == false)
-		{
-			qDebug() << "Атрибут: " << attr << " не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,15}.";
-			incorrected = true;
-		}
-	}
-
-	return incorrected;
-}
 
 bool DataController::oneOfTwoIs(int type_first, int type_second, int condition_type)
 {
@@ -616,21 +582,21 @@ int DataController::createRelationBetweenAssociationAndCharacteristic(EREssenceD
 int DataController::createRelationBetweenBaseAndBaseWithNewRelation(EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two)
 {
 	QList<QString> keys;
-	QList<QString> attrs; attrs << e1->getId() + "<->" + e2->getId()+"_date";
+	QList<QString> attrs; attrs << "RELATE_date";
 
-	this->createEssence(e1->getId() + "<->" + e2->getId(), essence_type::Association, keys, attrs);
+	this->createEssence("RELATE", essence_type::Association, keys, attrs);
 	foreach (QString key, e1->getKeys())
 	{
-		addKey((e1->getId() + "<->" + e2->getId()), (e1->getId() + "<->" + e2->getId()) + "::" + key);
+		addKey("RELATE","RELATE::" + key);
 	}
 
 	foreach (QString key, e2->getKeys())
 	{
-		addKey((e1->getId() + "<->" + e2->getId()), (e1->getId() + "<->" + e2->getId()) + "::" + key);
+		addKey("RELATE","RELATE::" + key);
 	}
 
-	relation_table.addRelation(e1->getId(), e1->getId() + "<->" + e2->getId(), cord_one, cordinalyty::hiddenCord);
-	relation_table.addRelation(e2->getId(), e1->getId() + "<->" + e2->getId(), cord_two, cordinalyty::hiddenCord);
+	relation_table.addRelation(e1->getId(),"RELATE", cord_one, cordinalyty::hiddenCord);
+	relation_table.addRelation(e2->getId(),"RELATE", cord_two, cordinalyty::hiddenCord);
 	return 0;
 }
 
@@ -946,7 +912,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if(f->getType() == essence_type::Base && s->getType() == essence_type::Base)
 				{
 					qDebug() << "Создание связи между стержневой и стержневой сущностями:";
-					qDebug() << "Для соединения будет создана новая ассоциация с именем: " << id_first + "<->" +id_second;
+					qDebug() << "Для соединения будет создана новая ассоциация с именем: " << id_first + "RELATE" +id_second;
 					createRelationBetweenBaseAndBaseWithNewRelation(f,s,cord_one, cord_two);
 					return 0;
 				}

@@ -34,7 +34,8 @@ void EREssenceCharacteristic::paint(QPainter * painter, const QStyleOptionGraphi
 
 	QPen pen(QColor(0,0,0));
 	painter->setPen(pen);
-	painter->drawText(0,0,100,50,Qt::AlignCenter,getId());
+	painter->setFont(QFont(Support::fontFamilie, Support::fontSizeEssence));
+	painter->drawText(0,0,size().width(),50,Qt::AlignCenter,getIdWithoutPath());
 }
 
 QRectF EREssenceCharacteristic::boundingRect() const
@@ -66,7 +67,7 @@ void EREssenceCharacteristic::initEssence()
 	setFlag(QGraphicsItem::ItemIsMovable, true);
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-	setGeometry(0,0,120,50);
+	setGeometry(0,0,180,50);
 //	qDebug() << this->pos() <<"\n";
 //	qDebug() << this->size() <<"\n";
 }

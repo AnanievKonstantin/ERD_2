@@ -11,8 +11,10 @@
 #include <QTableWidgetItem>
 #include <DataController.h>
 #include <EssenceGraphicsController.h>
-
+#include <QRegExp>
 #include <QDebug>
+#include <QRegExpValidator>
+
 class EssenceCreateWindow : public QWidget
 {
 		Q_OBJECT
@@ -34,6 +36,11 @@ class EssenceCreateWindow : public QWidget
 		QList<QString> old_attrs;
 		bool editMode = false;
 		std::tuple<QString, int, QList<QString>, QList<QString>> old_data;
+
+		void createWindow();
+
+		QRegExp regExp;
+		QRegExpValidator validator;
 signals:
 		void endSuccessCreation(QString id);
 		void endSuccessEditation(QString id);

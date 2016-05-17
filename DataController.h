@@ -58,7 +58,6 @@ class DataController
 
 
 		EREssenceData * search(QString id);
-		bool keyOrAttributeFromViewerIsIncorrect(QList<QString> keys, QList<QString> attrs);
 	private:
 
 		DataController();

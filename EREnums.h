@@ -25,4 +25,6 @@ enum cordinalyty
 };
 
 
+
+
 #endif // ERENUMS_H
