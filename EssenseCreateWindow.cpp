@@ -156,7 +156,13 @@ void EssenceCreateWindow::submitCreation(bool)
 		int error_add_attr		= 0;
 		int error_remove_key	= 0;
 		int error_remove_attr	= 0;
+		int error_bad_property	= 0;
 
+
+		if(DataController::getInstance()->keyOrAttributeFromViewerIsIncorrect(new_keys, new_attributes) == true)
+		{
+			error_bad_property = 1;
+		}
 		//add new keys
 		foreach (QString key, new_keys)
 		{
@@ -236,7 +242,10 @@ void EssenceCreateWindow::submitCreation(bool)
 			}
 		}
 
-		if(error_rename == 1 || error_add_attr == 1 || error_add_key == 1 || error_dubl_attr == 1|| error_dubl_key == 1 || error_remove_attr == 1 || error_remove_key == 1)
+		if(error_rename == 1	|| error_add_attr == 1		||
+		   error_add_key == 1	|| error_dubl_attr == 1		||
+		   error_dubl_key == 1	|| error_remove_attr == 1	||
+		   error_remove_key == 1 || error_bad_property == 1)
 		{
 			loadData(old_id);
 			qDebug() << "error_dubl_key	  " << error_dubl_key	  ;
@@ -245,6 +254,7 @@ void EssenceCreateWindow::submitCreation(bool)
 			qDebug() << "error_add_attr	  " << error_add_attr	  ;
 			qDebug() << "error_remove_key " << error_remove_key   ;
 			qDebug() << "error_remove_attr" << error_remove_attr  ;
+			qDebug() << "error_bad_property" << error_bad_property  ;
 			qDebug() << "\nERROR";
 		}
 		else
@@ -258,14 +268,16 @@ void EssenceCreateWindow::submitCreation(bool)
 	if(editMode == false)
 	{
 		qDebug() << "\nПроверка при создании сущности: ";
-
-		int error = DataController::getInstance()->createEssence(new_id, current_type, new_keys, new_attributes);
-		DataController::getInstance()->printAllEssence();
-		if(error == 0)
+		if(DataController::getInstance()->keyOrAttributeFromViewerIsIncorrect(new_keys, new_attributes) == false)
 		{
-			qDebug() << "\nПроверка пройдена";
-			emit endSuccessCreation(new_id);
-			this->close();
+			int error = DataController::getInstance()->createEssence(new_id, current_type, new_keys, new_attributes);
+			DataController::getInstance()->printAllEssence();
+			if(error == 0)
+			{
+				qDebug() << "\nПроверка пройдена";
+				emit endSuccessCreation(new_id);
+				this->close();
+			}
 		}
 	}
 }

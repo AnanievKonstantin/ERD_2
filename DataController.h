@@ -6,7 +6,7 @@
 #include <QString>
 #include <EREssenceData.h>
 #include <ERRelationsData.h>
-
+#include <QRegExp>
 
 
 
@@ -45,7 +45,7 @@ class DataController
 		int addKey(QString id, QString key_name);
 
 		int joinBaseToExistAssociation(QString essence, QString association, int cord);
-		int setCordinalityFromTo(QString id_a, QString id_b, int cord_to_b);
+		int setCordinality(QString id_a, QString id_b, int cord_A, int cord_B);
 
 		int renameEssence(QString id_to_rename, QString new_id);
 		//debug - print
@@ -58,6 +58,7 @@ class DataController
 
 
 		EREssenceData * search(QString id);
+		bool keyOrAttributeFromViewerIsIncorrect(QList<QString> keys, QList<QString> attrs);
 	private:
 
 		DataController();

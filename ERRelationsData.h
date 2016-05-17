@@ -17,7 +17,7 @@ class ERRelationsData
 		QList<QString> getAjasencyByName(QString id);
 		bool isExist(QString first, QString second);
 		bool renameEssence(QString old_name, QString new_name);
-		bool setCordFromAToB(QString A, QString B, int cord);
+		bool setCord(QString A, QString B, int cord_a, int cord_b);
 
 		void print();
 		void printList(QList<std::tuple<QString, QString, int, int>> list);

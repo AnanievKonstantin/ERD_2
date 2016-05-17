@@ -132,14 +132,14 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 		col_1->setText("Сущность А");
 		col_4->setText("Сущность B");
 		col_2->setText("Кординальность к B");
-		menuCordinalityB->setDisabled(true);
+		col_3->setText("Кординальность к A");
+//		menuCordinalityB->setDisabled(true);
 		submit->setText("Edit");
 
 		foreach (QString s, essences_list)
 		{
 			menuEssenceB->addItem(s);
 			menuEssenceA->addItem(s);
-
 		}
 	}
 
@@ -198,7 +198,7 @@ void RelationOperationWindow::checkSubmossion(bool test)
 	}
 	case 6:
 	{
-		if(DataController::getInstance()->setCordinalityFromTo(A, B, cord_A) == 0)
+		if(DataController::getInstance()->setCordinality(A, B, cord_A, cord_B) == 0)
 		{
 			emit successRelationOperation(true);
 			close();

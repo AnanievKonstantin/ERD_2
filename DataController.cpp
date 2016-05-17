@@ -12,6 +12,13 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 
 
 	bool error = false;
+	QRegExp r("[A-Z,a-z,А-Я,а-я]{1,20}");
+
+	if(r.exactMatch(id) == false)
+	{
+		qDebug() << "Имя сущности не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,20}.";
+		error = true;
+	}
 	if(id == "")
 	{
 		qDebug() << "Имя сущности не может быть пустым";
@@ -187,6 +194,34 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	return dublicatesIsExist;
 }
 
+bool DataController::keyOrAttributeFromViewerIsIncorrect(QList<QString> keys, QList<QString> attrs)
+{
+	bool incorrected = false;
+	QRegExp r("[A-Z,a-z,А-Я,а-я]{1,15}");
+
+	foreach (QString key, keys)
+	{
+
+		if(r.exactMatch(key) == false)
+		{
+			qDebug() << "Ключ: " << key << " не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,15}.";
+			incorrected = true;
+		}
+	}
+
+	foreach (QString attr, attrs)
+	{
+
+		if(r.exactMatch(attr) == false)
+		{
+			qDebug() << "Атрибут: " << attr << " не соответствует шаблону [A-Z,a-z,А-Я,а-я]{1,15}.";
+			incorrected = true;
+		}
+	}
+
+	return incorrected;
+}
+
 bool DataController::oneOfTwoIs(int type_first, int type_second, int condition_type)
 {
 	if(Support::checkTypeEssence(type_first) && Support::checkTypeEssence(type_second) && Support::checkTypeEssence(condition_type))
@@ -211,12 +246,17 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		return -10;
 	}
 
-	if(oneOfTwoIs(first_type, second_type, essence_type::Designation) == true || oneOfTwoIs(first_type, second_type, essence_type::Characteristic))
+	if(oneOfTwoIs(first_type, second_type, essence_type::Designation) == true && oneOfTwoIs(first_type, second_type, essence_type::Characteristic) == true)
 	{
-		if(	(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne)		||
-			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
-			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne))
+		if(	(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany))
 		{
+			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
+			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
+			{
+				qDebug() << "Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+				return -10;
+			}
 			return 0;
 		}
 		else
@@ -226,7 +266,104 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		}
 	}
 
-	return 0;
+	if(oneOfTwoIs(first_type, second_type, essence_type::Designation) == true && oneOfTwoIs(first_type, second_type, essence_type::Association) == true)
+	{
+		if(	(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
+			(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne))
+		{
+			return 0;
+		}
+		else
+		{
+			qDebug() << "Для обозначений и Ассоциации возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1 или 1/M - 1/1";
+			return -20;
+		}
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Designation) == true && oneOfTwoIs(first_type, second_type, essence_type::Base) == true)
+	{
+		if(	(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
+			(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne))
+		{
+			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
+			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
+			{
+				qDebug() << "Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+				return -30;
+			}
+			return 0;
+		}
+		else
+		{
+			qDebug() << "Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+			return -30;
+		}
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Characteristic) == true && oneOfTwoIs(first_type, second_type, essence_type::Base) == true)
+	{
+		if(	(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
+			(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne))
+		{
+			if((first_type == essence_type::Base && cord_first != cordinalyty::OneOne) ||
+			   (second_type == essence_type::Base && cord_second != cordinalyty::OneOne))
+			{
+				qDebug() << "Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+				return -40;
+			}
+			return 0;
+		}
+		else
+		{
+			qDebug() << "Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+			return -40;
+		}
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Characteristic) == true && oneOfTwoIs(first_type, second_type, essence_type::Association) == true)
+	{
+		if(	(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneOne)		||
+			(cord_first == cordinalyty::OneOne	&&	cord_second == cordinalyty::OneMany)	||
+			(cord_first == cordinalyty::OneMany	&&	cord_second == cordinalyty::OneOne))
+		{
+			if((first_type == essence_type::Association && cord_first != cordinalyty::OneOne) ||
+			   (second_type == essence_type::Association && cord_second != cordinalyty::OneOne))
+			{
+				qDebug() << "Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+				return -50;
+			}
+			return 0;
+		}
+		else
+		{
+			qDebug() << "Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+			return -50;
+		}
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Base) == true && oneOfTwoIs(first_type, second_type, essence_type::Association) == true)
+	{
+		if(cord_first == cordinalyty::hiddenCord	||	cord_second == cordinalyty::hiddenCord)
+		{
+			return 0;
+		}
+		else
+		{
+			qDebug() << "__ERROR__: in int DataController::checkCordinality bad association cordinality";
+			return -40;
+		}
+	}
+
+	if(oneOfTwoIs(first_type, second_type, essence_type::Base) == true && oneOfTwoIs(first_type, second_type, essence_type::Base) == true)
+	{
+		return 0;
+	}
+
+	qDebug() << "Не известная кардинальность";
+	return -70;
 }
 
 void DataController::insertKeyInCharacteristic(EREssenceData * e, QString key)
@@ -1072,9 +1209,9 @@ int DataController::joinBaseToExistAssociation(QString essence, QString associat
 	return 0;
 }
 
-int DataController::setCordinalityFromTo(QString id_a, QString id_b, int cord_to_b)
+int DataController::setCordinality(QString id_a, QString id_b, int cord_A, int cord_B)
 {
-	qDebug() << "Производится установка кардинальности: " << Support::cardinalityToString(cord_to_b) << " от " << id_a << " к " << id_b;
+	qDebug() << "Производится установка кардинальностей: " << Support::cardinalityToString(cord_A) <<" "<<Support::cardinalityToString(cord_A) << " от " << id_a << " к " << id_b;
 
 	if(essenceIsExist(id_a) == false || essenceIsExist(id_b) == false)
 	{
@@ -1088,56 +1225,14 @@ int DataController::setCordinalityFromTo(QString id_a, QString id_b, int cord_to
 		return -10;
 	}
 
-	if(search(id_a)->getType() == essence_type::Association)
+	if(checkCordinality(id_a, id_b,search(id_a)->getType(), search(id_b)->getType(),cord_A, cord_B) == 0)
 	{
-		qDebug() << "Установка связей для ассоциаций не допускатся";
-		return -30;
+		relation_table.setCord(id_a, id_b, cord_A, cord_B);
+		qDebug() << "Кардинальности установлены";
+		return 0;
 	}
 
-	if(search(id_a)->getType() == essence_type::Designation || search(id_b)->getType() == essence_type::Designation)
-	{
-		if(cord_to_b == cordinalyty::OneOne || cord_to_b == cordinalyty::OneMany)
-		{
-
-		}
-		else
-		{
-			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1 или 1/M";
-			return -40;
-		}
-	}
-
-	if(search(id_b)->getType() == essence_type::Designation)
-	{
-		if(cord_to_b == cordinalyty::OneOne || cord_to_b == cordinalyty::OneMany)
-		{
-
-		}
-		else
-		{
-			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1 или 1/M";
-			return -40;
-		}
-	}
-
-
-	if(search(id_a)->getType() == essence_type::Characteristic || search(id_b)->getType() == essence_type::Characteristic)
-	{
-		if(cord_to_b == cordinalyty::OneOne)
-		{
-
-		}
-		else
-		{
-			qDebug() << "Ошибка. Установлены не допустимые кардинальности. Только 1/1";
-			return -40;
-		}
-	}
-
-
-	relation_table.setCordFromAToB(id_a, id_b, cord_to_b);
-	qDebug() << "Кардинальность установлена";
-	return 0;
+	return -10;
 
 }
 
