@@ -44,6 +44,7 @@ class EssenceCreateWindow : public QWidget
 signals:
 		void endSuccessCreation(QString id);
 		void endSuccessEditation(QString id);
+		void endDeletetion(QString id);
 		void toDeleteEssence(QString id);
 	public slots:
 		void submitCreation(bool);

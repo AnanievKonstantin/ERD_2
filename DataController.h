@@ -55,7 +55,7 @@ class DataController
 
 		QList<QString> getEssences();
 		QList<QString> getProperties(int mode);
-
+		QList<QString> getAjesencyFor(QString id);
 
 		EREssenceData * search(QString id);
 	private:
@@ -75,6 +75,7 @@ class DataController
 		bool keyISattr(QList<QString> keys, QList<QString> attributes);
 		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
 		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
+		bool keyOrAttributeIsNameOfEssence(QString id, QList<QString> keys, QList<QString> attrs);
 
 		bool oneOfTwoIs(int type_first, int type_second, int condition_type);
 		int checkCordinality(QString first, QString second,int first_type, int second_type, int cord_first, int cord_second);

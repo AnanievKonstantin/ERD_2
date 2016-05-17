@@ -71,7 +71,7 @@ void EREssenceProperty::initEssence()
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 //	int width = getId().length()*10;
-	setGeometry(0,0,180,50);
+	setGeometry(0,0,190,40);
 
 
 

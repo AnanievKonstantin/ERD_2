@@ -16,6 +16,9 @@ bool Widget::setUpSignalsAndSlots()
 	QObject::connect(this->erView, SIGNAL(doCreation(int)), this, SLOT(createEssence(int)));
 	QObject::connect(this->erView, SIGNAL(doRelationOperation(int)), this, SLOT(performRelationOperation(int)));
 	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startEditEssence(QString)), this, SLOT(editEssence(QString)));
+	QShortcut * key = new QShortcut(QKeySequence("Ctrl+S"), this);
+	key->setContext(Qt::ShortcutContext::ApplicationShortcut);
+	QObject::connect(key, SIGNAL(activated()), this, SLOT(save()));
 
 }
 
@@ -32,6 +35,7 @@ void Widget::editEssence(QString id)
 //	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
 	QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
 	QObject::connect(win, SIGNAL(endSuccessEditation(QString)), this, SLOT(addEssenceOnScreen(QString)));
+	QObject::connect(win, SIGNAL(endDeletetion(QString)), this, SLOT(removeEssence(QString)));
 	win->show();
 }
 
@@ -57,48 +61,11 @@ void Widget::addEssenceOnScreen(QString id)
 	}
 
 	EssenceGraphicsController::instance()->syncWithDataContriller();
-//	EREssenceBase *b = new EREssenceBase(data);
-//	EssenceGraphicsController::instance()->addEssence(b);
-
-//	QObject::connect(b, SIGNAL(edit(QString)), this, SLOT(editEssence(QString)));
-//	this->erView->getScene()->addItem(b);
-//	foreach (QString attr, data->getAttributes())
-//	{
-//		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(attr, essence_type::Property_default));
-//		Arrow * a = new Arrow(b,p);
-
-//		EssenceGraphicsController::instance()->addProperty(p);
-//		EssenceGraphicsController::instance()->addArrow(a);
-//		erView->getScene()->addItem(a);
-//		erView->getScene()->addItem(p);
-
-//	}
-
-//	foreach (QString key, data->getKeys())
-//	{
-//		int type =Property_key;
-//		if(key.lastIndexOf("::") != -1)
-//		{
-//			type = essence_type::Property_foreign_key;
-//		}
-
-//		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(key, type));
-//		Arrow * a = new Arrow(b,p);
-
-//		EssenceGraphicsController::instance()->addProperty(p);
-//		EssenceGraphicsController::instance()->addArrow(a);
-//		erView->getScene()->addItem(a);
-//		erView->getScene()->addItem(p);
-
-//	}
-
-//	EssenceGraphicsController::instance()->print();
 }
 
 void Widget::removeEssence(QString id)
 {
-//	erView->getScene()->removeItem(EssenceGraphicsController::instance()->getEssence(id));
-	//	qDebug() << "Deleted: " << id <<"\n";
+	EssenceGraphicsController::instance()->syncWithDataContriller();
 }
 
 void Widget::performRelationOperation(int action_code)
@@ -147,5 +114,10 @@ void Widget::performRelationOperation(int action_code)
 void Widget::afterPerformRelationOperation(bool test)
 {
 	EssenceGraphicsController::instance()->syncWithDataContriller();
+}
+
+void Widget::save()
+{
+	qDebug() << "START SAVE:";
 }
 

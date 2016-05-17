@@ -116,14 +116,12 @@ void EssenceGraphicsController::syncWithDataContriller()
 			}
 		essenceList.append(switch_pointer);
 		QObject::connect(switch_pointer, SIGNAL(edit(QString)), this, SLOT(emitEditEssenceSignal(QString)));
-		scene->addItem(switch_pointer);
 	}
 
 	foreach (QString s, DataController::getInstance()->getProperties(2))
 	{
 		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_default));
 		propertyList.append(p);
-		scene->addItem(p);
 	}
 	foreach (QString s, DataController::getInstance()->getProperties(1))
 	{
@@ -131,16 +129,15 @@ void EssenceGraphicsController::syncWithDataContriller()
 		{
 			EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_foreign_key));
 			propertyList.append(p);
-			scene->addItem(p);
 			continue;
 		}
 		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_key));
 		propertyList.append(p);
-		scene->addItem(p);
 		continue;
 	}
+	//---------------
 
-
+	//Создание и рисование стрелок. Заполнение списка стрелок
 	QList<std::tuple<QString, QString, int, int> > table = DataController::getInstance()->getRelationTable();
 	for(int i =0 ; i < table.length() ; i++)
 	{
@@ -166,6 +163,8 @@ void EssenceGraphicsController::syncWithDataContriller()
 		scene->addItem(a);
 	}
 
+
+	//Рисование стрелок для свойств
 	foreach (EREssence * e, essenceList)
 	{
 		EREssenceData * d = DataController::getInstance()->search(e->getId());
@@ -190,6 +189,15 @@ void EssenceGraphicsController::syncWithDataContriller()
 	}
 
 
+	foreach (EREssence * e, essenceList)
+	{
+		scene->addItem(e);
+	}
+
+	foreach (EREssence * e, propertyList)
+	{
+		scene->addItem(e);
+	}
 }
 
 

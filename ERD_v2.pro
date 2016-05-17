@@ -28,7 +28,9 @@ SOURCES += main.cpp \
     EssenceGraphicsController.cpp \
     EssenseCreateWindow.cpp \
     widget.cpp \
-    RelationOperationWindow.cpp
+    RelationOperationWindow.cpp \
+    TreeModel.cpp \
+    TreeItem.cpp
 
 HEADERS  += \
     EREnums.h \
@@ -47,7 +49,9 @@ HEADERS  += \
     EssenceGraphicsController.h \
     EssenseCreateWindow.h \
     widget.h \
-    RelationOperationWindow.h
+    RelationOperationWindow.h \
+    TreeModel.h \
+    TreeItem.h
 
 DISTFILES += \
     ToDo

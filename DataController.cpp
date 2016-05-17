@@ -60,6 +60,11 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 		error = true;
 	}
 
+	if(keyOrAttributeIsNameOfEssence(id, keys, attributes) == true)
+	{
+		qDebug() << "Имена свойств сущности не могут быть идентичны имени сущности";
+		error = true;
+	}
 	if(error == true)
 	{
 		return 10;
@@ -75,17 +80,24 @@ int DataController::checkBeforeCreationRelation(QString id_first, QString id_sec
 		qDebug() << "Имена(Имя) связуемых сущностей не существуют";
 		return 9;
 	}
-	if(relationIsExist(id_first, id_second) == true)
-	{
-		qDebug() << "Связь между " << id_first << " и "<< id_second <<" уже существует.";
-		return 10;
-	}
 
 	if(id_first == id_second)
 	{
 		qDebug() << "Создание рекурсивных сущностей не разрешено";
 		return 11;
 	}
+
+	if(relationIsExist(id_first, id_second) == true)
+	{
+		if(search(id_first)->getType() == essence_type::Base && search(id_second)->getType() == essence_type::Base)
+		{
+			qDebug() << "Создаётся ассоциация";
+			return 0;
+		}
+		qDebug() << "Связь между " << id_first << " и "<< id_second <<" уже существует.";
+		return 10;
+	}
+
 
 
 	return 0;
@@ -185,6 +197,42 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	}
 
 	return dublicatesIsExist;
+}
+
+bool DataController::keyOrAttributeIsNameOfEssence(QString id, QList<QString> keys, QList<QString> attrs)
+{
+	bool isName = false;
+	foreach (QString key, keys)
+	{
+		if(key == id)
+		{
+			qDebug() << "Ключ: " << key << " равен имени сущности. " << id;
+			isName = true;
+		}
+	}
+
+	foreach (QString attr, attrs)
+	{
+		if(attr == id)
+		{
+			qDebug() << "Атрибут: " << attr << " равен имени сущности." << id;
+			isName = true;
+		}
+	}
+
+	foreach (EREssenceData * d, list_essences)
+	{
+		if(keys.contains(d->getId()))
+		{
+			isName = true;
+		}
+		if(attrs.contains(d->getId()))
+		{
+			isName = true;
+		}
+	}
+
+	return isName;
 }
 
 
@@ -732,8 +780,10 @@ int DataController::removeKeyFrom(QString id, QString key)
 		QList<QString> & keys = e->getKeys();
 		foreach (QString k, keys)
 		{
-			if(k.lastIndexOf(key) != -1)
+			if(k.contains(key) == true)
 			{
+//				QString stripped = k.right(k.length() - k.lastIndexOf(":") -1);
+//				if(stripped ==)
 				e->removeKey(k);
 				qDebug() << "удалено: " << k << " из " << e->getId();
 			}
@@ -1319,5 +1369,10 @@ QList<QString> DataController::getProperties(int mode)
 
 
 
+}
+
+QList<QString> DataController::getAjesencyFor(QString id)
+{
+	return relation_table.getAjasencyByName(id);
 }
 

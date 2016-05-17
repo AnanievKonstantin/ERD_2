@@ -379,8 +379,13 @@ void EssenceCreateWindow::cancelCreation(bool)
 
 void EssenceCreateWindow::removeEssence()
 {
-	qDebug() <<"in void EssenceCreateWindow::removeEssence(bool) delete" << old_id;
-//	emit toDeleteEssence(currentID);
+	int error = 0;
+	error = DataController::getInstance()->removeEssence(old_id);
+	if(error == 0)
+	{
+		emit endDeletetion(old_id);
+		this->close();
+	}
 }
 
 

@@ -16,6 +16,8 @@
 #include <EssenceGraphicsController.h>
 #include <EssenseCreateWindow.h>
 #include <RelationOperationWindow.h>
+#include <QShortcut>
+#include<QKeySequence>
 
 class Widget : public QWidget
 {
@@ -38,6 +40,7 @@ class Widget : public QWidget
 		void removeEssence(QString id);
 		void performRelationOperation(int action_code);
 		void afterPerformRelationOperation(bool);
+		void save();
 
 };
 
