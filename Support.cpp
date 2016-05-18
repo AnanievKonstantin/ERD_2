@@ -1,8 +1,8 @@
 #include "Support.h"
 
 QString Support::fontFamilie = "Arial";
-int Support::fontSizeEssence =10;
-int Support::fontSizeProperty = 10;
+int Support::fontSizeEssence =9;
+int Support::fontSizeProperty = 9;
 
 Support::Support()
 {

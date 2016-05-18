@@ -166,6 +166,7 @@ void RelationOperationWindow::checkSubmossion(bool test)
 	QString B = menuEssenceB->currentText();
 	int cord_A = menuCordinalityA->currentData().toInt();
 	int cord_B = menuCordinalityB->currentData().toInt();
+
 	switch (mode)
 	{
 	case 3:

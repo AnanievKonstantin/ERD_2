@@ -5,9 +5,24 @@ Widget::Widget(QWidget *parent)
 {
 	this->layout = new QHBoxLayout(this);
 	this->erView = new ERGraphicsView();
+	this->treeModel = new TreeModel();
+	this->treeViev = new QTreeView();
+	treeViev->setGeometry(QRect(0,0, 100, 100));
+	treeViev->setMinimumWidth(200);
+	treeViev->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+//	treeViev->setHeader
+	treeViev->setModel(treeModel);
+//	treeViev->mode
+
+
+//	treeViev->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+//	treeViev->setAutoScroll(true);
+	layout->addWidget(treeViev);
 	layout->addWidget(erView);
+
 	EssenceGraphicsController::instance();
 	EssenceGraphicsController::setScene(erView->getScene());
+
 	setUpSignalsAndSlots();
 }
 
@@ -25,6 +40,13 @@ bool Widget::setUpSignalsAndSlots()
 Widget::~Widget()
 {
 
+}
+
+void Widget::syncTreeViev()
+{
+	delete treeModel;
+	treeModel = new TreeModel;
+	treeViev->setModel(treeModel);
 }
 
 void Widget::editEssence(QString id)
@@ -61,11 +83,14 @@ void Widget::addEssenceOnScreen(QString id)
 	}
 
 	EssenceGraphicsController::instance()->syncWithDataContriller();
+	syncTreeViev();
+
 }
 
 void Widget::removeEssence(QString id)
 {
 	EssenceGraphicsController::instance()->syncWithDataContriller();
+	syncTreeViev();
 }
 
 void Widget::performRelationOperation(int action_code)
@@ -114,6 +139,7 @@ void Widget::performRelationOperation(int action_code)
 void Widget::afterPerformRelationOperation(bool test)
 {
 	EssenceGraphicsController::instance()->syncWithDataContriller();
+	syncTreeViev();
 }
 
 void Widget::save()

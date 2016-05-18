@@ -17,7 +17,9 @@
 #include <EssenseCreateWindow.h>
 #include <RelationOperationWindow.h>
 #include <QShortcut>
-#include<QKeySequence>
+#include <QKeySequence>
+#include <TreeModel.h>
+#include <QTreeView>
 
 class Widget : public QWidget
 {
@@ -31,8 +33,12 @@ class Widget : public QWidget
 	private:
 		void initViev();
 
+		void syncTreeViev();
 		QHBoxLayout * layout;
 		ERGraphicsView * erView;
+		TreeModel * treeModel;
+		QTreeView * treeViev;
+
 	public slots:
 		void editEssence(QString id);
 		void createEssence(int type);

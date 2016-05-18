@@ -8,7 +8,7 @@ EREssenceProperty::EREssenceProperty(EREssenceData *data, QGraphicsWidget * pare
 void EREssenceProperty::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
 	QLinearGradient linearGradient(QPointF(0, 0), QPointF(40, 40));
-
+	QFont font(Support::fontFamilie, Support::fontSizeProperty);
 	if(getType() == essence_type::Property_default)
 	{
 		linearGradient.setColorAt(0, Qt::white);
@@ -18,6 +18,14 @@ void EREssenceProperty::paint(QPainter * painter, const QStyleOptionGraphicsItem
 	{
 		linearGradient.setColorAt(0, Qt::red);
 		linearGradient.setColorAt(1, Qt::white);
+		font.setUnderline(true);
+	}
+
+	if(getType() == essence_type::Property_combinated_key)
+	{
+		linearGradient.setColorAt(0, Qt::yellow);
+		linearGradient.setColorAt(1, Qt::white);
+		font.setUnderline(true);
 	}
 
 
@@ -38,7 +46,7 @@ void EREssenceProperty::paint(QPainter * painter, const QStyleOptionGraphicsItem
 
 	QPen pen(QColor(0,0,0));
 	painter->setPen(pen);
-	painter->setFont(QFont(Support::fontFamilie, Support::fontSizeProperty));
+	painter->setFont(font);
 	painter->drawText(0,0,size().width(), size().height(),Qt::AlignCenter,getIdWithoutPath());
 }
 

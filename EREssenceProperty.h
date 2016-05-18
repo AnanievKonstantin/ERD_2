@@ -4,6 +4,7 @@
 #include <QObject>
 #include <Arrow.h>
 #include <EREssence.h>
+#include <DataController.h>
 
 class EREssenceProperty: public EREssence
 {

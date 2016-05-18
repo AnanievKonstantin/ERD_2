@@ -252,7 +252,7 @@ bool DataController::oneOfTwoIs(int type_first, int type_second, int condition_t
 	return false;
 }
 
-int DataController::checkCordinality(QString first, QString second, int first_type, int second_type, int cord_first, int cord_second)
+int DataController::checkCordinality(QString first, QString second, int first_type, int second_type, int & cord_first, int & cord_second)
 {
 	if(Support::checkTypeCordinality(cord_first) != true || Support::checkTypeCordinality(cord_second) != true)
 	{
@@ -366,8 +366,21 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		}
 		else
 		{
-			qDebug() << "__ERROR__: in int DataController::checkCordinality bad association cordinality";
-			return -40;
+			EREssenceData * e1 = search(first);
+			EREssenceData * e2 = search(second);
+			if(e1->getType() == essence_type::Association)
+			{
+				qDebug() << "Для ассоциации " << first << "устновлена скрытая кординальность";
+				cord_first = cordinalyty::hiddenCord;
+				return 0;
+			}
+			if(e2->getType() == essence_type::Association)
+			{
+				qDebug() << "Для ассоциации " << second << "устновлена скрытая кординальность";
+				cord_second = cordinalyty::hiddenCord;
+				return 0;
+			}
+			return -10;
 		}
 	}
 
@@ -1004,6 +1017,14 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				{
 					qDebug() << "Создание связи между обозначающей и характерисической сущностями:";
 					createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
+					return 0;
+				}
+
+				if((f->getType() == essence_type::Association && s->getType() == essence_type::Base) ||
+				   (s->getType() == essence_type::Association && f->getType() == essence_type::Base))
+				{
+					qDebug() << "Создание связи между ассоциацией и стержневой сущностью производится черех функцию включения в ассоциацию";
+//					createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
 					return 0;
 				}
 			}

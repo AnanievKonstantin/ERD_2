@@ -78,7 +78,7 @@ class DataController
 		bool keyOrAttributeIsNameOfEssence(QString id, QList<QString> keys, QList<QString> attrs);
 
 		bool oneOfTwoIs(int type_first, int type_second, int condition_type);
-		int checkCordinality(QString first, QString second,int first_type, int second_type, int cord_first, int cord_second);
+		int checkCordinality(QString first, QString second, int first_type, int second_type, int &cord_first, int &cord_second);
 
 		//to perform action
 		void insertKeyInCharacteristic(EREssenceData * e, QString key);

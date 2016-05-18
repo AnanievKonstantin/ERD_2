@@ -2,21 +2,35 @@
 #include <TreeModel.h>
 #include <QStringList>
 
-//! [0]
+////! [0]
 TreeModel::TreeModel(QObject *parent)
 	: QAbstractItemModel(parent)
 {
 	QList<QVariant> rootData;
 	rootData << "Сущности";
 	rootItem = new TreeItem(rootData);
-	setupModelData(rootItem);
+
+	const QStringList lines = createLines();
+	setupModelData(lines, rootItem);
 }
-//! [0]
+////! [0]
 
 //! [1]
 TreeModel::~TreeModel()
 {
 	delete rootItem;
+}
+
+void TreeModel::update()
+{
+	delete rootItem;
+	QList<QVariant> rootData;
+	rootData << "Сущности";
+	rootItem = new TreeItem(rootData);
+
+
+	const QStringList lines = createLines();
+	setupModelData(lines, rootItem);
 }
 //! [1]
 
@@ -120,7 +134,7 @@ int TreeModel::rowCount(const QModelIndex &parent) const
 }
 //! [8]
 
-void TreeModel::setupModelData(TreeItem *parent)
+void TreeModel::setupModelData(const QStringList &lines,TreeItem *parent)
 {
 	QList<TreeItem*> parents;
 	QList<int> indentations;
@@ -179,4 +193,42 @@ void TreeModel::setupModelData(TreeItem *parent)
 		QList<QString> adj = DataController::getInstance()->getAjesencyFor(data->getId());
 
 	}
+}
+
+QStringList TreeModel::createLines()
+{
+	QStringList lines;
+	QString line;
+
+	foreach (QString name, DataController::getInstance()->getEssences())
+	{
+		EREssenceData * p = DataController::getInstance()->search(name);
+
+		lines << p->getId();
+		lines << " Тип:";
+		lines << "  "+Support::typeToString(p->getType());
+
+		lines << " Ключи:";
+		foreach (QString key, p->getKeysConst())
+		{
+			QString stripped = key.right(key.length() - key.lastIndexOf(":") - 1);
+			lines << "   "+stripped;
+		}
+		//lines << line;
+
+		lines << " Атрибуты:";
+		foreach (QString attr, p->getAttrsConst())
+		{
+			QString stripped = attr.right(attr.length() - attr.lastIndexOf(":") - 1);
+			lines << "   "+stripped;
+		}
+
+		lines << " Смежность:";
+		foreach (QString adj, DataController::getInstance()->getAjesencyFor(name))
+		{
+			lines << "   "+adj;
+		}
+
+	}
+	return lines;
 }

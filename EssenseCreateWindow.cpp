@@ -38,26 +38,32 @@ bool EssenceCreateWindow::loadData(QString id)
 
 	this->name.setText(std::get<0>(old_data));
 
-	for(int i = 0; i < std::get<2>(old_data).length(); i++)
-	{
-		if(std::get<2>(old_data).at(i).contains("::") == true || (std::get<2>(old_data).at(i).contains("_id") == true))
-		{
-//			QTableWidgetItem * it = new QTableWidgetItem(std::get<2>(old_data).at(i));
-			QLineEdit * it = new QLineEdit(std::get<2>(old_data).at(i));
-			it->setDisabled(true);
-//			it->setFlags(it->flags() &  ~Qt::ItemIsEditable);
-//			keys.setItem(i,0, it);
-			keys.setCellWidget(i, 0, it);
-			it = nullptr;
-		}
-		else
-			keys.setCellWidget(i,0, new QLineEdit(std::get<2>(old_data).at(i)));
-	}
+//	for(int i = 0; i < std::get<2>(old_data).length(); i++)
+//	{
+//		if(std::get<2>(old_data).at(i).contains("::") == true || (std::get<2>(old_data).at(i).contains("_id") == true))
+//		{
+////			QTableWidgetItem * it = new QTableWidgetItem(std::get<2>(old_data).at(i));
+//			QLineEdit * it = new QLineEdit(std::get<2>(old_data).at(i));
+//			it->setDisabled(true);
+////			it->setFlags(it->flags() &  ~Qt::ItemIsEditable);
+////			keys.setItem(i,0, it);
+//			it->setValidator(&validator);
+//			keys.setCellWidget(i, 0, it);
+//			it = nullptr;
+//		}
+//		else
+//		{
+//			QLineEdit * it = new QLineEdit(std::get<2>(old_data).at(i));
+//			it->setValidator(&validator);
+//			keys.setCellWidget(i,0, it);
+//		}
 
-	for(int i = 0; i < std::get<3>(old_data).length(); i++)
-	{
-		attributes.setItem(i,0, new QTableWidgetItem(std::get<3>(old_data).at(i)));
-	}
+//	}
+
+//	for(int i = 0; i < std::get<3>(old_data).length(); i++)
+//	{
+//		attributes.setItem(i,0, new QTableWidgetItem(std::get<3>(old_data).at(i)));
+//	}
 
 	//keys col creation
 	for(int i = 0; i < keys.rowCount(); i++)
@@ -68,12 +74,14 @@ bool EssenceCreateWindow::loadData(QString id)
 			{
 				QLineEdit * it = new QLineEdit(std::get<2>(old_data).at(i));
 				it->setDisabled(true);
+				it->setValidator(&validator);
 				keys.setCellWidget(i, 0, it);
 				it = nullptr;
 			}
 			else
 			{
 				QLineEdit * it = new QLineEdit(std::get<2>(old_data).at(i));
+				it->setValidator(&validator);
 				keys.setCellWidget(i, 0, it);
 				it = nullptr;
 			}
@@ -81,6 +89,7 @@ bool EssenceCreateWindow::loadData(QString id)
 		else
 		{
 			QLineEdit * it = new QLineEdit();
+			it->setValidator(&validator);
 			keys.setCellWidget(i, 0, it);
 			it = nullptr;
 		}
@@ -95,12 +104,14 @@ bool EssenceCreateWindow::loadData(QString id)
 			{
 				QLineEdit * it = new QLineEdit(std::get<3>(old_data).at(i));
 				it->setDisabled(true);
+				it->setValidator(&validator);
 				attributes.setCellWidget(i, 0, it);
 				it = nullptr;
 			}
 			else
 			{
 				QLineEdit * it = new QLineEdit(std::get<3>(old_data).at(i));
+				it->setValidator(&validator);
 				attributes.setCellWidget(i, 0, it);
 				it = nullptr;
 			}
@@ -108,6 +119,7 @@ bool EssenceCreateWindow::loadData(QString id)
 		else
 		{
 			QLineEdit * it = new QLineEdit();
+			it->setValidator(&validator);
 			attributes.setCellWidget(i, 0, it);
 			it = nullptr;
 		}
@@ -131,7 +143,7 @@ void EssenceCreateWindow::createWindow()
 	attributes.setHorizontalHeaderItem(0, item1);
 
 
-	keys.setRowCount(200);
+	keys.setRowCount(50);
 	keys.setColumnCount(1);
 
 	QHeaderView * headKeys = new QHeaderView(Qt::Horizontal);

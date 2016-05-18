@@ -98,3 +98,13 @@ bool EREssenceData::removeAttributeWithSubStr(QString attr)
 
 	return false;
 }
+
+QList<QString> EREssenceData::getKeysConst()
+{
+	return this->keys;
+}
+
+QList<QString> EREssenceData::getAttrsConst()
+{
+	return this->attributes;
+}

@@ -31,6 +31,9 @@ class EREssenceData
 
 		bool removeAttributeWithSubStr(QString attr);
 
+		QList<QString> getKeysConst();
+		QList<QString> getAttrsConst();
+
 	private:
 		QString id;
 		int type;
