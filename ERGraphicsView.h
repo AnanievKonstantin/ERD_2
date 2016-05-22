@@ -18,6 +18,7 @@ class ERGraphicsView: public QGraphicsView
 		void initMenu();
 		void contextMenuEvent(QContextMenuEvent *event);
 		QGraphicsScene * getScene() const;
+		void wheelEvent(QWheelEvent *event);
 	private:
 		QGraphicsScene * scene;
 		QMenu * topMenu;

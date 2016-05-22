@@ -14,7 +14,7 @@ EREssenceBase::EREssenceBase(EREssenceData *data, QGraphicsWidget * parent):EREs
 
 void EREssenceBase::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-	QLinearGradient linearGradient(QPointF(0, 0), QPointF(40, 40));
+	QLinearGradient linearGradient(QPointF(size().width()/4, -size().height()), QPointF(40, 40));
 	linearGradient.setColorAt(0, Qt::blue);
 	linearGradient.setColorAt(1, Qt::white);
 

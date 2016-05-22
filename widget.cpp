@@ -60,16 +60,12 @@ bool Widget::initBar()
 	QAction * newAct3 = new QAction(tr("&Save as"), this);
 	connect(newAct3, SIGNAL(triggered(bool)), this, SLOT(save_as()));
 
-	QAction * newAct4 = new QAction(tr("&Help"), this);
-	connect(newAct4, SIGNAL(triggered(bool)), this, SLOT(help()));
-
 	QAction * newAct5 = new QAction(tr("&Exit"), this);
 	connect(newAct5, SIGNAL(triggered(bool)), this, SLOT(endWork()));
 
 	bar->addAction(newAct1);
 	bar->addAction(newAct2);
 	bar->addAction(newAct3);
-	bar->addAction(newAct4);
 	bar->addAction(newAct5);
 
 }

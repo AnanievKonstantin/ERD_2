@@ -7,7 +7,7 @@ EREssenceProperty::EREssenceProperty(EREssenceData *data, QGraphicsWidget * pare
 
 void EREssenceProperty::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-	QLinearGradient linearGradient(QPointF(0, 0), QPointF(40, 40));
+	QLinearGradient linearGradient(QPointF(size().width()/4, -size().height()), QPointF(40, 40));
 	QFont font(Support::fontFamilie, Support::fontSizeProperty);
 	if(getType() == essence_type::Property_default)
 	{
