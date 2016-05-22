@@ -12,6 +12,8 @@ Widget::Widget(QWidget *parent)
 	this->treeVievOneEssence = new QTreeView();
 	bar = new QMenuBar();
 
+	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
+
 	initBar();
 	setUpTreeViews();
 
@@ -47,24 +49,28 @@ bool Widget::setUpSignalsAndSlots()
 
 bool Widget::initBar()
 {
-	QAction * newAct1 = new QAction(tr("&Save as"), this);
-	connect(newAct1, SIGNAL(triggered(bool)), this, SLOT(save_as()));
 
 
-	QAction * newAct2 = new QAction(tr("&New"), this);
-	connect(newAct2, SIGNAL(triggered(bool)), this, SLOT(new_file()));
+	QAction * newAct1 = new QAction(tr("&New"), this);
+	connect(newAct1, SIGNAL(triggered(bool)), this, SLOT(new_file()));
 
+	QAction * newAct2 = new QAction(tr("&Open"), this);
+	connect(newAct2, SIGNAL(triggered(bool)), this, SLOT(load_file()));
 
-	QAction * newAct3 = new QAction(tr("&Load"), this);
-	connect(newAct3, SIGNAL(triggered(bool)), this, SLOT(load_file()));
+	QAction * newAct3 = new QAction(tr("&Save as"), this);
+	connect(newAct3, SIGNAL(triggered(bool)), this, SLOT(save_as()));
 
 	QAction * newAct4 = new QAction(tr("&Help"), this);
 	connect(newAct4, SIGNAL(triggered(bool)), this, SLOT(help()));
+
+	QAction * newAct5 = new QAction(tr("&Exit"), this);
+	connect(newAct5, SIGNAL(triggered(bool)), this, SLOT(endWork()));
 
 	bar->addAction(newAct1);
 	bar->addAction(newAct2);
 	bar->addAction(newAct3);
 	bar->addAction(newAct4);
+	bar->addAction(newAct5);
 
 }
 
@@ -115,6 +121,9 @@ void Widget::editEssence(QString id)
 	QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
 	QObject::connect(win, SIGNAL(endSuccessEditation(QString)), this, SLOT(addEssenceOnScreen(QString)));
 	QObject::connect(win, SIGNAL(endDeletetion(QString)), this, SLOT(removeEssence(QString)));
+	QObject::connect(win, SIGNAL(exitFromCreateWindow()), this, SLOT(closeEditWindow()));
+	this->setEnabled(false);
+
 	win->show();
 }
 
@@ -123,9 +132,9 @@ void Widget::createEssence(int type)
 
 	EssenceCreateWindow * win = new EssenceCreateWindow("", type);
 	QObject::connect(win, SIGNAL(endSuccessCreation(QString)), this, SLOT(addEssenceOnScreen(QString)));
-//	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
+	QObject::connect(win, SIGNAL(exitFromCreateWindow()), this, SLOT(closeEditWindow()));
+	this->setEnabled(false);
 	win->show();
-
 
 }
 
@@ -141,6 +150,7 @@ void Widget::addEssenceOnScreen(QString id)
 
 	EssenceGraphicsController::instance()->syncWithDataContriller();
 	syncTreeViev();
+	this->setEnabled(true);
 
 }
 
@@ -148,15 +158,19 @@ void Widget::removeEssence(QString id)
 {
 	EssenceGraphicsController::instance()->syncWithDataContriller();
 	syncTreeViev();
+	this->setEnabled(true);
 }
 
 void Widget::performRelationOperation(int action_code)
 {
-	switch (action_code) {
+	switch (action_code)
+	{
 		case 3:
 		{
 			RelationOperationWindow * w = new RelationOperationWindow(action_code);
 			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			QObject::connect(w, SIGNAL(cancelRelationOperation(bool)), this, SLOT(closeEditWindow()));
+			this->setEnabled(false);
 			w->show();
 			//qDebug("Создаю: связь");
 			break;
@@ -165,6 +179,8 @@ void Widget::performRelationOperation(int action_code)
 		{
 			RelationOperationWindow * w = new RelationOperationWindow(action_code);
 			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			QObject::connect(w, SIGNAL(cancelRelationOperation(bool)), this, SLOT(closeEditWindow()));
+			this->setEnabled(false);
 			w->show();
 			break;
 
@@ -173,14 +189,17 @@ void Widget::performRelationOperation(int action_code)
 		{
 			RelationOperationWindow * w = new RelationOperationWindow(action_code);
 			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			QObject::connect(w, SIGNAL(cancelRelationOperation(bool)), this, SLOT(closeEditWindow()));
+			this->setEnabled(false);
 			w->show();
-			//qDebug("Удаляю связь");
 			break;
 		}
 		case 6:
 		{
 			RelationOperationWindow * w = new RelationOperationWindow(action_code);
 			QObject::connect(w, SIGNAL(successRelationOperation(bool)), this, SLOT(afterPerformRelationOperation(bool)));
+			QObject::connect(w, SIGNAL(cancelRelationOperation(bool)), this, SLOT(closeEditWindow()));
+			this->setEnabled(false);
 			w->show();
 			//qDebug("изменяю кардинальность");
 			break;
@@ -197,12 +216,13 @@ void Widget::afterPerformRelationOperation(bool test)
 {
 	EssenceGraphicsController::instance()->syncWithDataContriller();
 	syncTreeViev();
+	this->setEnabled(true);
 }
 
 void Widget::quick_save()
 {
 	qDebug() << "quick save";
-	DataController::getInstance()->saveState();
+	DataController::getInstance()->saveState("");
 }
 
 void Widget::save_as()
@@ -210,17 +230,41 @@ void Widget::save_as()
 	qDebug() << "Save as";
 	QString fileName = QFileDialog::getSaveFileName(this,
 			tr("ER_Diagram"), "",
-			tr(""));
+			tr("ER Diagram (*.json);;All Files (*)"));
+
+	qDebug() << fileName;
+	DataController::getInstance()->saveState(fileName);
 }
 
 void Widget::new_file()
 {
 	qDebug() << "new file";
+	DataController::getInstance()->clear();
+	syncTreeViev();
+	EssenceGraphicsController::instance()->syncWithDataContriller();
+
 }
 
 void Widget::load_file()
 {
 	qDebug() << "load file";
+	QString fileName = QFileDialog::getOpenFileName(this,
+			tr("ER_Diagram"), "",
+			tr("ER Diagram (*.json);;All Files (*)"));
+	qDebug() << fileName;
+	DataController::getInstance()->loadState(fileName);
+	syncTreeViev();
+	EssenceGraphicsController::instance()->syncWithDataContriller();
+
+
+}
+
+void Widget::endWork()
+{
+	qDebug() << "EndWork";
+	qDebug() << "save before exit";
+	DataController::getInstance()->saveState("");
+	close();
 }
 
 void Widget::help()
@@ -236,5 +280,11 @@ void Widget::treeViewEssenceUpdate(QString id)
 	treeVievOneEssence->setModel(treeModelForOneEssence);
 	treeVievOneEssence->expandAll();
 
+}
+
+void Widget::closeEditWindow()
+{
+	qDebug() << "closeEditWindow()" <<endl;
+	this->setEnabled(true);
 }
 

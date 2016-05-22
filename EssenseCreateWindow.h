@@ -46,6 +46,7 @@ signals:
 		void endSuccessEditation(QString id);
 		void endDeletetion(QString id);
 		void toDeleteEssence(QString id);
+		void exitFromCreateWindow();
 	public slots:
 		void submitCreation(bool);
 		void cancelCreation(bool);

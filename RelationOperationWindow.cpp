@@ -3,6 +3,8 @@
 RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QWidget(parent)
 {
 
+	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint| Qt::WindowStaysOnTopHint));
+
 	this->mode = mode;
 	l = new QGridLayout();
 	cancel = new QPushButton();
@@ -215,5 +217,6 @@ void RelationOperationWindow::checkSubmossion(bool test)
 void RelationOperationWindow::cancelWork(bool check)
 {
 	qDebug() << "Отмена операций со связями";
+	emit cancelRelationOperation(false);
 	close();
 }

@@ -166,6 +166,7 @@ QList<std::tuple<QString, QString, int, int> > ERRelationsData::getCordinality_t
 
 void ERRelationsData::read(const QJsonObject &json)
 {
+	cordinality_table.clear();
 	QJsonArray relations = json["relationsArray"].toArray();
 	for(int i = 0; i < relations.size(); i++)
 	{
@@ -199,4 +200,9 @@ void ERRelationsData::write(QJsonObject &json) const
 		relations << relation;
 	}
 	json["relationsArray"] = relations;
+}
+
+void ERRelationsData::clear()
+{
+	cordinality_table.clear();
 }

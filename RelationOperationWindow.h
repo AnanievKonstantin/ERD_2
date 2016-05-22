@@ -36,6 +36,7 @@ private:
 
 signals:
 	void successRelationOperation(bool);
+	void cancelRelationOperation(bool);
 
 public slots:
 	void setAEssece(QString name);

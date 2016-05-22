@@ -129,7 +129,7 @@ bool EssenceCreateWindow::loadData(QString id)
 
 void EssenceCreateWindow::createWindow()
 {
-	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
+	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint));
 	attributes.setRowCount(200);
 	attributes.setColumnCount(1);
 	attributes.setColumnWidth(0, 400);
@@ -386,6 +386,7 @@ void EssenceCreateWindow::submitCreation(bool)
 void EssenceCreateWindow::cancelCreation(bool)
 {
 	qDebug() << "Работа с обьектом прервана" << "\n";
+	emit exitFromCreateWindow();
 	this->close();
 }
 

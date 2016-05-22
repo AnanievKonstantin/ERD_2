@@ -26,6 +26,7 @@ class ERRelationsData
 		QList<std::tuple<QString, QString, int, int> > getCordinality_table() const;
 		void read(const QJsonObject &json);
 		void write(QJsonObject &json) const;
+		void clear();
 private:
 		QList<std::tuple<QString, QString, int, int>> cordinality_table;
 };

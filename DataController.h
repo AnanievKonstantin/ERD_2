@@ -72,7 +72,10 @@ class DataController
 		QList<QString> getAjesencyFor(QString id);
 
 		EREssenceData * search(QString id);
-		bool saveState();
+		bool saveState(QString path);
+		bool loadState(QString path);
+
+		void clear();
 
 	private:
 		void read(const QJsonObject &json);

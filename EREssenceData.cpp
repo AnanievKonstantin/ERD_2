@@ -113,8 +113,8 @@ void EREssenceData::read(const QJsonObject &json)
 {
 	type = json["type"].toInt();
 	id = json["id"].toString();
-	QJsonArray jattrs = json["keys"].toArray();
-	QJsonArray jkeys = json["attrs"].toArray();
+	QJsonArray jattrs = json["attrs"].toArray();
+	QJsonArray jkeys = json["keys"].toArray();
 
 	for(int i = 0; i < jattrs.size(); i++)
 	{

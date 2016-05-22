@@ -64,8 +64,10 @@ class Widget : public QWidget
 		void save_as();
 		void new_file();
 		void load_file();
+		void endWork();
 		void help();
 		void treeViewEssenceUpdate(QString id);
+		void closeEditWindow();
 
 };
 
