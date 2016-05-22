@@ -20,6 +20,7 @@
 #include <QKeySequence>
 #include <TreeModel.h>
 #include <QTreeView>
+#include <TreeModelForOneEssence.h>
 
 class Widget : public QWidget
 {
@@ -39,6 +40,9 @@ class Widget : public QWidget
 		TreeModel * treeModel;
 		QTreeView * treeViev;
 
+		TreeModelForOneEssence* treeModelForOneEssence;
+		QTreeView * treeVievOneEssence;
+
 	public slots:
 		void editEssence(QString id);
 		void createEssence(int type);
@@ -47,6 +51,7 @@ class Widget : public QWidget
 		void performRelationOperation(int action_code);
 		void afterPerformRelationOperation(bool);
 		void save();
+		void treeViewEssenceUpdate(QString id);
 
 };
 

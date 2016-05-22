@@ -55,6 +55,13 @@ void EREssence::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 	emit edit(id);
 }
 
+void EREssence::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+	QString id = getId();
+	emit focued(id);
+
+}
+
 int EREssence::getType() const
 {
 	return data->getType();

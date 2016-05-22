@@ -32,6 +32,7 @@ class EREssence: public QGraphicsWidget
 		virtual QPolygonF getPolygon() = 0;
 		QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 		void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
+		void mousePressEvent(QGraphicsSceneMouseEvent * event);
 		virtual void initEssence() = 0;
 		int getType() const;
 	private:
@@ -40,6 +41,7 @@ class EREssence: public QGraphicsWidget
 
 	signals:
 		void edit(QString);
+		void focued(QString);
 	public slots:
 
 };

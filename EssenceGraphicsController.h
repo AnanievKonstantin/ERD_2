@@ -49,11 +49,16 @@ class EssenceGraphicsController : public QObject
 		QList<EREssenceProperty *> propertyList;
 		QList<Arrow * > arrowList;
 
+		void createEssenceWithPropertyWithCordinate();
+
+
 
 	signals:
 		void startEditEssence(QString id);
+		void startFocucedEssence(QString id);
 	public slots:
 		void emitEditEssenceSignal(QString);
+		void emitFocucedEssenceSignal(QString id);
 };
 
 #endif // ESSENCEGRAPHICSCONTROLLER_H

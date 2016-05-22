@@ -643,21 +643,25 @@ int DataController::createRelationBetweenAssociationAndCharacteristic(EREssenceD
 int DataController::createRelationBetweenBaseAndBaseWithNewRelation(EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two)
 {
 	QList<QString> keys;
-	QList<QString> attrs; attrs << "RELATE_date";
+	QString name;
+	name.append(e1->getId().at(0));
+	name.append("rel");
+	name.append(e2->getId().at(0));
+	QList<QString> attrs; attrs << name + "_date";
 
-	this->createEssence("RELATE", essence_type::Association, keys, attrs);
+	this->createEssence(name, essence_type::Association, keys, attrs);
 	foreach (QString key, e1->getKeys())
 	{
-		addKey("RELATE","RELATE::" + key);
+		addKey(name,name+"::" + key);
 	}
 
 	foreach (QString key, e2->getKeys())
 	{
-		addKey("RELATE","RELATE::" + key);
+		addKey(name,name+"::" + key);
 	}
 
-	relation_table.addRelation(e1->getId(),"RELATE", cord_one, cordinalyty::hiddenCord);
-	relation_table.addRelation(e2->getId(),"RELATE", cord_two, cordinalyty::hiddenCord);
+	relation_table.addRelation(e1->getId(),name, cord_one, cordinalyty::hiddenCord);
+	relation_table.addRelation(e2->getId(),name, cord_two, cordinalyty::hiddenCord);
 	return 0;
 }
 
@@ -845,6 +849,7 @@ EREssenceData *DataController::search(QString id)
 
 	return nullptr;
 }
+
 
 DataController *DataController::getInstance()
 {
@@ -1158,6 +1163,8 @@ int DataController::addKey(QString id, QString key_name)
 		return 11;
 	}
 
+
+
 	EREssenceData * e = search(id);
 	if(e == nullptr)
 	{
@@ -1165,6 +1172,14 @@ int DataController::addKey(QString id, QString key_name)
 		return 12;
 	}
 
+
+	QList<QString> list;
+	list << key_name;
+	if(keyOrAttributeIsNameOfEssence(id, list) == true)
+	{
+		qDebug() << "Проверьте ошибки";
+		return 13;
+	}
 	switch (e->getType())
 	{
 		case essence_type::Characteristic:
@@ -1361,32 +1376,43 @@ QList<QString> DataController::getEssences()
 	return essences;
 }
 
-QList<QString> DataController::getProperties(int mode)
+QList<QString> DataController::getProperties(QString id, int mode)
 {
 	QList<QString> properties;
-	if(mode == 1)
+	EREssenceData * e = search(id);
+	if(e != nullptr)
 	{
-		foreach (EREssenceData * e, list_essences)
+		if(mode == 1)
 		{
-			foreach (QString s, e->getKeys())
+			if(e->getKeysConst().length() == 1)
 			{
-				properties.append(s);
+				properties.append(e->getKeys().at(0));
+				return properties;
 			}
+			else
+				return properties;
 		}
-		return properties;
+
+		if(mode == 2)
+		{
+			return e->getAttrsConst();
+		}
+
+		if(mode == 3)
+		{
+			if(e->getKeysConst().length() > 1)
+			{
+				return e->getKeysConst();
+			}
+			else
+				return properties;
+		}
+
 	}
 
-	if(mode == 2)
-	{
-		foreach (EREssenceData * e, list_essences)
-		{
-			foreach (QString s, e->getAttributes())
-			{
-				properties.append(s);
-			}
-		}
-		return properties;
-	}
+	qDebug() << "__ERROR__: in QList<QString> DataController::getProperties(QString id, int mode) null pointer expection";
+	return properties;
+
 
 
 

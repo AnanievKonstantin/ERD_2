@@ -69,6 +69,7 @@ QGraphicsScene *ERGraphicsView::getScene() const
 	return scene;
 }
 
+
 void ERGraphicsView::whatCreate(QAction * action)
 {
 //	qDebug() << "Val: " <<action->data().toInt()<< "\n";

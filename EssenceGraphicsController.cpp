@@ -8,9 +8,100 @@ EssenceGraphicsController::EssenceGraphicsController(QObject *parent) : QObject(
 
 }
 
+void EssenceGraphicsController::createEssenceWithPropertyWithCordinate()
+{
+	QPoint essence_pos = {-1000, -600};
+	QPoint property_pos = {-500, -500};
+	qreal dx = 10;
+	qreal dy = 30;
+	qreal dEPx = 0;
+	qreal dEPy = 50;
+	qreal shiftEssenceByX = 250;
+	qreal shiftEssenceByY = 250;
+
+	//заполнение списков
+	foreach (QString s, DataController::getInstance()->getEssences())
+	{
+		EREssenceData * d = DataController::getInstance()->search(s);
+
+		EREssence * switch_pointer;
+		switch (d->getType())
+		{
+			case essence_type::Base:
+			{
+				switch_pointer  = new EREssenceBase(d);
+				break;
+			}
+			case essence_type::Association:
+			{
+				switch_pointer  = new EREssenceRelation(d);
+				break;
+			}
+			case essence_type::Designation:
+			{
+				switch_pointer  = new EREssenceDesignation(d);
+				break;
+			}
+			case essence_type::Characteristic:
+			{
+				switch_pointer  = new EREssenceCharacteristic(d);
+				break;
+			}
+			default:
+				break;
+			}
+
+		switch_pointer->setPos(essence_pos);
+
+		essenceList.append(switch_pointer);
+		QObject::connect(switch_pointer, SIGNAL(edit(QString)), this, SLOT(emitEditEssenceSignal(QString)));
+		QObject::connect(switch_pointer, SIGNAL(focued(QString)), this, SLOT(emitFocucedEssenceSignal(QString)));
+
+		property_pos.setX(essence_pos.x());
+		property_pos.setY(essence_pos.y() + dEPy);
+		essence_pos.setX(essence_pos.x() + shiftEssenceByX);
+
+		foreach (QString attr, DataController::getInstance()->getProperties(s, 2))
+		{
+			EREssenceProperty * p = new EREssenceProperty(new EREssenceData(attr, essence_type::Property_default));
+			p->setPos(property_pos);
+			property_pos.setY(property_pos.y() + dy);
+			propertyList.append(p);
+		}
+		foreach (QString key, DataController::getInstance()->getProperties(s, 1))
+		{
+			EREssenceProperty * p = new EREssenceProperty(new EREssenceData(key, essence_type::Property_key));
+			p->setPos(property_pos);
+			property_pos.setY(property_pos.y() + dy);
+			propertyList.append(p);
+			continue;
+		}
+		foreach (QString comb_key, DataController::getInstance()->getProperties(s, 3))
+		{
+			EREssenceProperty * p = new EREssenceProperty(new EREssenceData(comb_key, essence_type::Property_combinated_key));
+			p->setPos(property_pos);
+			property_pos.setY(property_pos.y() + dy);
+			propertyList.append(p);
+			continue;
+		}
+
+		if(essence_pos.x() > 0)
+		{
+			essence_pos.setX(-1000);
+			essence_pos.setY(essence_pos.y()+ shiftEssenceByY);
+		}
+	}
+
+}
+
 void EssenceGraphicsController::emitEditEssenceSignal(QString id)
 {
 	emit startEditEssence(id);
+}
+
+void EssenceGraphicsController::emitFocucedEssenceSignal(QString id)
+{
+	emit startFocucedEssence(id);
 }
 
 EssenceGraphicsController *EssenceGraphicsController::instance()
@@ -84,57 +175,7 @@ void EssenceGraphicsController::syncWithDataContriller()
 	arrowList.clear();
 
 	//заполнение списков
-	foreach (QString s, DataController::getInstance()->getEssences())
-	{
-		EREssenceData * d = DataController::getInstance()->search(s);
-
-		EREssence * switch_pointer;
-		switch (d->getType())
-		{
-			case essence_type::Base:
-			{
-				switch_pointer  = new EREssenceBase(d);
-				break;
-			}
-			case essence_type::Association:
-			{
-				switch_pointer  = new EREssenceRelation(d);
-				break;
-			}
-			case essence_type::Designation:
-			{
-				switch_pointer  = new EREssenceDesignation(d);
-				break;
-			}
-			case essence_type::Characteristic:
-			{
-				switch_pointer  = new EREssenceCharacteristic(d);
-				break;
-			}
-			default:
-				break;
-			}
-		essenceList.append(switch_pointer);
-		QObject::connect(switch_pointer, SIGNAL(edit(QString)), this, SLOT(emitEditEssenceSignal(QString)));
-	}
-
-	foreach (QString s, DataController::getInstance()->getProperties(2))
-	{
-		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_default));
-		propertyList.append(p);
-	}
-	foreach (QString s, DataController::getInstance()->getProperties(1))
-	{
-		if(s.lastIndexOf("::") != -1)
-		{
-			EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_foreign_key));
-			propertyList.append(p);
-			continue;
-		}
-		EREssenceProperty * p = new EREssenceProperty(new EREssenceData(s, essence_type::Property_key));
-		propertyList.append(p);
-		continue;
-	}
+	createEssenceWithPropertyWithCordinate();
 	//---------------
 
 	//Создание и рисование стрелок. Заполнение списка стрелок

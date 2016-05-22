@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     widget.cpp \
     RelationOperationWindow.cpp \
     TreeModel.cpp \
-    TreeItem.cpp
+    TreeItem.cpp \
+    TreeModelForOneEssence.cpp
 
 HEADERS  += \
     EREnums.h \
@@ -51,7 +52,8 @@ HEADERS  += \
     widget.h \
     RelationOperationWindow.h \
     TreeModel.h \
-    TreeItem.h
+    TreeItem.h \
+    TreeModelForOneEssence.h
 
 DISTFILES += \
     ToDo

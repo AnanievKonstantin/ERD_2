@@ -54,12 +54,22 @@ class DataController
 		void printRelations();
 
 		QList<QString> getEssences();
-		QList<QString> getProperties(int mode);
+
+		/**
+		 * @brief getProperties
+		 * вернет ключи соотвествено mode
+		 * @param mode	1 - ключи единоличные - красные
+		 *				2 - свойства - белые
+		 *				3 - ключи составные
+		 *
+		 * @return
+		 */
+		QList<QString> getProperties(QString id, int mode);
 		QList<QString> getAjesencyFor(QString id);
 
 		EREssenceData * search(QString id);
-	private:
 
+	private:
 		DataController();
 		DataController(DataController const&){}
 		DataController& operator=(DataController const&){}
@@ -75,7 +85,7 @@ class DataController
 		bool keyISattr(QList<QString> keys, QList<QString> attributes);
 		bool keyOrAttributeIsExist(QList<QString> keys, QList<QString> attrs);
 		bool keyOrAttributeDublication(QList<QString> keys, QList<QString> attrs);
-		bool keyOrAttributeIsNameOfEssence(QString id, QList<QString> keys, QList<QString> attrs);
+		bool keyOrAttributeIsNameOfEssence(QString id, QList<QString> keys = QList<QString>(), QList<QString> attrs = QList<QString>());
 
 		bool oneOfTwoIs(int type_first, int type_second, int condition_type);
 		int checkCordinality(QString first, QString second, int first_type, int second_type, int &cord_first, int &cord_second);
