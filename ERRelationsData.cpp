@@ -163,3 +163,40 @@ QList<std::tuple<QString, QString, int, int> > ERRelationsData::getCordinality_t
 {
 	return cordinality_table;
 }
+
+void ERRelationsData::read(const QJsonObject &json)
+{
+	QJsonArray relations = json["relationsArray"].toArray();
+	for(int i = 0; i < relations.size(); i++)
+	{
+		QJsonArray relation = relations.at(i).toArray();
+
+		QString A	= relation.at(0).toString();
+		QString B	= relation.at(1).toString();
+		int cord_a	= relation.at(2).toInt();
+		int cord_b	= relation.at(3).toInt();
+
+		std::tuple<QString, QString, int, int> row;
+		std::get<0>(row) = A;
+		std::get<1>(row) = B;
+		std::get<2>(row) = cord_a;
+		std::get<3>(row) = cord_b;
+		cordinality_table.append(row);
+	}
+}
+
+void ERRelationsData::write(QJsonObject &json) const
+{
+	QJsonArray relations;
+	for(int i = 0; i < cordinality_table.length(); i++)
+	{
+		QJsonArray relation;
+		std::tuple<QString, QString, int, int> row = cordinality_table.at(i);
+		relation << std::get<0>(row);
+		relation << std::get<1>(row);
+		relation << std::get<2>(row);
+		relation << std::get<3>(row);
+		relations << relation;
+	}
+	json["relationsArray"] = relations;
+}

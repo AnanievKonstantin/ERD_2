@@ -6,6 +6,8 @@
 #include <QList>
 #include <tuple>
 #include <Support.h>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class ERRelationsData
 {
@@ -22,7 +24,8 @@ class ERRelationsData
 		void print();
 		void printList(QList<std::tuple<QString, QString, int, int>> list);
 		QList<std::tuple<QString, QString, int, int> > getCordinality_table() const;
-
+		void read(const QJsonObject &json);
+		void write(QJsonObject &json) const;
 private:
 		QList<std::tuple<QString, QString, int, int>> cordinality_table;
 };

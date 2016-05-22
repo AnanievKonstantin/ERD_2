@@ -3,15 +3,86 @@
 Widget::Widget(QWidget *parent)
 	: QWidget(parent)
 {
-	this->layout = new QHBoxLayout(this);
+	this->layoutH = new QHBoxLayout();
+	this->layoutV = new QVBoxLayout();
 	this->erView = new ERGraphicsView();
 	this->treeModel = new TreeModel();
 	this->treeViev = new QTreeView();
-
 	this->treeModelForOneEssence = new TreeModelForOneEssence("__EMPTY__");
 	this->treeVievOneEssence = new QTreeView();
+	bar = new QMenuBar();
 
-//	treeVievOneEssence->setGeometry(QRect(0,0, 100, 100));
+	initBar();
+	setUpTreeViews();
+
+	treeVievOneEssence->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	layoutH->addWidget(treeViev);
+	layoutH->addWidget(erView);
+	layoutH->addWidget(treeVievOneEssence);
+
+	layoutV->addWidget(bar);
+	this->layoutV->addLayout(layoutH);
+
+	this->setLayout(layoutV);
+
+
+	EssenceGraphicsController::instance();
+	EssenceGraphicsController::setScene(erView->getScene());
+
+	setUpSignalsAndSlots();
+}
+
+bool Widget::setUpSignalsAndSlots()
+{
+	QObject::connect(this->erView, SIGNAL(doCreation(int)), this, SLOT(createEssence(int)));
+	QObject::connect(this->erView, SIGNAL(doRelationOperation(int)), this, SLOT(performRelationOperation(int)));
+	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startEditEssence(QString)), this, SLOT(editEssence(QString)));
+	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startFocucedEssence(QString)), this, SLOT(treeViewEssenceUpdate(QString)));
+	QShortcut * key = new QShortcut(QKeySequence("Ctrl+S"), this);
+	key->setContext(Qt::ShortcutContext::ApplicationShortcut);
+	QObject::connect(key, SIGNAL(activated()), this, SLOT(quick_save()));
+
+
+}
+
+bool Widget::initBar()
+{
+	QAction * newAct1 = new QAction(tr("&Save as"), this);
+	connect(newAct1, SIGNAL(triggered(bool)), this, SLOT(save_as()));
+
+
+	QAction * newAct2 = new QAction(tr("&New"), this);
+	connect(newAct2, SIGNAL(triggered(bool)), this, SLOT(new_file()));
+
+
+	QAction * newAct3 = new QAction(tr("&Load"), this);
+	connect(newAct3, SIGNAL(triggered(bool)), this, SLOT(load_file()));
+
+	QAction * newAct4 = new QAction(tr("&Help"), this);
+	connect(newAct4, SIGNAL(triggered(bool)), this, SLOT(help()));
+
+	bar->addAction(newAct1);
+	bar->addAction(newAct2);
+	bar->addAction(newAct3);
+	bar->addAction(newAct4);
+
+}
+
+Widget::~Widget()
+{
+
+}
+
+void Widget::syncTreeViev()
+{
+	delete treeModel;
+	treeModel = new TreeModel;
+	treeViev->setModel(treeModel);
+	//	treeViev->expandAll();
+}
+
+void Widget::setUpTreeViews()
+{
 	treeVievOneEssence->setMinimumWidth(250);
 	treeVievOneEssence->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
@@ -32,52 +103,7 @@ Widget::Widget(QWidget *parent)
 	treeVievOneEssence->setSortingEnabled(true);
 	treeVievOneEssence->sortByColumn(0, Qt::AscendingOrder);
 	treeVievOneEssence->header()->resizeSections(QHeaderView::ResizeToContents);
-
-//	treeViev->setRootIsDecorated(false);
 	treeViev->setAlternatingRowColors(true);
-//	treeViev->setAllColumnsShowFocus(true);
-//	treeViev->setExpandsOnDoubleClick(false);
-//	treeViev->setEditTriggers(QAbstractItemView::NoEditTriggers);
-//	treeViev->setSortingEnabled(true);
-//	treeViev->sortByColumn(0, Qt::AscendingOrder);
-//	treeViev->header()->resizeSections(QHeaderView::ResizeToContents);
-
-	treeVievOneEssence->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-//	treeViev->setAutoScroll(true);
-	layout->addWidget(treeViev);
-	layout->addWidget(erView);
-	layout->addWidget(treeVievOneEssence);
-
-	EssenceGraphicsController::instance();
-	EssenceGraphicsController::setScene(erView->getScene());
-
-	setUpSignalsAndSlots();
-}
-
-bool Widget::setUpSignalsAndSlots()
-{
-	QObject::connect(this->erView, SIGNAL(doCreation(int)), this, SLOT(createEssence(int)));
-	QObject::connect(this->erView, SIGNAL(doRelationOperation(int)), this, SLOT(performRelationOperation(int)));
-	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startEditEssence(QString)), this, SLOT(editEssence(QString)));
-	QObject::connect(EssenceGraphicsController::instance(), SIGNAL(startFocucedEssence(QString)), this, SLOT(treeViewEssenceUpdate(QString)));
-	QShortcut * key = new QShortcut(QKeySequence("Ctrl+S"), this);
-	key->setContext(Qt::ShortcutContext::ApplicationShortcut);
-	QObject::connect(key, SIGNAL(activated()), this, SLOT(save()));
-
-
-}
-
-Widget::~Widget()
-{
-
-}
-
-void Widget::syncTreeViev()
-{
-	delete treeModel;
-	treeModel = new TreeModel;
-	treeViev->setModel(treeModel);
-//	treeViev->expandAll();
 }
 
 void Widget::editEssence(QString id)
@@ -173,9 +199,33 @@ void Widget::afterPerformRelationOperation(bool test)
 	syncTreeViev();
 }
 
-void Widget::save()
+void Widget::quick_save()
 {
-	qDebug() << "START SAVE:";
+	qDebug() << "quick save";
+	DataController::getInstance()->saveState();
+}
+
+void Widget::save_as()
+{
+	qDebug() << "Save as";
+	QString fileName = QFileDialog::getSaveFileName(this,
+			tr("ER_Diagram"), "",
+			tr(""));
+}
+
+void Widget::new_file()
+{
+	qDebug() << "new file";
+}
+
+void Widget::load_file()
+{
+	qDebug() << "load file";
+}
+
+void Widget::help()
+{
+	qDebug() << "help";
 }
 
 void Widget::treeViewEssenceUpdate(QString id)

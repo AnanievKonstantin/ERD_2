@@ -850,6 +850,77 @@ EREssenceData *DataController::search(QString id)
 	return nullptr;
 }
 
+bool DataController::saveState()
+{
+
+	QFile saveFile(QStringLiteral("save.json"));
+
+	if (!saveFile.open(QIODevice::WriteOnly)) {
+	   qWarning("Couldn't open save file.");
+	   return false;
+	}
+
+
+	QJsonObject json;
+	write(json);
+	QJsonDocument saveDoc(json);
+	saveFile.write(saveDoc.toJson());
+	saveFile.close();
+
+
+
+	QFile openFile(QStringLiteral("save.json"));
+	if (!openFile.open(QIODevice::ReadOnly)) {
+	   qWarning("Couldn't open save file.");
+	   return false;
+	}
+
+	QByteArray saveData = openFile.readAll();
+
+	QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+	read(loadDoc.object());
+	return true;
+}
+
+void DataController::read(const QJsonObject &json)
+{
+//	qDebug() << json;
+	QJsonArray essences = json["EssencesArray"].toArray();
+	QJsonObject relations = json["RelationsTable"].toObject();
+
+
+	for(int i = 0; i < essences.size(); i++)
+	{
+		EREssenceData * e = new EREssenceData("load", 0);
+		e->read(essences.at(i).toObject());
+		list_essences.append(e);
+
+	}
+
+	relation_table.read(relations);
+
+
+}
+
+void DataController::write(QJsonObject &json) const
+{
+	QJsonArray essences;
+	foreach (EREssenceData * e, list_essences)
+	{
+		QJsonObject obj;
+		e->write(obj);
+		essences.append(obj);
+	}
+
+	json["EssencesArray"] = essences;
+
+
+	QJsonObject relations;
+	relation_table.write(relations);
+	json["RelationsTable"] = relations;
+
+}
+
 
 DataController *DataController::getInstance()
 {

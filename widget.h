@@ -21,6 +21,9 @@
 #include <TreeModel.h>
 #include <QTreeView>
 #include <TreeModelForOneEssence.h>
+#include <QMenuBar>
+#include <QVBoxLayout>
+#include <QFileDialog>
 
 class Widget : public QWidget
 {
@@ -28,29 +31,40 @@ class Widget : public QWidget
 
 	public:
 		Widget(QWidget *parent = 0);
-		bool setUpSignalsAndSlots();
 		~Widget();
 
 	private:
 		void initViev();
 
 		void syncTreeViev();
-		QHBoxLayout * layout;
+		QHBoxLayout * layoutH;
+		QVBoxLayout * layoutV;
+
 		ERGraphicsView * erView;
 		TreeModel * treeModel;
 		QTreeView * treeViev;
 
 		TreeModelForOneEssence* treeModelForOneEssence;
 		QTreeView * treeVievOneEssence;
+		QMenuBar * bar;
+
+
+		bool setUpSignalsAndSlots();
+		bool initBar();
 
 	public slots:
+		void setUpTreeViews();
 		void editEssence(QString id);
 		void createEssence(int type);
 		void addEssenceOnScreen(QString id);
 		void removeEssence(QString id);
 		void performRelationOperation(int action_code);
 		void afterPerformRelationOperation(bool);
-		void save();
+		void quick_save();
+		void save_as();
+		void new_file();
+		void load_file();
+		void help();
 		void treeViewEssenceUpdate(QString id);
 
 };

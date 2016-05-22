@@ -7,7 +7,11 @@
 #include <EREssenceData.h>
 #include <ERRelationsData.h>
 #include <QRegExp>
-
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QFile>
+#include <QJsonDocument>
+#include <QByteArray>
 
 
 /**
@@ -68,8 +72,11 @@ class DataController
 		QList<QString> getAjesencyFor(QString id);
 
 		EREssenceData * search(QString id);
+		bool saveState();
 
 	private:
+		void read(const QJsonObject &json);
+		void write(QJsonObject &json) const;
 		DataController();
 		DataController(DataController const&){}
 		DataController& operator=(DataController const&){}

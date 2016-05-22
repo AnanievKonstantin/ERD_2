@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QList>
 #include "Support.h"
+#include <QJsonArray>
+#include <QJsonObject>
 
 class EREssenceData
 {
@@ -33,6 +35,9 @@ class EREssenceData
 
 		QList<QString> getKeysConst();
 		QList<QString> getAttrsConst();
+
+		void read(const QJsonObject &json);
+		void write(QJsonObject &json) const;
 
 	private:
 		QString id;

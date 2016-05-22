@@ -108,3 +108,73 @@ QList<QString> EREssenceData::getAttrsConst()
 {
 	return this->attributes;
 }
+
+void EREssenceData::read(const QJsonObject &json)
+{
+	type = json["type"].toInt();
+	id = json["id"].toString();
+	QJsonArray jattrs = json["keys"].toArray();
+	QJsonArray jkeys = json["attrs"].toArray();
+
+	for(int i = 0; i < jattrs.size(); i++)
+	{
+		attributes.append(jattrs[i].toString());
+	}
+
+	for(int i = 0; i < jkeys.size(); i++)
+	{
+		keys.append(jkeys[i].toString());
+	}
+}
+
+void EREssenceData::write(QJsonObject &json) const
+{
+	QJsonArray jattrs;
+	QJsonArray jkeys;
+
+	json["id"] = id;
+	json["type"] = type;
+	foreach (QString key, keys)
+	{
+		jkeys.append(key);
+	}
+
+	foreach (QString attr, attributes)
+	{
+		jattrs.append(attr);
+	}
+	json["keys"] = jkeys;
+	json["attrs"] = jattrs;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
