@@ -35,6 +35,8 @@ class EREssence: public QGraphicsWidget
 		void mousePressEvent(QGraphicsSceneMouseEvent * event);
 		virtual void initEssence() = 0;
 		int getType() const;
+		QList<QString> getAttrs();
+		QList<QString> getKeys();
 	private:
 		EREssenceData * data;
 		QList<Arrow *> arrows;

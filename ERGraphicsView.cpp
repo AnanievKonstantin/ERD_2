@@ -17,7 +17,7 @@ void ERGraphicsView::initView()
 {
 	setRenderHint(QPainter::Antialiasing);
 	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	setBackgroundBrush(QColor(245, 235, 148));
+	setBackgroundBrush(QColor(253, 250, 195));
 	setDragMode(QGraphicsView::RubberBandDrag);
 	setAcceptDrops(true);
 }

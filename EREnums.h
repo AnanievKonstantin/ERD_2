@@ -17,7 +17,6 @@ enum essence_type
 enum cordinalyty
 {
 	ZeroOne = 0,
-	OneZero,
 	OneOne,
 	ZeroMany,
 	OneMany,

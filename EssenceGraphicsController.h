@@ -16,13 +16,15 @@
 #include <EREssenceRelation.h>
 #include <EREssenceProperty.h>
 #include <Support.h>
+#include <DataTable.h>
 
 class EssenceGraphicsController : public QObject
 {
 		Q_OBJECT
 	public:
 		static EssenceGraphicsController * instance();
-		static void setScene(QGraphicsScene * _scene);
+		static void setSceneToErModel(QGraphicsScene * _scene);
+		static void setSceneToDataModel(QGraphicsScene * _scene);
 
 
 		void syncWithDataContriller();
@@ -41,8 +43,12 @@ class EssenceGraphicsController : public QObject
 		EssenceGraphicsController& operator=(EssenceGraphicsController const&){}
 		explicit EssenceGraphicsController(QObject *parent = 0);
 		static EssenceGraphicsController * self;
-		static QGraphicsScene * scene;
+		static QGraphicsScene * er_scene;
+		static QGraphicsScene * data_scene;
 
+		void clearAll();
+		void fillERScene();
+		void fillDataScene();
 
 //		QList<std::tuple<EREssence *, QList<EREssenceProperty *>>> essenceList;
 		QList<EREssence *> essenceList;

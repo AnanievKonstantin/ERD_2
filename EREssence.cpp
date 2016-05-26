@@ -67,6 +67,16 @@ int EREssence::getType() const
 	return data->getType();
 }
 
+QList<QString> EREssence::getAttrs()
+{
+	return data->getAttrsConst();
+}
+
+QList<QString> EREssence::getKeys()
+{
+	return data->getKeysConst();
+}
+
 //void EREssence::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 //{
 //	qDebug("void EREssence::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)");

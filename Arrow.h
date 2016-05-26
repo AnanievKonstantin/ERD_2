@@ -6,6 +6,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include "EREssenceData.h"
 #include <EREssence.h>
+#include <QTextItem>
+
 class EREssence;
 class Arrow : public QGraphicsLineItem
 {
@@ -13,7 +15,7 @@ public:
 
 	Arrow(EREssence *startItem, EREssence *endItem,QString sText, QString eText,
 	  QGraphicsItem *parent = 0);
-
+	~Arrow();
 //	void mousePressEvent(QGraphicsSceneMouseEvent *event);
 //	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	int type() const Q_DECL_OVERRIDE { return Type; }
@@ -33,6 +35,7 @@ private:
 	void calcConnectPoint(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
 	QString sText = "";
 	QString eText = "";
+
 
 
 	EREssence *myStartItem;

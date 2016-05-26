@@ -31,7 +31,9 @@ SOURCES += main.cpp \
     RelationOperationWindow.cpp \
     TreeModel.cpp \
     TreeItem.cpp \
-    TreeModelForOneEssence.cpp
+    TreeModelForOneEssence.cpp \
+    DataModelGraphicsView.cpp \
+    DataTable.cpp
 
 HEADERS  += \
     EREnums.h \
@@ -53,7 +55,10 @@ HEADERS  += \
     RelationOperationWindow.h \
     TreeModel.h \
     TreeItem.h \
-    TreeModelForOneEssence.h
+    TreeModelForOneEssence.h \
+    DataModelGraphicsView.h \
+    DataTable.h
 
 DISTFILES += \
-    ToDo
+    ToDo \
+    Test.qmodel

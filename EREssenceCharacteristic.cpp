@@ -8,7 +8,7 @@ EREssenceCharacteristic::EREssenceCharacteristic(EREssenceData *data, QGraphicsW
 void EREssenceCharacteristic::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
 	QLinearGradient linearGradient(QPointF(size().width()/4, -size().height()), QPointF(40, 40));
-	linearGradient.setColorAt(0, Qt::red);
+	linearGradient.setColorAt(0,QColor(227, 158,250));
 	linearGradient.setColorAt(1, Qt::white);
 
 	QPen penOutLine(Qt::black, 1);

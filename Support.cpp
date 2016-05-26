@@ -49,9 +49,6 @@ QString Support::cardinalityToString(int cordinals)
 		case cordinalyty::ZeroOne:
 			return "0/1";
 			break;
-		case cordinalyty::OneZero:
-			return "1/0";
-			break;
 		case cordinalyty::OneOne:
 			return "1/1";
 			break;
@@ -84,7 +81,7 @@ bool Support::checkTypeEssence(int type)
 
 bool Support::checkTypeCordinality(int type)
 {
-	if(type == cordinalyty::ZeroOne || type == cordinalyty::OneZero|| type == cordinalyty::OneOne
+	if(type == cordinalyty::ZeroOne || type == cordinalyty::OneOne
 			|| type == cordinalyty::OneMany || type == cordinalyty::ZeroMany || type == cordinalyty::hiddenCord)
 	{
 		return true;

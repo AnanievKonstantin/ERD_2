@@ -8,9 +8,27 @@ Widget::Widget(QWidget *parent)
 	this->erView = new ERGraphicsView();
 	this->treeModel = new TreeModel();
 	this->treeViev = new QTreeView();
+	this->dataView = new DataModelGraphicsView();
 	this->treeModelForOneEssence = new TreeModelForOneEssence("__EMPTY__");
 	this->treeVievOneEssence = new QTreeView();
-	bar = new QMenuBar();
+	this->bar = new QMenuBar();
+	this->tabs = new QTabWidget();
+
+	setGeometry(0,0, 1200, 900);
+
+	QWidget * test_w1 = new QWidget;
+	QHBoxLayout * test_lay1 = new QHBoxLayout;
+	test_lay1->addWidget(erView);
+
+	test_w1->setLayout(test_lay1);
+	tabs->addTab(test_w1, "ER model");
+
+	QWidget * test_w2 = new QWidget;
+	QHBoxLayout * test_lay2 = new QHBoxLayout;
+	test_lay2->addWidget(dataView);
+
+	test_w2->setLayout(test_lay2);
+	tabs->addTab(test_w2, "Data model");
 
 	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
 
@@ -19,7 +37,7 @@ Widget::Widget(QWidget *parent)
 
 	treeVievOneEssence->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	layoutH->addWidget(treeViev);
-	layoutH->addWidget(erView);
+	layoutH->addWidget(tabs);
 	layoutH->addWidget(treeVievOneEssence);
 
 	layoutV->addWidget(bar);
@@ -29,7 +47,8 @@ Widget::Widget(QWidget *parent)
 
 
 	EssenceGraphicsController::instance();
-	EssenceGraphicsController::setScene(erView->getScene());
+	EssenceGraphicsController::setSceneToErModel(erView->getScene());
+	EssenceGraphicsController::setSceneToDataModel(dataView->getScene());
 
 	setUpSignalsAndSlots();
 }
@@ -43,8 +62,6 @@ bool Widget::setUpSignalsAndSlots()
 	QShortcut * key = new QShortcut(QKeySequence("Ctrl+S"), this);
 	key->setContext(Qt::ShortcutContext::ApplicationShortcut);
 	QObject::connect(key, SIGNAL(activated()), this, SLOT(quick_save()));
-
-
 }
 
 bool Widget::initBar()

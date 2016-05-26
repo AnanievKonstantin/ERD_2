@@ -9,7 +9,6 @@ Arrow::Arrow(EREssence *startItem, EREssence *endItem, QString sText, QString eT
 {
 	myStartItem = startItem;
 	myEndItem = endItem;
-	//setFlag(QGraphicsItem::ItemIsSelectable, true);
 	myColor = Qt::black;
 	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	startItem->addArrow(this);
@@ -17,6 +16,10 @@ Arrow::Arrow(EREssence *startItem, EREssence *endItem, QString sText, QString eT
 	this->eText = eText;
 	this->sText = sText;
 
+}
+
+Arrow::~Arrow()
+{
 }
 
 //void Arrow::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -82,6 +85,7 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 	painter->drawText(sTextPos, sText);
 	painter->drawText(eTextPos, eText);
+
 }
 
 void Arrow::calcConnectPoint(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos)

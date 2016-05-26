@@ -1,11 +1,125 @@
 #include "EssenceGraphicsController.h"
 
 EssenceGraphicsController * EssenceGraphicsController::self = nullptr;
-QGraphicsScene * EssenceGraphicsController::scene = nullptr;
+QGraphicsScene * EssenceGraphicsController::er_scene = nullptr;
+QGraphicsScene * EssenceGraphicsController::data_scene = nullptr;
 
 EssenceGraphicsController::EssenceGraphicsController(QObject *parent) : QObject(parent)
 {
 
+}
+
+void EssenceGraphicsController::clearAll()
+{
+	//отчиска списков
+	foreach (EREssence *e, essenceList)
+	{
+		er_scene->removeItem(e);
+	}
+
+	foreach (EREssenceProperty *e, propertyList)
+	{
+		er_scene->removeItem(e);
+	}
+
+	foreach (Arrow *e, arrowList)
+	{
+		er_scene->removeItem(e);
+	}
+
+
+	foreach (EREssence *e, essenceList)
+	{
+		delete e;
+	}
+
+	foreach (EREssenceProperty *e, propertyList)
+	{
+		delete e;
+	}
+
+	foreach (Arrow *e, arrowList)
+	{
+		delete e;
+	}
+
+	essenceList.clear();
+	propertyList.clear();
+	arrowList.clear();
+}
+
+void EssenceGraphicsController::fillERScene()
+{
+	//Создание и рисование стрелок. Заполнение списка стрелок
+	QList<std::tuple<QString, QString, int, int> > table = DataController::getInstance()->getRelationTable();
+	for(int i =0 ; i < table.length() ; i++)
+	{
+		std::tuple<QString, QString, int, int> row = table.at(i);
+		EREssence * f;
+		EREssence * s;
+		foreach (EREssence * e, essenceList)
+		{
+			if(e->getId() == DataController::getInstance()->search(std::get<0>(row))->getId())
+			{
+				f = e;
+			}
+			if(e->getId() == DataController::getInstance()->search(std::get<1>(row))->getId())
+			{
+				s = e;
+			}
+		}
+
+		Arrow * a = new Arrow(f,s,
+							  Support::cardinalityToString(std::get<2>(row)),
+							  Support::cardinalityToString(std::get<3>(row)));
+		arrowList.append(a);
+		er_scene->addItem(a);
+	}
+
+
+	//Рисование стрелок для свойств
+	foreach (EREssence * e, essenceList)
+	{
+		EREssenceData * d = DataController::getInstance()->search(e->getId());
+		foreach (EREssenceProperty * p, propertyList)
+		{
+			if(d->getKeys().contains(p->getId()))
+			{
+				Arrow * a = new Arrow(e,p, Support::cardinalityToString(cordinalyty::hiddenCord), Support::cardinalityToString(cordinalyty::hiddenCord));
+				arrowList.append(a);
+				er_scene->addItem(a);
+				continue;
+			}
+
+			if(d->getAttributes().contains(p->getId()))
+			{
+				Arrow * a = new Arrow(e,p, Support::cardinalityToString(cordinalyty::hiddenCord), Support::cardinalityToString(cordinalyty::hiddenCord));
+				arrowList.append(a);
+				er_scene->addItem(a);
+				continue;
+			}
+		}
+	}
+
+
+	foreach (EREssence * e, essenceList)
+	{
+		er_scene->addItem(e);
+	}
+
+	foreach (EREssence * e, propertyList)
+	{
+		er_scene->addItem(e);
+	}
+}
+
+void EssenceGraphicsController::fillDataScene()
+{
+	foreach (QString s, DataController::getInstance()->getEssences())
+	{
+		EREssenceData * d = DataController::getInstance()->search(s);
+		data_scene->addItem(new DataTable(d));
+	}
 }
 
 void EssenceGraphicsController::createEssenceWithPropertyWithCordinate()
@@ -117,16 +231,16 @@ EssenceGraphicsController *EssenceGraphicsController::instance()
 	}
 }
 
-void EssenceGraphicsController::setScene(QGraphicsScene *_scene)
+void EssenceGraphicsController::setSceneToErModel(QGraphicsScene *_scene)
 {
 	if(_scene == nullptr)
 	{
-		qDebug() << "__ERROR__: in void EssenceGraphicsController::setScene(QGraphicsScene *scene) nullptr expection";
+		qDebug() << "__ERROR__: in void EssenceGraphicsController::setSceneToErModel(QGraphicsScene *_scene) nullptr expection";
 		return;
 	}
-	if(scene == nullptr)
+	if(er_scene == nullptr)
 	{
-		scene = _scene;
+		er_scene = _scene;
 	}
 	else
 	{
@@ -135,110 +249,32 @@ void EssenceGraphicsController::setScene(QGraphicsScene *_scene)
 
 }
 
+void EssenceGraphicsController::setSceneToDataModel(QGraphicsScene *_scene)
+{
+	if(_scene == nullptr)
+	{
+		qDebug() << "__ERROR__: in void EssenceGraphicsController::setSceneToDataModel(QGraphicsScene *_scene) nullptr expection";
+		return;
+	}
+	if(data_scene == nullptr)
+	{
+		data_scene = _scene;
+	}
+	else
+	{
+		return;
+	}
+}
+
 void EssenceGraphicsController::syncWithDataContriller()
 {
-
-	//отчиска списков
-	foreach (EREssence *e, essenceList)
-	{
-		scene->removeItem(e);
-	}
-
-	foreach (EREssenceProperty *e, propertyList)
-	{
-		scene->removeItem(e);
-	}
-
-	foreach (Arrow *e, arrowList)
-	{
-		scene->removeItem(e);
-	}
-
-
-	foreach (EREssence *e, essenceList)
-	{
-		delete e;
-	}
-
-	foreach (EREssenceProperty *e, propertyList)
-	{
-		delete e;
-	}
-
-	foreach (Arrow *e, arrowList)
-	{
-		delete e;
-	}
-
-	essenceList.clear();
-	propertyList.clear();
-	arrowList.clear();
-
+	clearAll();
 	//заполнение списков
 	createEssenceWithPropertyWithCordinate();
 	//---------------
+	fillERScene();
+	fillDataScene();
 
-	//Создание и рисование стрелок. Заполнение списка стрелок
-	QList<std::tuple<QString, QString, int, int> > table = DataController::getInstance()->getRelationTable();
-	for(int i =0 ; i < table.length() ; i++)
-	{
-		std::tuple<QString, QString, int, int> row = table.at(i);
-		EREssence * f;
-		EREssence * s;
-		foreach (EREssence * e, essenceList)
-		{
-			if(e->getId() == DataController::getInstance()->search(std::get<0>(row))->getId())
-			{
-				f = e;
-			}
-			if(e->getId() == DataController::getInstance()->search(std::get<1>(row))->getId())
-			{
-				s = e;
-			}
-		}
-
-		Arrow * a = new Arrow(f,s,
-							  Support::cardinalityToString(std::get<2>(row)),
-							  Support::cardinalityToString(std::get<3>(row)));
-		arrowList.append(a);
-		scene->addItem(a);
-	}
-
-
-	//Рисование стрелок для свойств
-	foreach (EREssence * e, essenceList)
-	{
-		EREssenceData * d = DataController::getInstance()->search(e->getId());
-		foreach (EREssenceProperty * p, propertyList)
-		{
-			if(d->getKeys().contains(p->getId()))
-			{
-				Arrow * a = new Arrow(e,p, Support::cardinalityToString(cordinalyty::hiddenCord), Support::cardinalityToString(cordinalyty::hiddenCord));
-				arrowList.append(a);
-				scene->addItem(a);
-				continue;
-			}
-
-			if(d->getAttributes().contains(p->getId()))
-			{
-				Arrow * a = new Arrow(e,p, Support::cardinalityToString(cordinalyty::hiddenCord), Support::cardinalityToString(cordinalyty::hiddenCord));
-				arrowList.append(a);
-				scene->addItem(a);
-				continue;
-			}
-		}
-	}
-
-
-	foreach (EREssence * e, essenceList)
-	{
-		scene->addItem(e);
-	}
-
-	foreach (EREssence * e, propertyList)
-	{
-		scene->addItem(e);
-	}
 }
 
 

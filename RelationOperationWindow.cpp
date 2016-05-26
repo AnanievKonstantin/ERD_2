@@ -35,7 +35,7 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 
 
 	QList<int> cord_list; cord_list
-			<< cordinalyty::OneZero
+			<< cordinalyty::ZeroOne
 			<< cordinalyty::OneOne
 			<< cordinalyty::OneMany
 			<< cordinalyty::ZeroMany;

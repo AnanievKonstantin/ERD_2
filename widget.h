@@ -24,6 +24,8 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 #include <QFileDialog>
+#include <QTabWidget>
+#include <DataModelGraphicsView.h>
 
 class Widget : public QWidget
 {
@@ -41,8 +43,10 @@ class Widget : public QWidget
 		QVBoxLayout * layoutV;
 
 		ERGraphicsView * erView;
+		DataModelGraphicsView * dataView;
 		TreeModel * treeModel;
 		QTreeView * treeViev;
+		QTabWidget * tabs;
 
 		TreeModelForOneEssence* treeModelForOneEssence;
 		QTreeView * treeVievOneEssence;
