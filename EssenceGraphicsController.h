@@ -54,6 +54,8 @@ class EssenceGraphicsController : public QObject
 		QList<EREssence *> essenceList;
 		QList<EREssenceProperty *> propertyList;
 		QList<Arrow * > arrowList;
+		QList<DataTable *> tableList;
+		QList<Arrow * > arrowTableList;
 
 		void createEssenceWithPropertyWithCordinate();
 

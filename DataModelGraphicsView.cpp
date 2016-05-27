@@ -1,5 +1,21 @@
 #include "DataModelGraphicsView.h"
 
+void DataModelGraphicsView::wheelEvent(QWheelEvent *event)
+{
+	// Scale the view / do the zoom
+	const double scaleFactor = 1.15;
+	if(event->delta() > 0)
+	{
+		// Zoom in
+		scale(scaleFactor, scaleFactor);
+	}
+	else
+	{
+		// Zooming out
+		scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+	}
+}
+
 DataModelGraphicsView::DataModelGraphicsView(QGraphicsView * parent):QGraphicsView(parent)
 {
 	this->scene = new QGraphicsScene();

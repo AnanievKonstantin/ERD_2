@@ -1452,6 +1452,86 @@ void DataController::printRelations()
 	qDebug() <<"\n";
 }
 
+std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFor(QString id_first, QString id_second)
+{
+	EREssenceData * f = search(id_first);
+	EREssenceData * s = search(id_second);
+
+	if(f == nullptr || s == nullptr)
+	{
+		qDebug() << "__ERRER__: in std::pair<QString, QString> DataController::getConnectionAttributesFor(QString id_first, QString id_second) nullptr exeption";
+		return std::make_tuple("__ERROR__",-1, "__ERROR__", -1);
+	}
+
+	//соеженены по ключам
+	int i = 1;
+	int j = 1;
+	foreach (QString f_key, f->getKeysConst())
+	{
+		foreach (QString s_key, s->getKeysConst())
+		{
+			QString stripped_f = Support::getStrippedProperty(f_key);
+			QString stripped_s = Support::getStrippedProperty(s_key);
+
+			if(stripped_f == stripped_s)
+			{
+				return std::make_tuple(f_key, i, s_key, j);
+			}
+			j++;
+		}
+		i++;
+	}
+
+	i = 0;
+	j = 1;
+	//соеденины по атрибутам
+	foreach (QString f_key, f->getKeysConst())
+	{
+		foreach (QString s_attr, s->getAttrsConst())
+		{
+			QString stripped_f = Support::getStrippedProperty(f_key);
+			QString stripped_s = Support::getStrippedProperty(s_attr);
+
+			if(stripped_f == stripped_s)
+			{
+				if(i == 0) i++;
+				if(j == 0) j++;
+				return std::make_tuple(f_key, i, s_attr, j + s->getKeysConst().length());
+			}
+			j++;
+		}
+		i++;
+	}
+
+	i = 1;
+	j = 0;
+	foreach (QString f_attr, f->getAttrsConst())
+	{
+		foreach (QString s_key, s->getKeysConst())
+		{
+			QString stripped_f = Support::getStrippedProperty(f_attr);
+			QString stripped_s = Support::getStrippedProperty(s_key);
+
+			if(stripped_f == stripped_s)
+			{
+
+				qDebug() << "This one";
+				qDebug() << f_attr;
+				qDebug() << s_key;
+				qDebug() << s->getKeysConst().indexOf(s_key);
+				if(i == 0) {i++;}
+				if(j == 0) {j++;}
+				return std::make_tuple(f_attr, i + f->getKeysConst().length(), s_key, s->getKeysConst().indexOf(s_key) + 1);
+			}
+			j++;
+		}
+		i++;
+	}
+
+	qDebug() << "Сущности " << id_first << " и " << id_second << "не имеют связи";
+	return std::make_tuple("__ERROR__",-1, "__ERROR__", -1);
+}
+
 QList<QString> DataController::getEssences()
 {
 	QList<QString> essences;

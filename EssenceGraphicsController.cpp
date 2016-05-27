@@ -43,6 +43,18 @@ void EssenceGraphicsController::clearAll()
 		delete e;
 	}
 
+	foreach (Arrow *e, arrowTableList)
+	{
+		delete e;
+	}
+
+	foreach (DataTable *e, tableList)
+	{
+		delete e;
+	}
+
+	arrowTableList.clear();
+	tableList.clear();
 	essenceList.clear();
 	propertyList.clear();
 	arrowList.clear();
@@ -118,7 +130,36 @@ void EssenceGraphicsController::fillDataScene()
 	foreach (QString s, DataController::getInstance()->getEssences())
 	{
 		EREssenceData * d = DataController::getInstance()->search(s);
-		data_scene->addItem(new DataTable(d));
+		DataTable * t = new DataTable(d);
+		tableList.append(t);
+		data_scene->addItem(t);
+	}
+
+	//Создание и рисование стрелок. Заполнение списка стрелок
+	QList<std::tuple<QString, QString, int, int> > table = DataController::getInstance()->getRelationTable();
+	for(int i =0 ; i < table.length() ; i++)
+	{
+		std::tuple<QString, QString, int, int> row = table.at(i);
+		EREssence * f;
+		EREssence * s;
+		foreach (EREssence * e, tableList)
+		{
+			if(e->getId() == DataController::getInstance()->search(std::get<0>(row))->getId())
+			{
+				f = e;
+			}
+			if(e->getId() == DataController::getInstance()->search(std::get<1>(row))->getId())
+			{
+				s = e;
+			}
+		}
+
+		Arrow * a = new Arrow(f,s,
+							  Support::cardinalityToString(std::get<2>(row)),
+							  Support::cardinalityToString(std::get<3>(row)));
+		a->enableTableDrawMode();
+		arrowTableList.append(a);
+		data_scene->addItem(a);
 	}
 }
 

@@ -57,6 +57,18 @@ class DataController
 		void printEssenceByID(QString id);
 		void printRelations();
 
+		/**
+		 * @brief getConnectionAttributesFor
+		 *
+		 * std::tuple<QString, int, int, QString, int, int>
+		 * Имя первого, позиция первого в таблице, тоже и для вторго.
+		 * @param id_first
+		 * @param id_second
+		 * @return
+		 *
+		 */
+		std::tuple<QString, int, QString, int> getConnectionAttributesFor(QString id_first, QString id_second);
+
 		QList<QString> getEssences();
 
 		/**

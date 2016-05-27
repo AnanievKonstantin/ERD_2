@@ -36,3 +36,7 @@
     Удаление ключа подстроки!!!
     Краш с сохранением файла
     Делай таблицы
+	Отреактируй код в std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFor(QString id_first, QString id_second)
+	там много лишнего
+    обновление кардинальностей
+

@@ -3,6 +3,8 @@
 QString Support::fontFamilie = "Arial";
 int Support::fontSizeEssence =9;
 int Support::fontSizeProperty = 9;
+qreal Support::tableHeightRow = 15;
+qreal Support::tableDeltaRow = 5;
 
 Support::Support()
 {
@@ -88,4 +90,19 @@ bool Support::checkTypeCordinality(int type)
 	}
 
 	return false;
+}
+
+QString Support::getStrippedProperty(QString nonStrippedProperty)
+{
+	return nonStrippedProperty.right(nonStrippedProperty.length() - nonStrippedProperty.lastIndexOf(":") - 1);
+}
+
+qreal Support::getTableHeightRow()
+{
+	return tableHeightRow;
+}
+
+qreal Support::getTableDeltaRow()
+{
+	return tableDeltaRow;
 }

@@ -12,6 +12,7 @@ class DataModelGraphicsView: public QGraphicsView
 {
 	Q_OBJECT
 	public:
+		void wheelEvent(QWheelEvent *event);
 		DataModelGraphicsView(QGraphicsView * parent = 0);
 		void initView();
 		QGraphicsScene * getScene() const;

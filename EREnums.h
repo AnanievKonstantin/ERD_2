@@ -11,7 +11,8 @@ enum essence_type
 	Property_key,
 	Property_combinated_key,
 	Property_foreign_key,
-	Property_default
+	Property_default,
+	Table
 };
 
 enum cordinalyty

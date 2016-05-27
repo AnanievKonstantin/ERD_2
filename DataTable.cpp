@@ -30,26 +30,26 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 
 
 	qreal x = 0;
-	qreal y = deltaRow;
+	qreal y = Support::getTableDeltaRow();
 
 	painter->drawText(x,y,size().width(),50,Qt::AlignHCenter,getIdWithoutPath());
 
-	y+=heightRow + deltaRow;
+	y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	painter->drawLine(0,y,size().width(),y);
-	y+=deltaRow;
+	y+=Support::getTableDeltaRow();
 
 	foreach (QString key, getKeys())
 	{
 		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+key);
-		y+=heightRow + deltaRow;
+		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 
 	painter->drawLine(0,y,size().width(),y);
-	y+=deltaRow;
+	y+=Support::getTableDeltaRow();
 	foreach (QString attrs, getAttrs())
 	{
 		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+attrs);
-		y+=heightRow + deltaRow;
+		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 
 }
@@ -85,7 +85,7 @@ void DataTable::initEssence()
 	setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
 	qreal rows = getAttrs().length()+getKeys().length()+2;
-	setGeometry(0, 0, 200,rows*(heightRow+deltaRow));
+	setGeometry(0, 0, 200,rows*(Support::getTableHeightRow()+Support::getTableDeltaRow()));
 
 
 

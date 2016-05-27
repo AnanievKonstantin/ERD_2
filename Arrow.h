@@ -6,9 +6,11 @@
 #include <QGraphicsSceneMouseEvent>
 #include "EREssenceData.h"
 #include <EREssence.h>
+#include <DataController.h>
 #include <QTextItem>
 
 class EREssence;
+class DataController;
 class Arrow : public QGraphicsLineItem
 {
 public:
@@ -25,6 +27,8 @@ public:
 	EREssence *startItem() const { return myStartItem; }
 	EREssence *endItem() const { return myEndItem; }
 
+	bool isTableDrawMode() const {return table_draw_mode;}
+	void enableTableDrawMode() {table_draw_mode = true;}
 	void updatePosition();
 
 protected:
@@ -32,16 +36,19 @@ protected:
 
 private:
 
-	void calcConnectPoint(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
+	void calcConnectPointInERMode(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
+	void calcConnectPointInTableMode(QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
 	QString sText = "";
 	QString eText = "";
-
-
 
 	EREssence *myStartItem;
 	EREssence *myEndItem;
 	QColor myColor;
-	QPolygonF arrowHead;
+	bool table_draw_mode = false;
+//	QPolygonF arrowHead;
+
+
+
 
 };
 #endif // ARROW_H

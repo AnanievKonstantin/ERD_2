@@ -15,8 +15,8 @@ class DataTable: public EREssence
 		~DataTable();
 
 	private:
-		qreal heightRow = 15;
-		qreal deltaRow = 5;
+
+
 };
 
 #endif // DATATABLE_H

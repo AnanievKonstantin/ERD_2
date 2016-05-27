@@ -11,8 +11,8 @@ Arrow::Arrow(EREssence *startItem, EREssence *endItem, QString sText, QString eT
 	myEndItem = endItem;
 	myColor = Qt::black;
 	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	startItem->addArrow(this);
-	endItem->addArrow(this);
+	myStartItem->addArrow(this);
+	myEndItem->addArrow(this);
 	this->eText = eText;
 	this->sText = sText;
 
@@ -54,7 +54,7 @@ QRectF Arrow::boundingRect() const
 QPainterPath Arrow::shape() const
 {
 	QPainterPath path = QGraphicsLineItem::shape();
-	path.addPolygon(arrowHead);
+//	path.addPolygon(arrowHead);
 	return path;
 }
 
@@ -62,7 +62,14 @@ QPainterPath Arrow::shape() const
 void Arrow::updatePosition()
 {
 	QLineF line(mapFromItem(myStartItem, 0, 0), mapFromItem(myEndItem, 0, 0));
+//	qDebug()  << "void Arrow::updatePosition()";
+//	if(isTableDrawMode() == true)
+//	{
+//		calcConnectPointInTableMode(line,);
+//	}
+
 	setLine(line);
+
 }
 
 void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
@@ -75,7 +82,15 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 	QPointF sTextPos;
 	QPointF eTextPos;
 
-	calcConnectPoint(50, 30, line, sTextPos, eTextPos);
+	if(table_draw_mode == false)
+	{
+		calcConnectPointInERMode(50, 30, line, sTextPos, eTextPos);
+
+	}
+	else
+	{
+		calcConnectPointInTableMode(line, sTextPos, eTextPos);
+	}
 
 	if (qFuzzyCompare(line.length(), qreal(0.)))
 		return;
@@ -88,7 +103,7 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 }
 
-void Arrow::calcConnectPoint(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos)
+void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos)
 {
 
 	QPointF s = startItem()->pos();
@@ -142,6 +157,39 @@ void Arrow::calcConnectPoint(int indent, int delta, QLineF & line, QPointF & sTe
 			eTextPos = {line.p2().x() + indent/2, line.p2().y() - indent/2};
 		}
 	}
+}
+
+void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF &eTextPos)
+{
+	std::tuple<QString, int, QString, int> connection =
+			DataController::getInstance()->getConnectionAttributesFor(myStartItem->getId(), myEndItem->getId());
+
+	QPointF s = myStartItem->pos();
+	QPointF e = myEndItem->pos();
+
+	if(s.x() > e.x())
+	{
+		e.setX(e.x() + myEndItem->size().width());
+	}
+	else
+	{
+		s.setX(s.x() + myStartItem->size().width());
+	}
+
+
+	qreal delta_s = Support::getTableHeightRow() + Support::getTableDeltaRow() + std::get<1>(connection)*(Support::getTableHeightRow()+ Support::getTableDeltaRow());
+	qreal delta_e = Support::getTableHeightRow() + Support::getTableDeltaRow() + std::get<3>(connection)*(Support::getTableHeightRow()+ Support::getTableDeltaRow());
+
+	qDebug() << "1: " + std::get<0>(connection) <<std::get<1>(connection);
+	qDebug() << "3: " + std::get<2>(connection) <<std::get<3>(connection);
+
+	s.setY(s.y() +delta_s);
+
+	e.setY(e.y() +delta_e);
+
+	line.setP1(s);
+	line.setP2(e);
+
 }
 
 

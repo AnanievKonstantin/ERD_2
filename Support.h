@@ -15,6 +15,12 @@ class Support
 		static QString fontFamilie;
 		static int fontSizeEssence;
 		static int fontSizeProperty;
+		static QString getStrippedProperty(QString nonStrippedProperty);
+		static qreal getTableHeightRow();
+		static qreal getTableDeltaRow();
+	private:
+		static qreal tableHeightRow;
+		static qreal tableDeltaRow;
 };
 
 #endif // SUPPORT_H
