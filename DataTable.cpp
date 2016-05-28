@@ -40,7 +40,18 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 
 	foreach (QString key, getKeys())
 	{
+		key += " - P";
+		if(getKeys().length() > 1)
+		{
+			key += ",C";
+		}
+		if(key.lastIndexOf(":") != -1)
+		{
+			key += ",F";
+		}
 		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+key);
+
+
 		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 

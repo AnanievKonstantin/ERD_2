@@ -89,6 +89,7 @@ bool Support::checkTypeCordinality(int type)
 		return true;
 	}
 
+
 	return false;
 }
 

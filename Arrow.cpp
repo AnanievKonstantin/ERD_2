@@ -89,7 +89,7 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 	}
 	else
 	{
-		calcConnectPointInTableMode(line, sTextPos, eTextPos);
+		calcConnectPointInTableMode(line, sTextPos, eTextPos, 30);
 	}
 
 	if (qFuzzyCompare(line.length(), qreal(0.)))
@@ -159,7 +159,7 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 	}
 }
 
-void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF &eTextPos)
+void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF &eTextPos, qreal indent)
 {
 	std::tuple<QString, int, QString, int> connection =
 			DataController::getInstance()->getConnectionAttributesFor(myStartItem->getId(), myEndItem->getId());
@@ -189,6 +189,20 @@ void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF
 
 	line.setP1(s);
 	line.setP2(e);
+
+
+	if(s.x() >= e.x())
+	{
+		sTextPos.setX(s.x() - indent);
+		eTextPos.setX(e.x() + indent);
+	}
+	if(s.x() < e.x())
+	{
+		sTextPos.setX(s.x() + indent);
+		eTextPos.setX(e.x() -  indent);
+	}
+	sTextPos.setY(s.y());
+	eTextPos.setY(e.y());
 
 }
 

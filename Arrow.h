@@ -37,7 +37,7 @@ protected:
 private:
 
 	void calcConnectPointInERMode(int indent, int delta, QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
-	void calcConnectPointInTableMode(QLineF & line, QPointF & sTextPos, QPointF & eTextPos);
+	void calcConnectPointInTableMode(QLineF & line, QPointF & sTextPos, QPointF & eTextPos, qreal indent);
 	QString sText = "";
 	QString eText = "";
 

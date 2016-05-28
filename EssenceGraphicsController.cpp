@@ -127,11 +127,21 @@ void EssenceGraphicsController::fillERScene()
 
 void EssenceGraphicsController::fillDataScene()
 {
+	qreal x = -500;
+	qreal y = -500;
+
 	foreach (QString s, DataController::getInstance()->getEssences())
 	{
 		EREssenceData * d = DataController::getInstance()->search(s);
 		DataTable * t = new DataTable(d);
 		tableList.append(t);
+		t->setPos(x,y);
+		x += t->size().width() + 50;
+		if(x >=1000)
+		{
+			x = -500;
+			y += t->size().width()*2;
+		}
 		data_scene->addItem(t);
 	}
 
