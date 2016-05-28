@@ -180,8 +180,8 @@ void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF
 	qreal delta_s = Support::getTableHeightRow() + Support::getTableDeltaRow() + std::get<1>(connection)*(Support::getTableHeightRow()+ Support::getTableDeltaRow());
 	qreal delta_e = Support::getTableHeightRow() + Support::getTableDeltaRow() + std::get<3>(connection)*(Support::getTableHeightRow()+ Support::getTableDeltaRow());
 
-	qDebug() << "1: " + std::get<0>(connection) <<std::get<1>(connection);
-	qDebug() << "3: " + std::get<2>(connection) <<std::get<3>(connection);
+//	qDebug() << "1: " + std::get<0>(connection) <<std::get<1>(connection);
+//	qDebug() << "3: " + std::get<2>(connection) <<std::get<3>(connection);
 
 	s.setY(s.y() +delta_s);
 

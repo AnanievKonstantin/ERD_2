@@ -14,55 +14,55 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 	bool error = false;
 	if(id == "")
 	{
-		qDebug() << "Имя сущности не может быть пустым";
+		ConsoleOutput::getInstance()->printInfo("Имя сущности не может быть пустым");
 		error = true;
 	}
 
 	if(essenceIsExist(id) == true)
 	{
-		qDebug() << "Сущность с таким именем уже существует";
+		ConsoleOutput::getInstance()->printInfo("Сущность с таким именем уже существует");
 		error = true;
 	}
 
 	if(Support::checkTypeEssence(type) == false)
 	{
-		qDebug() << "Указан не известный тип сущности";
+		ConsoleOutput::getInstance()->printInfo("Указан не известный тип сущности");
 		error = true;
 	}
 
 	if(keys.length() == 0)
 	{
-		qDebug() << "Сущность должна сожержать минимум один ключ";
+		ConsoleOutput::getInstance()->printInfo("Сущность должна сожержать минимум один ключ");
 		error = true;
 	}
 
 	if(attributes.length() == 0)
 	{
-		qDebug() << "Сущность должна сожержать минимум один атрибут";
+		ConsoleOutput::getInstance()->printInfo("Сущность должна сожержать минимум один атрибут");
 		error = true;
 	}
 
 	if(keyISattr(keys, attributes) == true)
 	{
-		qDebug() << "Имена свойств сущности должны быть уникальны";
+		ConsoleOutput::getInstance()->printInfo("Имена свойств сущности должны быть уникальны");
 		error = true;
 	}
 
 	if(keyOrAttributeIsExist(keys, attributes) == true)
 	{
-		qDebug() << "Имена свойств сущности должны быть уникальны";
+		ConsoleOutput::getInstance()->printInfo("Имена свойств сущности должны быть уникальны");
 		error = true;
 	}
 
 	if(keyOrAttributeDublication(keys, attributes) == true)
 	{
-		qDebug() << "Имена свойств сущности должны быть уникальны";
+		ConsoleOutput::getInstance()->printInfo("Имена свойств сущности должны быть уникальны");
 		error = true;
 	}
 
 	if(keyOrAttributeIsNameOfEssence(id, keys, attributes) == true)
 	{
-		qDebug() << "Имена свойств сущности не могут быть идентичны имени сущности";
+		ConsoleOutput::getInstance()->printInfo("Имена свойств сущности не могут быть идентичны имени сущности");
 		error = true;
 	}
 	if(error == true)
@@ -77,13 +77,13 @@ int DataController::checkBeforeCreationRelation(QString id_first, QString id_sec
 {
 	if(essenceIsExist(id_first) != true || essenceIsExist(id_second) != true )
 	{
-		qDebug() << "Имена(Имя) связуемых сущностей не существуют";
+		ConsoleOutput::getInstance()->printInfo("Имена(Имя) связуемых сущностей не существуют");
 		return 9;
 	}
 
 	if(id_first == id_second)
 	{
-		qDebug() << "Создание рекурсивных сущностей не разрешено";
+		ConsoleOutput::getInstance()->printInfo("Создание рекурсивных сущностей не разрешено");
 		return 11;
 	}
 
@@ -91,10 +91,11 @@ int DataController::checkBeforeCreationRelation(QString id_first, QString id_sec
 	{
 		if(search(id_first)->getType() == essence_type::Base && search(id_second)->getType() == essence_type::Base)
 		{
-			qDebug() << "Создаётся ассоциация";
+			ConsoleOutput::getInstance()->printInfo("Создаётся ассоциация");
 			return 0;
 		}
-		qDebug() << "Связь между " << id_first << " и "<< id_second <<" уже существует.";
+		QString msg("Связь между " + id_first + " и " + id_second + " уже существует.");
+		ConsoleOutput::getInstance()->printInfo(msg);
 		return 10;
 	}
 
@@ -136,7 +137,8 @@ bool DataController::keyISattr(QList<QString> keys, QList<QString> attributes)
 		{
 			if(key == attr)
 			{
-				qDebug() << "Ошибка в именовании свойств сущности. Ключ:\"" << key <<"\" идентичен атрибуту\"" << attr <<"\"";
+				QString msg("Ошибка в именовании свойств сущности. Ключ: " + key + " идентичен атрибуту " + attr);
+				ConsoleOutput::getInstance()->printInfo(msg);
 				return true;
 			}
 		}
@@ -153,7 +155,7 @@ bool DataController::keyOrAttributeIsExist(QList<QString> keys, QList<QString> a
 		{
 			if(e->getKeys().contains(key) || e->getAttributes().contains(key))
 			{
-				qDebug() << "Ключ: " << key << " уже существует в списке свойств сущности: " << e->getId();
+				ConsoleOutput::getInstance()->printInfo("Ключ: " + key +" уже существует в списке свойств сущности: " +e->getId());
 				exist = true;
 			}
 		}
@@ -161,7 +163,7 @@ bool DataController::keyOrAttributeIsExist(QList<QString> keys, QList<QString> a
 		{
 			if(e->getAttributes().contains(attr) || e->getKeys().contains(attr))
 			{
-				qDebug() << "Атрибут: " << attr << " уже существует в списке свойств сущности: " << e->getId();
+				ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr +" уже существует в списке свойств сущности: " + e->getId());
 				exist = true;
 			}
 		}
@@ -182,7 +184,7 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	{
 		if(keys.count(key) > 1)
 		{
-			qDebug() << "Ключ: " << key << " дублируется.";
+			ConsoleOutput::getInstance()->printInfo("Ключ: "  + key + " дублируется.");
 			dublicatesIsExist = true;
 		}
 	}
@@ -191,7 +193,7 @@ bool DataController::keyOrAttributeDublication(QList<QString> keys, QList<QStrin
 	{
 		if(attrs.count(attr) > 1)
 		{
-			qDebug() << "Атрибут: " << attr << " дублируется.";
+			ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr + " дублируется.");
 			dublicatesIsExist = true;
 		}
 	}
@@ -206,7 +208,7 @@ bool DataController::keyOrAttributeIsNameOfEssence(QString id, QList<QString> ke
 	{
 		if(key == id)
 		{
-			qDebug() << "Ключ: " << key << " равен имени сущности. " << id;
+			ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " равен имени сущности. " + id);
 			isName = true;
 		}
 	}
@@ -215,7 +217,7 @@ bool DataController::keyOrAttributeIsNameOfEssence(QString id, QList<QString> ke
 	{
 		if(attr == id)
 		{
-			qDebug() << "Атрибут: " << attr << " равен имени сущности." << id;
+			ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr + " равен имени сущности " + id);
 			isName = true;
 		}
 	}
@@ -245,7 +247,7 @@ bool DataController::oneOfTwoIs(int type_first, int type_second, int condition_t
 	}
 	else
 	{
-		qDebug() << "Указаны не известные кардинальности";
+		ConsoleOutput::getInstance()->printInfo("Указаны не известные кардинальности");
 		return false;
 	}
 
@@ -256,7 +258,7 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 {
 	if(Support::checkTypeCordinality(cord_first) != true || Support::checkTypeCordinality(cord_second) != true)
 	{
-		qDebug() << "Задана неизвестная кординальность";
+		ConsoleOutput::getInstance()->printInfo("Задана неизвестная кординальность");
 		return -10;
 	}
 
@@ -268,14 +270,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
 			{
-				qDebug() << "Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+				ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
 				return -10;
 			}
 			return 0;
 		}
 		else
 		{
-			qDebug() << "Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
 			return -10;
 		}
 	}
@@ -290,7 +292,7 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		}
 		else
 		{
-			qDebug() << "Для обозначений и Ассоциации возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1 или 1/M - 1/1";
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и Ассоциации возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1 или 1/M - 1/1");
 			return -20;
 		}
 	}
@@ -304,14 +306,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
 			{
-				qDebug() << "Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+				ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
 				return -30;
 			}
 			return 0;
 		}
 		else
 		{
-			qDebug() << "Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1";
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
 			return -30;
 		}
 	}
@@ -325,14 +327,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Base && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Base && cord_second != cordinalyty::OneOne))
 			{
-				qDebug() << "Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+				ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
 				return -40;
 			}
 			return 0;
 		}
 		else
 		{
-			qDebug() << "Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+			ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
 			return -40;
 		}
 	}
@@ -346,14 +348,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Association && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Association && cord_second != cordinalyty::OneOne))
 			{
-				qDebug() << "Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+				ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
 				return -50;
 			}
 			return 0;
 		}
 		else
 		{
-			qDebug() << "Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1";
+			ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
 			return -50;
 		}
 	}
@@ -370,13 +372,13 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			EREssenceData * e2 = search(second);
 			if(e1->getType() == essence_type::Association)
 			{
-				qDebug() << "Для ассоциации " << first << "устновлена скрытая кординальность";
+				ConsoleOutput::getInstance()->printInfo("Для ассоциации " + first + " устновлена скрытая кординальность");
 				cord_first = cordinalyty::hiddenCord;
 				return 0;
 			}
 			if(e2->getType() == essence_type::Association)
 			{
-				qDebug() << "Для ассоциации " << second << "устновлена скрытая кординальность";
+				ConsoleOutput::getInstance()->printInfo("Для ассоциации " + second + " устновлена скрытая кординальность");
 				cord_second = cordinalyty::hiddenCord;
 				return 0;
 			}
@@ -389,21 +391,21 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		return 0;
 	}
 
-	qDebug() << "Не известная кардинальность";
+	ConsoleOutput::getInstance()->printInfo( "Не известная кардинальность");
 	return -70;
 }
 
 void DataController::insertKeyInCharacteristic(EREssenceData * e, QString key)
 {
-	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	ConsoleOutput::getInstance()->printInfo("производится вставка ключа: " + key + " в " + e->getId());
 	e->addKey(key);
-	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в характеристику выполнена";
+	ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в характеристику выполнена");
 }
 
 void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
 {
 
-	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	ConsoleOutput::getInstance()->printInfo("производится вставка ключа: " + key + " в " + e->getId());
 	e->addKey(key);
 	QList<QString> adjList = relation_table.getAjasencyByName(e->getId());
 	qDebug() << e->getId() << "смежен с: "<< adjList;

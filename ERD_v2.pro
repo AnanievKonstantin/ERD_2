@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     TreeItem.cpp \
     TreeModelForOneEssence.cpp \
     DataModelGraphicsView.cpp \
-    DataTable.cpp
+    DataTable.cpp \
+    ConsoleOutput.cpp
 
 HEADERS  += \
     EREnums.h \
@@ -57,7 +58,8 @@ HEADERS  += \
     TreeItem.h \
     TreeModelForOneEssence.h \
     DataModelGraphicsView.h \
-    DataTable.h
+    DataTable.h \
+    ConsoleOutput.h
 
 DISTFILES += \
     ToDo \

@@ -14,43 +14,20 @@ Widget::Widget(QWidget *parent)
 	this->bar = new QMenuBar();
 	this->tabs = new QTabWidget();
 
-	setGeometry(0,0, 1200, 900);
-
-	QWidget * test_w1 = new QWidget;
-	QHBoxLayout * test_lay1 = new QHBoxLayout;
-	test_lay1->addWidget(erView);
-
-	test_w1->setLayout(test_lay1);
-	tabs->addTab(test_w1, "ER model");
-
-	QWidget * test_w2 = new QWidget;
-	QHBoxLayout * test_lay2 = new QHBoxLayout;
-	test_lay2->addWidget(dataView);
-
-	test_w2->setLayout(test_lay2);
-	tabs->addTab(test_w2, "Data model");
-
-	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
+	this->vSplit = new QSplitter(Qt::Vertical);
+	this->hSplit = new QSplitter(Qt::Horizontal);
+	createWindow();
 
 	initBar();
 	setUpTreeViews();
-
-	treeVievOneEssence->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	layoutH->addWidget(treeViev);
-	layoutH->addWidget(tabs);
-	layoutH->addWidget(treeVievOneEssence);
-
-	layoutV->addWidget(bar);
-	this->layoutV->addLayout(layoutH);
-
-	this->setLayout(layoutV);
-
 
 	EssenceGraphicsController::instance();
 	EssenceGraphicsController::setSceneToErModel(erView->getScene());
 	EssenceGraphicsController::setSceneToDataModel(dataView->getScene());
 
 	setUpSignalsAndSlots();
+	setUpConsoleProperty();
+
 }
 
 bool Widget::setUpSignalsAndSlots()
@@ -84,6 +61,53 @@ bool Widget::initBar()
 	bar->addAction(newAct2);
 	bar->addAction(newAct3);
 	bar->addAction(newAct5);
+
+}
+
+void Widget::createWindow()
+{
+	setGeometry(0,0, 1200, 900);
+
+	QWidget * test_w1 = new QWidget;
+	QHBoxLayout * test_lay1 = new QHBoxLayout;
+	test_lay1->addWidget(erView);
+
+	test_w1->setLayout(test_lay1);
+	tabs->addTab(test_w1, "ER model");
+
+	QWidget * test_w2 = new QWidget;
+	QHBoxLayout * test_lay2 = new QHBoxLayout;
+	test_lay2->addWidget(dataView);
+
+	test_w2->setLayout(test_lay2);
+	tabs->addTab(test_w2, "Data model");
+
+	setWindowFlags( ( (this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint));
+
+	treeVievOneEssence->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+	hSplit->addWidget(treeViev);
+	hSplit->addWidget(tabs);
+	hSplit->addWidget(treeVievOneEssence);
+	layoutH->addWidget(hSplit);
+
+	layoutV->addWidget(bar);
+
+	QWidget * hComponents = new QWidget;
+	hComponents->setLayout(layoutH);
+
+	vSplit->addWidget(hComponents);
+	vSplit->addWidget(ConsoleOutput::getBrowser());
+
+	layoutV->addWidget(vSplit);
+
+	this->setLayout(layoutV);
+}
+
+void Widget::setUpConsoleProperty()
+{
+
+	ConsoleOutput::getInstance()->printSystemMassage("Hello, I'am ERD. Good luck");
 
 }
 

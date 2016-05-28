@@ -12,7 +12,7 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QByteArray>
-
+#include <ConsoleOutput.h>
 
 /**
  * @brief The DataController class

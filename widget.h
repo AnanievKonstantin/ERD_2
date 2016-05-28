@@ -26,6 +26,9 @@
 #include <QFileDialog>
 #include <QTabWidget>
 #include <DataModelGraphicsView.h>
+#include <ConsoleOutput.h>
+#include <QSplitter>
+
 
 class Widget : public QWidget
 {
@@ -48,13 +51,19 @@ class Widget : public QWidget
 		QTreeView * treeViev;
 		QTabWidget * tabs;
 
+		QSplitter * vSplit;
+		QSplitter * hSplit;
+
+
+
 		TreeModelForOneEssence* treeModelForOneEssence;
 		QTreeView * treeVievOneEssence;
 		QMenuBar * bar;
 
-
 		bool setUpSignalsAndSlots();
 		bool initBar();
+		void createWindow();
+		void setUpConsoleProperty();
 
 	public slots:
 		void setUpTreeViews();
