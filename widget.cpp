@@ -151,7 +151,7 @@ void Widget::setUpTreeViews()
 
 void Widget::editEssence(QString id)
 {
-	qDebug() <<"in edit";
+//	qDebug() <<"in edit";
 	int type = DataController::getInstance()->search(id)->getType();
 	EssenceCreateWindow * win = new EssenceCreateWindow(id, type);
 //	QObject::connect(win, SIGNAL(toDeleteEssence(QString)), this, SLOT(removeEssence(QString)));
@@ -181,7 +181,7 @@ void Widget::addEssenceOnScreen(QString id)
 
 	if(data == nullptr)
 	{
-		qDebug() << "__ERROR__: in void Widget::addEssenceOnScreen(QString id) nullptr expection";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void Widget::addEssenceOnScreen(QString id) nullptr expection");
 		return;
 	}
 
@@ -243,7 +243,7 @@ void Widget::performRelationOperation(int action_code)
 
 		}
 		default:
-			qDebug("__ERROR_: in void Widget::performRelationOperation(int action_code) error action code");
+			ConsoleOutput::getInstance()->printSystemError("__ERROR_: in void Widget::performRelationOperation(int action_code) error action code");
 			break;
 	}
 
@@ -258,24 +258,24 @@ void Widget::afterPerformRelationOperation(bool test)
 
 void Widget::quick_save()
 {
-	qDebug() << "quick save";
+//	qDebug() << "quick save";
 	DataController::getInstance()->saveState("");
 }
 
 void Widget::save_as()
 {
-	qDebug() << "Save as";
+//	qDebug() << "Save as";
 	QString fileName = QFileDialog::getSaveFileName(this,
 			tr("ER_Diagram"), "",
 			tr("ER Diagram (*.json);;All Files (*)"));
 
-	qDebug() << fileName;
+//	qDebug() << fileName;
 	DataController::getInstance()->saveState(fileName);
 }
 
 void Widget::new_file()
 {
-	qDebug() << "new file";
+//	qDebug() << "new file";
 	DataController::getInstance()->clear();
 	syncTreeViev();
 	EssenceGraphicsController::instance()->syncWithDataContriller();
@@ -284,11 +284,11 @@ void Widget::new_file()
 
 void Widget::load_file()
 {
-	qDebug() << "load file";
+	ConsoleOutput::getInstance()->printSystemMassage("load file");
 	QString fileName = QFileDialog::getOpenFileName(this,
 			tr("ER_Diagram"), "",
 			tr("ER Diagram (*.json);;All Files (*)"));
-	qDebug() << fileName;
+//	qDebug() << fileName;
 	DataController::getInstance()->loadState(fileName);
 	syncTreeViev();
 	EssenceGraphicsController::instance()->syncWithDataContriller();
@@ -298,20 +298,20 @@ void Widget::load_file()
 
 void Widget::endWork()
 {
-	qDebug() << "EndWork";
-	qDebug() << "save before exit";
+	ConsoleOutput::getInstance()->printSystemMassage("End of Work");
+	ConsoleOutput::getInstance()->printSystemMassage("save before exit");
 	DataController::getInstance()->saveState("");
 	close();
 }
 
 void Widget::help()
 {
-	qDebug() << "help";
+//	qDebug() << "help";
 }
 
 void Widget::treeViewEssenceUpdate(QString id)
 {
-	qDebug() << "Updating";
+//	qDebug() << "Updating";
 	delete treeModelForOneEssence;
 	treeModelForOneEssence = new TreeModelForOneEssence(id);
 	treeVievOneEssence->setModel(treeModelForOneEssence);
@@ -321,7 +321,7 @@ void Widget::treeViewEssenceUpdate(QString id)
 
 void Widget::closeEditWindow()
 {
-	qDebug() << "closeEditWindow()" <<endl;
+//	qDebug() << "closeEditWindow()" <<endl;
 	this->setEnabled(true);
 }
 

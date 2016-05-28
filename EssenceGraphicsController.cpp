@@ -276,7 +276,7 @@ void EssenceGraphicsController::setSceneToErModel(QGraphicsScene *_scene)
 {
 	if(_scene == nullptr)
 	{
-		qDebug() << "__ERROR__: in void EssenceGraphicsController::setSceneToErModel(QGraphicsScene *_scene) nullptr expection";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void EssenceGraphicsController::setSceneToErModel(QGraphicsScene *_scene) nullptr expection");
 		return;
 	}
 	if(er_scene == nullptr)
@@ -294,7 +294,7 @@ void EssenceGraphicsController::setSceneToDataModel(QGraphicsScene *_scene)
 {
 	if(_scene == nullptr)
 	{
-		qDebug() << "__ERROR__: in void EssenceGraphicsController::setSceneToDataModel(QGraphicsScene *_scene) nullptr expection";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void EssenceGraphicsController::setSceneToDataModel(QGraphicsScene *_scene) nullptr expection");
 		return;
 	}
 	if(data_scene == nullptr)

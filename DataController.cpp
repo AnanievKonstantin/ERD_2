@@ -372,13 +372,13 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			EREssenceData * e2 = search(second);
 			if(e1->getType() == essence_type::Association)
 			{
-				ConsoleOutput::getInstance()->printInfo("Для ассоциации " + first + " устновлена скрытая кординальность");
+				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + first + " устновлена скрытая кординальность");
 				cord_first = cordinalyty::hiddenCord;
 				return 0;
 			}
 			if(e2->getType() == essence_type::Association)
 			{
-				ConsoleOutput::getInstance()->printInfo("Для ассоциации " + second + " устновлена скрытая кординальность");
+				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + second + " устновлена скрытая кординальность");
 				cord_second = cordinalyty::hiddenCord;
 				return 0;
 			}
@@ -397,25 +397,25 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 
 void DataController::insertKeyInCharacteristic(EREssenceData * e, QString key)
 {
-	ConsoleOutput::getInstance()->printInfo("производится вставка ключа: " + key + " в " + e->getId());
+	//ConsoleOutput::getInstance()->printStartActionInfo("производится вставка ключа: " + key + " в " + e->getId());
 	e->addKey(key);
-	ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в характеристику выполнена");
+	//ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в характеристику выполнена");
 }
 
 void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
 {
 
-	ConsoleOutput::getInstance()->printInfo("производится вставка ключа: " + key + " в " + e->getId());
+	//ConsoleOutput::getInstance()->printStartActionInfo("производится вставка ключа: " + key + " в " + e->getId());
 	e->addKey(key);
 	QList<QString> adjList = relation_table.getAjasencyByName(e->getId());
-	qDebug() << e->getId() << "смежен с: "<< adjList;
+	//ConsoleOutput::getInstance()->printInfoList(e->getId() + " смежен с: ", adjList);
 
 	foreach (QString next, adjList)
 	{
 		EREssenceData * e = search(next);
 		if(e == nullptr)
 		{
-			qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;";
+			ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;");
 			exit(10);
 		}
 
@@ -434,7 +434,7 @@ void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
 			}
 			case essence_type::Designation:
 			{
-				qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Возникло обозначение обозначения;";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Возникло обозначение обозначения;");
 				exit(10);
 			}
 			case essence_type::Characteristic:
@@ -443,28 +443,28 @@ void DataController::insertKeyInDesignation(EREssenceData * e, QString key)
 				break;
 			}
 			default:
-				qDebug() << "__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Неизвестный тип сущности";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInDesignation(EREssenceData * e, QString key); Неизвестный тип сущности");
 				exit(11);
 		}
 	}
 
-	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в обозначение выполнена";
+	//ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в обозначение выполнена");
 
 }
 
 void DataController::insertKeyInBase(EREssenceData * e, QString key)
 {
-	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	//ConsoleOutput::getInstance()->printStartActionInfo("производится вставка ключа: " + key + " в " + e->getId());
 	e->addKey(key);
 	QList<QString> adjList = relation_table.getAjasencyByName(e->getId());
-	qDebug() << e->getId() << "смежен с: " << adjList;
+	//ConsoleOutput::getInstance()->printInfoList(e->getId() + " смежен с: " , adjList);
 
 	foreach (QString next, adjList)
 	{
 		EREssenceData * e = search(next);
 		if(e == nullptr)
 		{
-			qDebug() << "__ERROR__: in void DataController::insertKeyInBase(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;";
+			ConsoleOutput::getInstance()->printSystemError( "__ERROR__: in void DataController::insertKeyInBase(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;");
 			exit(10);
 		}
 
@@ -472,7 +472,7 @@ void DataController::insertKeyInBase(EREssenceData * e, QString key)
 		{
 			case essence_type::Base:
 			{
-				qDebug() << "__ERROR__: in void DataController::insertKeyInBase(EREssenceData * e, QString key) обнаружено стержень - стердень соединение;";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInBase(EREssenceData * e, QString key) обнаружено стержень - стердень соединение;");
 				exit(11);
 			}
 			case essence_type::Association:
@@ -482,7 +482,7 @@ void DataController::insertKeyInBase(EREssenceData * e, QString key)
 			}
 			case essence_type::Designation:
 			{
-				qDebug() << "Передача ключей от стержневых сущностей к обозначениям не производится";
+				//ConsoleOutput::getInstance()->printInfo("Передача ключей от стержневых сущностей к обозначениям не производится");
 				break;
 			}
 			case essence_type::Characteristic:
@@ -491,27 +491,27 @@ void DataController::insertKeyInBase(EREssenceData * e, QString key)
 				break;
 			}
 			default:
-				qDebug() << "__ERROR__: in void void DataController::insertKeyInBase(EREssenceData * e, QString key); Неизвестный тип сущности";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void void DataController::insertKeyInBase(EREssenceData * e, QString key); Неизвестный тип сущности");
 				exit(11);
 		}
 	}
-	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в стержневую сущность выполнена";
+	//ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в стержневую сущность выполнена");
 }
 
 void DataController::insertKeyInAssociation(EREssenceData * e, QString key)
 {
-	qDebug() << "производится вставка ключа: " << key << " в " << e->getId();
+	//ConsoleOutput::getInstance()->printStartActionInfo("производится вставка ключа: " + key + " в " + e->getId());
 
 	e->addKey(key);
 	QList<QString> adjList = relation_table.getAjasencyByName(e->getId());
-	qDebug() << e->getId() << "смежен с: " << adjList;
+	//ConsoleOutput::getInstance()->printInfoList(e->getId() + " смежен с: ", adjList);
 
 	foreach (QString next, adjList)
 	{
 		EREssenceData * e = search(next);
 		if(e == nullptr)
 		{
-			qDebug() << "__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;";
+			ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key) поиск существующей сущности завершился неудачей;");
 			exit(10);
 		}
 
@@ -519,17 +519,17 @@ void DataController::insertKeyInAssociation(EREssenceData * e, QString key)
 		{
 			case essence_type::Base:
 			{
-				qDebug() << "Передача ключей от ассоциаций к стержневым сущностям не производится";
+				//ConsoleOutput::getInstance()->printInfo("Передача ключей от ассоциаций к стержневым сущностям не производится");
 				break;
 			}
 			case essence_type::Association:
 			{
-				qDebug() << "__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key) обнаружено соединение ассоциация - ассоциация;";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key) обнаружено соединение ассоциация - ассоциация;");
 				exit(11);
 			}
 			case essence_type::Designation:
 			{
-				qDebug() << "Передача ключей от ассаоциативных сущностей к обозначениям не производится";
+				//ConsoleOutput::getInstance()->printInfo("Передача ключей от ассаоциативных сущностей к обозначениям не производится");
 				break;
 			}
 			case essence_type::Characteristic:
@@ -538,12 +538,12 @@ void DataController::insertKeyInAssociation(EREssenceData * e, QString key)
 				break;
 			}
 			default:
-				qDebug() << "__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key); Неизвестный тип сущности";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in void DataController::insertKeyInAssociation(EREssenceData * e, QString key); Неизвестный тип сущности");
 				exit(11);
 		}
 	}
 
-	qDebug() << "Ключ: " << key<< " успешно добавлен в " << e->getId() <<" Процедура добавления ключа в ассоциацию выполнена";
+	//ConsoleOutput::getInstance()->printInfo("Ключ: " + key + " успешно добавлен в " + e->getId() + " Процедура добавления ключа в ассоциацию выполнена");
 }
 
 int DataController::createRelationBetweenBaseAndDesignation(EREssenceData * e1, EREssenceData * e2, int cord_one, int cord_two)
@@ -682,7 +682,7 @@ int DataController::createRelationBetweenDesignationAndCharacteristic(EREssenceD
 		ch = e1;
 	}
 
-	qDebug() << "Insert in:" << ch->getId();
+//	qDebug() << "Insert in:" << ch->getId();
 	foreach (QString key, des->getKeys())
 	{
 		addKey(ch->getId(), ch->getId() + "::" + key);
@@ -723,12 +723,12 @@ int DataController::removeRelationBetweenEssences(EREssenceData *e1, EREssenceDa
 
 	if(relation_table.deleteRelation(e1->getId(), e2->getId()) == true)
 	{
-		qDebug() << "Связь удалена успешно"<<"\n ===================";;
+		ConsoleOutput::getInstance()->printInfo("Связь удалена успешно\n ===================");
 		return 0;
 	}
 	else
 	{
-		qDebug() << "Ошибка при удалении связи"<<"\n ===================";;
+		ConsoleOutput::getInstance()->printUserError("Ошибка при удалении связи\n ===================");
 		return -10;
 	}
 
@@ -760,12 +760,12 @@ int DataController::removeRelationBetweenBaseAndDesignation(EREssenceData *e1, E
 
 	if(relation_table.deleteRelation(base->getId(), des->getId()) == true)
 	{
-		qDebug() << "Связь удалена успешно";
+		ConsoleOutput::getInstance()->printInfo("Связь удалена успешно");
 		return 0;
 	}
 	else
 	{
-		qDebug() << "Ошибка при удалении связи";
+		ConsoleOutput::getInstance()->printUserError("Ошибка при удалении связи");
 		return -10;
 	}
 
@@ -780,16 +780,16 @@ int DataController::removeKeyFrom(QString id, QString key)
 	EREssenceData * e = search(id);
 	if(e == nullptr)
 	{
-		qDebug() << "Попытка удаления ключа из не существующей сущности";
-		qDebug() << "Удаление ключа прервано.";
+		//ConsoleOutput::getInstance()->printInfo("Попытка удаления ключа из не существующей сущности");
+		//ConsoleOutput::getInstance()->printInfo("Удаление ключа прервано.");
 		return 10;
 	}
 
 	if(e->getKeys().contains(key) != true)
 	{
 
-		qDebug() << "В сущности: " << e->getId() << "нет ключа: "<< key;
-		qDebug() << "Удаление ключа прервано.";
+		//ConsoleOutput::getInstance()->printInfo("В сущности: " + e->getId() + "нет ключа: +key");
+		//ConsoleOutput::getInstance()->printInfo("Удаление ключа прервано.");
 		return 11;
 	}
 
@@ -801,10 +801,8 @@ int DataController::removeKeyFrom(QString id, QString key)
 		{
 			if(k.contains(key) == true)
 			{
-//				QString stripped = k.right(k.length() - k.lastIndexOf(":") -1);
-//				if(stripped ==)
 				e->removeKey(k);
-				qDebug() << "удалено: " << k << " из " << e->getId();
+				//ConsoleOutput::getInstance()->printInfo("удалено: " + k + " из " + e->getId());
 			}
 		}
 	}
@@ -820,20 +818,20 @@ int DataController::removeKeyFrom(QString id, QString key)
 				if(adjEssence->getType() == essence_type::Base)
 				{
 					adjEssence->removeAttributeWithSubStr(key);
-					qDebug() << "Удаление атрибута " << key << " из " << adjEssence->getId()<< " выполнено.";
+					//ConsoleOutput::getInstance()->printInfo("Удаление атрибута " + key + " из " + adjEssence->getId() + " выполнено.");
 					return 0;
 				}
 			}
 			else
 			{
-				qDebug("__ERROR__: in int DataController::removeKeyFrom(QString id, QString key). Bad designation pointer");
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in int DataController::removeKeyFrom(QString id, QString key). Bad designation pointer");
 				return 10;
 			}
 		}
 	}
 
 
-	qDebug() << "Удаление ключа " << key << " выполнено.";
+	ConsoleOutput::getInstance()->printInfo("Удаление ключа " + key + " выполнено.");
 	return 0;
 }
 
@@ -863,7 +861,7 @@ bool DataController::saveState(QString path)
 
 	if (!saveFile.open(QIODevice::WriteOnly))
 	{
-	   qWarning("Couldn't open save file.");
+	   ConsoleOutput::getInstance()->printSystemError("Couldn't open save file.");
 	   return false;
 	}
 
@@ -882,7 +880,7 @@ bool DataController::loadState(QString path)
 {
 	QFile openFile(path);
 	if (!openFile.open(QIODevice::ReadOnly)) {
-	   qWarning("Couldn't open file.");
+	   ConsoleOutput::getInstance()->printSystemError("Couldn't open file.");
 	   return false;
 	}
 
@@ -962,13 +960,13 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 
 	if(keys.contains(id+"_id") == true)
 	{
-		qDebug("Создание ключа вида: <Имя сущности>_id запрещено. Ключ автоматически добавится системмой.");
+		//ConsoleOutput::getInstance()->printUserError("Создание ключа вида: <Имя сущности>_id запрещено. Ключ автоматически добавится системмой.");
 		return -10;
 	}
 
 	keys.append(id+"_id");
-	qDebug() << "Создание сущности: " << id;
-	qDebug() << "-------------------------------------";
+	ConsoleOutput::getInstance()->printStartActionInfo("Создание сущности: " + id);
+	ConsoleOutput::getInstance()->printInfo("-------------------------------------");
 	if(checkBeforeCreationEssence(id, type, keys, attributes) == 0)
 	{
 		switch (type) {
@@ -978,8 +976,8 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 				eBase->setKeys(keys);
 				eBase->setAttributes(attributes);
 				list_essences.append(eBase);
-				qDebug() << "Сущность " << id << " успешно создана";
-				qDebug() << "-------------------------------------\n";
+				ConsoleOutput::getInstance()->printInfo("Сущность " + id + " успешно создана");
+				ConsoleOutput::getInstance()->printInfo("-------------------------------------\n");
 				return 0;
 			}
 
@@ -989,7 +987,7 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 				eChar->setKeys(keys);
 				eChar->setAttributes(attributes);
 				list_essences.append(eChar);
-				qDebug() << "Сущность " << id << " успешно создана";
+				ConsoleOutput::getInstance()->printInfo("Сущность " + id + " успешно создана");
 				qDebug() << "-------------------------------------\n";
 				return 0;
 			}
@@ -1000,8 +998,8 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 				eDes->setKeys(keys);
 				eDes->setAttributes(attributes);
 				list_essences.append(eDes);
-				qDebug() << "Сущность " << id << " успешно создана";
-				qDebug() << "-------------------------------------\n";
+				ConsoleOutput::getInstance()->printInfo("Сущность " + id + " успешно создана");
+				ConsoleOutput::getInstance()->printInfo("-------------------------------------\n");
 				return 0;
 			}
 
@@ -1011,45 +1009,45 @@ int DataController::createEssence(QString id, int type, QList<QString> keys, QLi
 				eAss->setKeys(keys);
 				eAss->setAttributes(attributes);
 				list_essences.append(eAss);
-				qDebug() << "Сущность " << id << " успешно создана";
-				qDebug() << "-------------------------------------\n";
+				ConsoleOutput::getInstance()->printInfo("Сущность " + id + " успешно создана");
+				ConsoleOutput::getInstance()->printInfo("-------------------------------------\n");
 				return 0;
 			}
 			default:
-				qDebug() << "__ERROR__: in int DataController::createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes) def brunch";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in int DataController::createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes) def brunch");
 				break;
 		}
 	}
 
-	qDebug() << "Сущность " << id << " не создана. Проверьте ошибки!";
-	qDebug() << "-------------------------------------\n";
+	ConsoleOutput::getInstance()->printUserError("Сущность " + id + " не создана. Проверьте ошибки!");
+	ConsoleOutput::getInstance()->printInfo("-------------------------------------\n");
 	return -1;
 }
 
 int DataController::removeEssence(QString id)
 {
 
-	qDebug () << "Удаление сущности " << id;
+	ConsoleOutput::getInstance()->printStartActionInfo("Удаление сущности " + id);
 	EREssenceData * e = search(id);
 
 	if(e == nullptr)
 	{
-		qDebug() << "Удаляемая сущность не сущенствует";
+		ConsoleOutput::getInstance()->printInfo("Удаляемая сущность не сущенствует");
 		return -10;
 	}
 
 	QList<QString> adj = relation_table.getAjasencyByName(id);
 
-	qDebug() << "Производится удаление связей со смежными сущностями";
+	//ConsoleOutput::getInstance()->printStartActionInfo("Производится удаление связей со смежными сущностями");
 	foreach (QString name, adj)
 	{
 		removeRelation(id, name);
 	}
-	qDebug() << "Удаление смежных связей завершено";
+	//ConsoleOutput::getInstance()->printInfo("Удаление смежных связей завершено");
 
 	list_essences.removeOne(e);
 
-	qDebug() << "Сущность удалена успешно";
+	ConsoleOutput::getInstance()->printInfo("Сущность удалена успешно");
 
 	return 0;
 }
@@ -1068,8 +1066,11 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 			{
 				if(f->getType() == essence_type::Base && s->getType() == essence_type::Base)
 				{
-					qDebug() << "Создание связи между стержневой и стержневой сущностями:";
-					qDebug() << "Для соединения будет создана новая ассоциация с именем: " << id_first + "RELATE" +id_second;
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между стержневой и стержневой сущностями:");
+					QString name = id_first.at(0);
+					name.append("rel");
+					name.append(id_second.at(0));
+					ConsoleOutput::getInstance()->printStartActionInfo("Для соединения будет создана новая ассоциация с именем: " + name);
 					createRelationBetweenBaseAndBaseWithNewRelation(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1077,7 +1078,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Base && s->getType() == essence_type::Designation) ||
 				   (s->getType() == essence_type::Base && f->getType() == essence_type::Designation))
 				{
-					qDebug() << "Создание связи между стержневой и обозначающей сущностями:";
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между стержневой и обозначающей сущностями:");
 					createRelationBetweenBaseAndDesignation(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1085,7 +1086,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Base && s->getType() == essence_type::Characteristic) ||
 				   (s->getType() == essence_type::Base && f->getType() == essence_type::Characteristic))
 				{
-					qDebug() << "Создание связи между стержневой и характерисической сущностями:";
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между стержневой и характерисической сущностями:");
 					createRelationBetweenBaseAndCharacteristic(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1093,7 +1094,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Association && s->getType() == essence_type::Designation) ||
 					(s->getType() == essence_type::Association && f->getType() == essence_type::Designation))
 				{
-					qDebug() << "Создание связи между ассоциативной и обозначающей сущностями:";
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между ассоциативной и обозначающей сущностями:");
 					createRelationBetweeAssociationAndDesignation(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1101,7 +1102,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Association && s->getType() == essence_type::Characteristic) ||
 				   (s->getType() == essence_type::Association && f->getType() == essence_type::Characteristic))
 				{
-					qDebug() << "Создание связи между ассоциативной и характерисической сущностями:";
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между ассоциативной и характерисической сущностями:");
 					createRelationBetweenAssociationAndCharacteristic(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1109,7 +1110,7 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Designation && s->getType() == essence_type::Characteristic) ||
 				   (s->getType() == essence_type::Designation && f->getType() == essence_type::Characteristic))
 				{
-					qDebug() << "Создание связи между обозначающей и характерисической сущностями:";
+					ConsoleOutput::getInstance()->printStartActionInfo("Создание связи между обозначающей и характерисической сущностями:");
 					createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
 					return 0;
 				}
@@ -1117,16 +1118,16 @@ int DataController::createRelation(QString id_first, QString id_second, int cord
 				if((f->getType() == essence_type::Association && s->getType() == essence_type::Base) ||
 				   (s->getType() == essence_type::Association && f->getType() == essence_type::Base))
 				{
-					qDebug() << "Создание связи между ассоциацией и стержневой сущностью производится черех функцию включения в ассоциацию";
+					ConsoleOutput::getInstance()->printUserError("Создание связи между ассоциацией и стержневой сущностью производится черех функцию включения в ассоциацию");
 //					createRelationBetweenDesignationAndCharacteristic(f,s,cord_one, cord_two);
 					return 0;
 				}
 			}
-			qDebug() << "Попытка cоздания неизвестного типа соединения. Проверьте ошибки.";
+			ConsoleOutput::getInstance()->printUserError("Попытка cоздания неизвестного типа соединения. Проверьте ошибки.");
 		}
 	}
 
-	qDebug() << "Cоздание связи между " << id_first << " и " << id_second <<" прервано. Проверьте ошибки\n";
+	ConsoleOutput::getInstance()->printUserError("Cоздание связи между " + id_first + " и " + id_second + " прервано. Проверьте ошибки\n");
 	return -1;
 
 }
@@ -1136,10 +1137,10 @@ int DataController::removeRelation(QString id_first, QString id_second)
 	EREssenceData * e1 = search(id_first);
 	EREssenceData * e2 = search(id_second);
 
-	qDebug() << "Удаление связи между: " << id_first <<" , "<< id_second <<"\n ===================";
+	ConsoleOutput::getInstance()->printStartActionInfo("Удаление связи между: " + id_first + " , " + id_second + "\n ===================");
 	if(e1 == nullptr || e2 == nullptr)
 	{
-		qDebug() << "Не удалось найти сущность(ти) " <<"\n ===================";
+		//ConsoleOutput::getInstance()->printInfo("Не удалось найти сущность(ти) \n ===================");
 		return -10;
 	}
 
@@ -1152,7 +1153,7 @@ int DataController::removeRelation(QString id_first, QString id_second)
 	}
 	else
 	{
-		qDebug() << "Удаляемая связь не обнаружена. Проверьте ошибки." <<"\n ===================";
+		ConsoleOutput::getInstance()->printUserError("Удаляемая связь не обнаружена. Проверьте ошибки.\n ===================");
 		return -11;
 	}
 
@@ -1166,24 +1167,24 @@ int DataController::removeAttribute(QString id, QString attr_name)
 	{
 		if(e->getAttributes().contains(attr_name) == false)
 		{
-			qDebug() << "Атрибут: " << attr_name << " не принадлежит сущности (возможно он внешний) " << id << " в качестве атрибута";
+			ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr_name + " не принадлежит сущности (возможно он внешний) " + id + " в качестве атрибута");
 			return 10;
 		}
 		else if(e->getAttributes().length() == 1)
 		{
-			qDebug() << "Сущность должна содержать как минимум один атрибут (Попытка удалить единственный атрибут)";
+			ConsoleOutput::getInstance()->printUserError("Сущность должна содержать как минимум один атрибут (Попытка удалить единственный атрибут)");
 			return 11;
 		}
 		else
 		{
 			e->getAttributes().removeOne(attr_name);
-			qDebug() << "Атрибут: " << attr_name << " удалён из " << id;
+			ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr_name + " удалён из " + id);
 			return 0;
 		}
 	}
 	else
 	{
-		qDebug() << "Сущность: " << id << "не существует";
+		ConsoleOutput::getInstance()->printInfo("Сущность: " + id + "не существует");
 		return 12;
 	}
 
@@ -1199,19 +1200,19 @@ int DataController::addAttribute(QString id, QString attr_name)
 		l2 << attr_name;
 		if(keyOrAttributeIsExist(l1, l2) == true)
 		{
-			qDebug() << "Имя атрибута должно быть уникально";
+			ConsoleOutput::getInstance()->printInfo("Имя атрибута должно быть уникально");
 			return 10;
 		}
 		else
 		{
 			e->addAtribute(attr_name);
-			qDebug() << "Атрибут: " << attr_name << " добавлен к: " << id;
+			ConsoleOutput::getInstance()->printInfo("Атрибут: " + attr_name + " добавлен к: " + id);
 			return 0;
 		}
 	}
 	else
 	{
-		qDebug() << "Сущность: " << id << "не существует";
+		ConsoleOutput::getInstance()->printInfo("Сущность: " + id +  "не существует");
 		return 20;
 	}
 
@@ -1221,10 +1222,10 @@ int DataController::addAttribute(QString id, QString attr_name)
 int DataController::removeKey(QString id, QString key_name)
 {
 
-	qDebug() << "\nУдаление ключа: " << key_name << " из " << id;
+	//ConsoleOutput::getInstance()->printStartActionInfo("\nУдаление ключа: " + key_name + " из " + id);
 	if(key_name.lastIndexOf("::") != -1 || key_name.lastIndexOf("_") != -1)
 	{
-		qDebug() << "Попытка напрямую удалить системный ключ. Удаление системных ключей производится через операции редактирования диаграмы";
+		ConsoleOutput::getInstance()->printSystemError("Попытка напрямую удалить системный ключ. Удаление системных ключей производится через операции редактирования диаграмы");
 		return 10;
 	}
 
@@ -1240,7 +1241,7 @@ int DataController::addKey(QString id, QString key_name)
 {
 	if(essenceIsExist(id) == false)
 	{
-		qDebug() << "Сущность: " << id <<" не существует. Ключ не добавлен";
+		ConsoleOutput::getInstance()->printUserError("Сущность: " + id + " не существует. Ключ не добавлен");
 		return 10;
 	}
 
@@ -1248,7 +1249,7 @@ int DataController::addKey(QString id, QString key_name)
 	l1.append(key_name);
 	if(keyOrAttributeIsExist(l1, l2) == true)
 	{
-		qDebug() << "Ключ должен быть уникальным. Ключ не добавлен. Проверьте ошибки";
+		ConsoleOutput::getInstance()->printUserError("Ключ должен быть уникальным. Ключ не добавлен. Проверьте ошибки");
 		return 11;
 	}
 
@@ -1257,7 +1258,7 @@ int DataController::addKey(QString id, QString key_name)
 	EREssenceData * e = search(id);
 	if(e == nullptr)
 	{
-		qDebug() << "__ERROR__: in int DataController::addKey(QString id, QString key_name); e == nullptr;";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__: in int DataController::addKey(QString id, QString key_name); e == nullptr;");
 		return 12;
 	}
 
@@ -1266,77 +1267,81 @@ int DataController::addKey(QString id, QString key_name)
 	list << key_name;
 	if(keyOrAttributeIsNameOfEssence(id, list) == true)
 	{
-		qDebug() << "Проверьте ошибки";
+		ConsoleOutput::getInstance()->printUserError("Проверьте ошибки");
 		return 13;
 	}
 	switch (e->getType())
 	{
 		case essence_type::Characteristic:
 		{
-			qDebug() << "\ninsertKeyInCharacteristic START ======================";
+			//ConsoleOutput::getInstance()->printStartActionInfo("\nПроизводится вставка ключа в характеристику \n======================");
 			insertKeyInCharacteristic(e, key_name);
-			qDebug() << "insertKeyInCharacteristic END     ======================\n";
+			ConsoleOutput::getInstance()->printInfo("Ключ: " + key_name + " добавлен к " + e->getId());
+			//ConsoleOutput::getInstance()->printInfo("\nВставка ключа в характеристику завершена \n======================");
 			return 0;
 		}
 
 		case essence_type::Designation:
 		{
-			qDebug() << "\ninsertKeyInDesignation START ======================";
+			//ConsoleOutput::getInstance()->printStartActionInfo("\nПроизводится вставка ключа в обозначение \n======================");
 			insertKeyInDesignation(e, key_name);
-			qDebug() << "insertKeyInDesignation END     ======================\n";
+			ConsoleOutput::getInstance()->printInfo("Ключ: " + key_name + " добавлен к " + e->getId());
+			//ConsoleOutput::getInstance()->printInfo("\nВставка ключа в обозначение завершена\n======================");
 			return 0;
 		}
 
 		case essence_type::Base:
 		{
-			qDebug() << "\ninsertKeyInBase START ======================";
+			//ConsoleOutput::getInstance()->printStartActionInfo("\nПроизводится вставка ключа в стержневую сущность\n======================");
 			insertKeyInBase(e, key_name);
-			qDebug() << "\ninsertKeyInBase END   ======================";
+			ConsoleOutput::getInstance()->printInfo("Ключ: " + key_name + " добавлен к " + e->getId());
+			//ConsoleOutput::getInstance()->printInfo("\nВставка ключа в стержневую сущность завершена\n======================");
 			return 0;
 		}
 
 		case essence_type::Association:
 		{
-			qDebug() << "\ninsertKeyInAssociation START ======================";
+			//ConsoleOutput::getInstance()->printStartActionInfo("\nПроизводится вставка ключа в ассоциацию\n======================");
 			insertKeyInAssociation(e, key_name);
-			qDebug() << "\ninsertKeyInAssociation END   ======================";
+			ConsoleOutput::getInstance()->printInfo("Ключ: " + key_name + " добавлен к " + e->getId());
+			//ConsoleOutput::getInstance()->printInfo("\nВставка ключа в ассоциацию завершена\n======================");
 			return 0;
 		}
 	}
 
-	qDebug() << "__ERROR__: in int DataController::addKey(QString id, QString key_name); Undifine behavior;";
+	ConsoleOutput::getInstance()->printSystemError("__ERROR__: in int DataController::addKey(QString id, QString key_name); Undifine behavior;");
 	return 100;
 }
 
 int DataController::joinBaseToExistAssociation(QString essence, QString association, int cord)
 {
 
-	qDebug() << "\nПроизводится включение сущности: " << essence <<" в состав ассоциации: " << association;
+	ConsoleOutput::getInstance()->printStartActionInfo("\nПроизводится включение сущности: " + essence + " в состав ассоциации: " + association);
 	EREssenceData * e = search(essence);
 	EREssenceData * a = search(association);
 
 	if(e == nullptr || a == nullptr)
 	{
-		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущностей: " << essence << " и(или) " << association << "не существует";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__:  in DataController::joinBaseToExistAssociation: сущностей: " + essence + " и(или) " + association + "не существует");
 		return 10;
 	}
 
 	if(e->getType() != essence_type::Base)
 	{
-		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " << essence << " не является стержневой";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " + essence + " не является стержневой");
 		return 20;
 	}
 
 	if(a->getType() != essence_type::Association)
 	{
-		qDebug() << "__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " << association << " не является ассаоциативной";
+		ConsoleOutput::getInstance()->printSystemError("__ERROR__:  in DataController::joinBaseToExistAssociation: сущность: " + association + " не является ассаоциативной");
 		return 30;
 	}
 
 	QList<QString> adj = relation_table.getAjasencyByName(association);
 	if(adj.contains(essence) == true)
 	{
-		qDebug() << "Сущность: " << essence << "уже входит в состав: " << association;
+		ConsoleOutput::getInstance()->printUserError("Сущность: " + essence + "уже входит в состав: " + association);
 		return 40;
 	}
 
@@ -1346,30 +1351,31 @@ int DataController::joinBaseToExistAssociation(QString essence, QString associat
 	}
 
 	relation_table.addRelation(essence, association, cord, cordinalyty::hiddenCord);
-	qDebug() << "Сущность: " << essence << "включена в связь: " << association << "\n";
+	ConsoleOutput::getInstance()->printInfo("Сущность: " + essence + "включена в связь: " + association + "\n");
 	return 0;
 }
 
 int DataController::setCordinality(QString id_a, QString id_b, int cord_A, int cord_B)
 {
-	qDebug() << "Производится установка кардинальностей: " << Support::cardinalityToString(cord_A) <<" "<<Support::cardinalityToString(cord_A) << " от " << id_a << " к " << id_b;
+	ConsoleOutput::getInstance()->printStartActionInfo("Производится установка кардинальностей: " +
+													   Support::cardinalityToString(cord_A) + " "+Support::cardinalityToString(cord_A) + " от " + id_a + " к " + id_b);
 
 	if(essenceIsExist(id_a) == false || essenceIsExist(id_b) == false)
 	{
-		qDebug() << "Сущностей(ти) с таким именем не обнаружено";
+		ConsoleOutput::getInstance()->printInfo("Сущностей(ти) с таким именем не обнаружено");
 		return -20;
 	}
 	QList<QString> adj = relation_table.getAjasencyByName(id_a);
 	if(adj.contains(id_b) == false)
 	{
-		qDebug() << "Сущности не смежны. Проверьте ошибки";
+		ConsoleOutput::getInstance()->printUserError("Сущности не смежны. Проверьте ошибки");
 		return -10;
 	}
 
 	if(checkCordinality(id_a, id_b,search(id_a)->getType(), search(id_b)->getType(),cord_A, cord_B) == 0)
 	{
 		relation_table.setCord(id_a, id_b, cord_A, cord_B);
-		qDebug() << "Кардинальности установлены";
+		ConsoleOutput::getInstance()->printInfo("Кардинальности установлены");
 		return 0;
 	}
 
@@ -1379,17 +1385,17 @@ int DataController::setCordinality(QString id_a, QString id_b, int cord_A, int c
 
 int DataController::renameEssence(QString id_to_rename, QString new_id)
 {
-	qDebug() << "Переименование сущности " << id_to_rename << " в " << new_id;
+	ConsoleOutput::getInstance()->printStartActionInfo("Переименование сущности " + id_to_rename + " в " + new_id);
 
 	if(essenceIsExist(id_to_rename) == false)
 	{
-		qDebug() << "Сущность " << id_to_rename << " не существует";
+		ConsoleOutput::getInstance()->printInfo("Сущность " + id_to_rename + " не существует");
 		return -10;
 	}
 
 	if(essenceIsExist(new_id) == true)
 	{
-		qDebug() << "Новое имя перекрывает старое";
+		ConsoleOutput::getInstance()->printInfo("Новое имя перекрывает старое - уже существующее");
 		return -20;
 	}
 
@@ -1397,7 +1403,7 @@ int DataController::renameEssence(QString id_to_rename, QString new_id)
 	EREssenceData * esse = search(id_to_rename);
 
 	esse->setId(new_id);
-	qDebug() << "Сущность переименована";
+	ConsoleOutput::getInstance()->printInfo("Сущность переименована");
 
 	foreach (EREssenceData * e, list_essences)
 	{
@@ -1415,12 +1421,12 @@ int DataController::renameEssence(QString id_to_rename, QString new_id)
 			(*i).replace(id_to_rename, new_id);
 		}
 	}
-	qDebug() << "Ключи и атрибуты переименованы";
+	ConsoleOutput::getInstance()->printInfo("Ключи и атрибуты переименованы");
 
 
 
 	relation_table.renameEssence(id_to_rename, new_id);
-	qDebug() << "Связи переименованы";
+	ConsoleOutput::getInstance()->printInfo("Связи переименованы");
 
 	return 0;
 }
@@ -1461,7 +1467,7 @@ std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFo
 
 	if(f == nullptr || s == nullptr)
 	{
-		qDebug() << "__ERRER__: in std::pair<QString, QString> DataController::getConnectionAttributesFor(QString id_first, QString id_second) nullptr exeption";
+		ConsoleOutput::getInstance()->printSystemError("__ERRER__: in std::pair<QString, QString> DataController::getConnectionAttributesFor(QString id_first, QString id_second) nullptr exeption");
 		return std::make_tuple("__ERROR__",-1, "__ERROR__", -1);
 	}
 
@@ -1517,10 +1523,10 @@ std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFo
 			if(stripped_f == stripped_s)
 			{
 
-				qDebug() << "This one";
-				qDebug() << f_attr;
-				qDebug() << s_key;
-				qDebug() << s->getKeysConst().indexOf(s_key);
+//				qDebug() << "This one";
+//				qDebug() << f_attr;
+//				qDebug() << s_key;
+//				qDebug() << s->getKeysConst().indexOf(s_key);
 				if(i == 0) {i++;}
 				if(j == 0) {j++;}
 				return std::make_tuple(f_attr, i + f->getKeysConst().length(), s_key, s->getKeysConst().indexOf(s_key) + 1);
@@ -1530,7 +1536,7 @@ std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFo
 		i++;
 	}
 
-	qDebug() << "Сущности " << id_first << " и " << id_second << "не имеют связи";
+	ConsoleOutput::getInstance()->printSystemError("Сущности " + id_first + " и " + id_second + "не имеют связи");
 	return std::make_tuple("__ERROR__",-1, "__ERROR__", -1);
 }
 
@@ -1579,7 +1585,7 @@ QList<QString> DataController::getProperties(QString id, int mode)
 
 	}
 
-	qDebug() << "__ERROR__: in QList<QString> DataController::getProperties(QString id, int mode) null pointer expection";
+	ConsoleOutput::getInstance()->printSystemError("__ERROR__: in QList<QString> DataController::getProperties(QString id, int mode) null pointer expection");
 	return properties;
 
 

@@ -16,16 +16,16 @@ QString Support::typeToString(int type)
 	switch (type)
 	{
 		case essence_type::Base:
-			return "Base";
+			return "Стержневая";
 			break;
 		case essence_type::Association:
-			return "Association";
+			return "Ассоциативная";
 			break;
 		case essence_type::Designation:
-			return "Designation";
+			return "Обозначающая";
 			break;
 		case essence_type::Characteristic:
-			return "Characteristic";
+			return "Характеризующая";
 			break;
 		case essence_type::Property_key:
 			return "Propery_key";

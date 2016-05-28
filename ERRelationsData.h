@@ -8,6 +8,7 @@
 #include <Support.h>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <ConsoleOutput.h>
 
 class ERRelationsData
 {

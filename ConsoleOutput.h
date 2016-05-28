@@ -13,6 +13,7 @@ public:
 	static void printSystemError(QString error);
 	static void printSystemMassage(QString msg);
 	static void printUserError(QString error);
+	static void printStartActionInfo(QString info);
 	static void printInfo(QString msg);
 	static void printInfoList(QString msg, QList<QString> list);
 

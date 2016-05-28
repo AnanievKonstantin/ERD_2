@@ -94,34 +94,34 @@ void ERGraphicsView::whatCreate(QAction * action)
 	switch (action->data().toInt()) {
 		case 0:
 			emit doCreation(essence_type::Base);
-			qDebug("Создаю: стержневую сущность");
+			//qDebug("Создаю: стержневую сущность");
 			break;
 		case 1:
 			emit doCreation(essence_type::Designation);
-			qDebug("Создаю: обозначение");
+//			qDebug("Создаю: обозначение");
 			break;
 		case 2:
 			emit doCreation(essence_type::Characteristic);
-			qDebug("Создаю: характеристику");
+//			qDebug("Создаю: характеристику");
 			break;
 		case 3:
 			emit doRelationOperation(3);
-			qDebug("Создаю: связь");
+//			qDebug("Создаю: связь");
 			break;
 		case 4:
 			emit doRelationOperation(4);
-			qDebug("Включаю в ассоциацию");
+//			qDebug("Включаю в ассоциацию");
 			break;
 		case 5:
 			emit doRelationOperation(5);
-			qDebug("Удаляю связь");
+//			qDebug("Удаляю связь");
 			break;
 		case 6:
 			emit doRelationOperation(6);
-			qDebug("изменяю кардинальность");
+//			qDebug("изменяю кардинальность");
 			break;
 		default:
-			qDebug("Ошибка в void ERGraphicsView::whatCreate(QAction * action), неверный тип сущности");
+//			qDebug("Ошибка в void ERGraphicsView::whatCreate(QAction * action), неверный тип сущности");
 			break;
 	}
 }

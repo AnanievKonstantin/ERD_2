@@ -12,11 +12,11 @@ EssenceCreateWindow::EssenceCreateWindow(QString id, int type, QWidget *parent) 
 	if(id == "")
 	{
 		editMode = false;
-		qDebug("Создаётся новая сущность");
+		ConsoleOutput::getInstance()->printStartActionInfo("Создаётся новая сущность");
 	}
 	else
 	{
-		qDebug("Редактируется существующая сущность");
+		ConsoleOutput::getInstance()->printStartActionInfo("Редактируется существующая сущность");
 		editMode = true;
 		loadData(id);
 	}
@@ -28,7 +28,7 @@ bool EssenceCreateWindow::loadData(QString id)
 	keys.clear();
 	attributes.clear();
 
-	qDebug() << "load\n";
+//	qDebug() << "load\n";
 //	EssenceDataController::instance()->getInfoAboutEssence(id);
 	EREssenceData * p_data  = DataController::getInstance()->search(id);
 
@@ -209,7 +209,7 @@ void EssenceCreateWindow::submitCreation(bool)
 //	old_attrs.clear();
 //	old_keys.clear();
 
-	qDebug() << "Проверка введенных данных";
+	ConsoleOutput::getInstance()->printStartActionInfo("Проверка введенных данных");
 	QString new_id = this->name.text();
 	QList<QString> new_keys;
 	QList<QString> new_attributes;
@@ -250,15 +250,15 @@ void EssenceCreateWindow::submitCreation(bool)
 
 	if(editMode == true)
 	{
-		qDebug() << "\nПроверка при редактировании сущности: ";
+		ConsoleOutput::getInstance()->printStartActionInfo("\nПроверка при редактировании сущности");
 
-		qDebug() <<"Old_keys: "<<old_keys;
-		qDebug() <<"old_attrs: "<<old_attrs;
-		qDebug() <<"old_id: "<<old_id;
+//		qDebug() <<"Old_keys: "<<old_keys;
+//		qDebug() <<"old_attrs: "<<old_attrs;
+//		qDebug() <<"old_id: "<<old_id;
 
-		qDebug() <<"new_keys: "	<<	new_keys;
-		qDebug() <<"new_attrs: "<<	new_attributes;
-		qDebug() <<"new_id: "	<<	new_id;
+//		qDebug() <<"new_keys: "	<<	new_keys;
+//		qDebug() <<"new_attrs: "<<	new_attributes;
+//		qDebug() <<"new_id: "	<<	new_id;
 
 		int error_dubl_key		= 0;
 		int error_dubl_attr		= 0;
@@ -282,7 +282,7 @@ void EssenceCreateWindow::submitCreation(bool)
 			}
 			if(new_keys.count(key) > 1)
 			{
-				qDebug() << "Ключ: " << key << "Дуюлируется. Проверьте ошибки";
+				ConsoleOutput::getInstance()->printUserError("Ключ: " + key + "Дуюлируется. Проверьте ошибки");
 				error_dubl_key = 1;
 				break;
 			}
@@ -303,7 +303,7 @@ void EssenceCreateWindow::submitCreation(bool)
 
 			if(new_attributes.count(attr) > 1)
 			{
-				qDebug() << "Атрибут: " << attr<< "Дуюлируется. Проверьте ошибки";
+				ConsoleOutput::getInstance()->printUserError("Атрибут: " + attr + "Дуюлируется. Проверьте ошибки");
 				error_dubl_attr = 1; break;
 			}
 		}
@@ -352,17 +352,18 @@ void EssenceCreateWindow::submitCreation(bool)
 		   error_remove_key == 1)
 		{
 			loadData(old_id);
-			qDebug() << "error_dubl_key	  " << error_dubl_key	  ;
-			qDebug() << "error_dubl_attr  " << error_dubl_attr    ;
-			qDebug() << "error_add_key	  " << error_add_key	  ;
-			qDebug() << "error_add_attr	  " << error_add_attr	  ;
-			qDebug() << "error_remove_key " << error_remove_key   ;
-			qDebug() << "error_remove_attr" << error_remove_attr  ;
-			qDebug() << "\nERROR";
+//			qDebug() << "error_dubl_key	  " << error_dubl_key	  ;
+//			qDebug() << "error_dubl_attr  " << error_dubl_attr    ;
+//			qDebug() << "error_add_key	  " << error_add_key	  ;
+//			qDebug() << "error_add_attr	  " << error_add_attr	  ;
+//			qDebug() << "error_remove_key " << error_remove_key   ;
+//			qDebug() << "error_remove_attr" << error_remove_attr  ;
+
+			ConsoleOutput::getInstance()->printUserError("Проверка не пройдена");
 		}
 		else
 		{
-			qDebug() << "\nПроверка пройдена";
+			ConsoleOutput::getInstance()->printInfo("Проверка пройдена");
 			emit endSuccessEditation(new_id);
 			this->close();
 		}
@@ -370,12 +371,12 @@ void EssenceCreateWindow::submitCreation(bool)
 
 	if(editMode == false)
 	{
-		qDebug() << "\nПроверка при создании сущности: ";
+		ConsoleOutput::getInstance()->printStartActionInfo("Проверка при создании сущности");
 		int error = DataController::getInstance()->createEssence(new_id, current_type, new_keys, new_attributes);
-		DataController::getInstance()->printAllEssence();
+//		DataController::getInstance()->printAllEssence();
 		if(error == 0)
 		{
-			qDebug() << "\nПроверка пройдена";
+			ConsoleOutput::getInstance()->printInfo("Проверка пройдена");
 			emit endSuccessCreation(new_id);
 			this->close();
 		}
@@ -385,7 +386,7 @@ void EssenceCreateWindow::submitCreation(bool)
 
 void EssenceCreateWindow::cancelCreation(bool)
 {
-	qDebug() << "Работа с обьектом прервана" << "\n";
+	ConsoleOutput::getInstance()->printSystemMassage("Работа с обьектом прервана");
 	emit exitFromCreateWindow();
 	this->close();
 }

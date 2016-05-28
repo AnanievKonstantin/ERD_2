@@ -31,13 +31,13 @@ int ERRelationsData::addRelation(QString first, QString second, int cordinalityF
 {
 	if(isExist(first, second) == true)
 	{
-		qDebug() << "Связь между " << first  << "и " << second<< "уже существует\n";
+		ConsoleOutput::getInstance()->printInfo("Связь между " + first  + "и "  + second + "уже существует\n");
 		return 1;
 	}
 
 	if(first ==  second)
 	{
-		qDebug() << "Рекурсивные связи запрещены. Рекурсия в" << first << "\n";
+		ConsoleOutput::getInstance()->printInfo("Рекурсивные связи запрещены. Рекурсия в" + first + "\n");
 		return 2;
 	}
 	std::tuple<QString, QString, int, int> row = std::make_tuple(first, second, cordinalityFirst, cordinalitySecond);
@@ -146,7 +146,7 @@ void ERRelationsData::print()
 	for(int i = 0; i < cordinality_table.length(); i++)
 	{
 		std::tuple<QString, QString, int, int> row = cordinality_table.at(i);
-		qDebug() <<std::get<0>(row) <<" RELATE "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
+//		qDebug() <<std::get<0>(row) <<" RELATE "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
 	}
 }
 
@@ -155,7 +155,7 @@ void ERRelationsData::printList(QList<std::tuple<QString, QString, int, int> > l
 	for(int i = 0; i < list.length(); i++)
 	{
 		std::tuple<QString, QString, int, int> row = list.at(i);
-		qDebug() <<std::get<0>(row) <<" RELATE "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
+//		qDebug() <<std::get<0>(row) <<" RELATE "<<std::get<1>(row) <<": "<<Support::cardinalityToString(std::get<2>(row)) <<", "<<Support::cardinalityToString(std::get<3>(row)) <<";";
 	}
 }
 

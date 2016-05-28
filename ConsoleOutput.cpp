@@ -51,6 +51,13 @@ void ConsoleOutput::printUserError(QString error)
 	lineCount++;
 }
 
+void ConsoleOutput::printStartActionInfo(QString info)
+{
+	QString num = QString::number(lineCount);
+	browser->append("<p><font color= green  face= Arial>" + num +": "+ info + "</font></p>");
+	lineCount++;
+}
+
 void ConsoleOutput::printInfo(QString msg)
 {
 	QString num = QString::number(lineCount);
@@ -60,7 +67,15 @@ void ConsoleOutput::printInfo(QString msg)
 
 void ConsoleOutput::printInfoList(QString msg, QList<QString> list)
 {
+	QString num = QString::number(lineCount);
+	QString string_list;
+	foreach (QString s, list)
+	{
+		string_list = string_list + ", " + s;
+	}
 
+	browser->append("<p><font color= black  face= Arial>" + num +": "+ msg + " " + string_list + "</font></p>");
+	lineCount++;
 }
 
 

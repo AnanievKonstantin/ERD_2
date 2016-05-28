@@ -82,7 +82,7 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 			EREssenceData * essence = DataController::getInstance()->search(s);
 			if(essence == nullptr)
 			{
-				qDebug() << "__ERROR__: in RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QWidget(parent) null pointer expection";
+				ConsoleOutput::getInstance()->printSystemError("__ERROR__: in RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QWidget(parent) null pointer expection");
 				continue;
 			}
 
@@ -129,7 +129,7 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 
 	if(this->mode == 6)
 	{
-		qDebug() << "Редактировани кардинальностей";
+		ConsoleOutput::getInstance()->printStartActionInfo("Редактировани кардинальностей");
 
 		col_1->setText("Сущность А");
 		col_4->setText("Сущность B");
@@ -153,16 +153,16 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 
 void RelationOperationWindow::setAEssece(QString name)
 {
-	qDebug() << "A essence:" << name;
+//	qDebug() << "A essence:" << name;
 }
 
 void RelationOperationWindow::checkSubmossion(bool test)
 {
-	qDebug() << "Проверка операций со связями";
-	qDebug() << "A: " << menuEssenceA->currentText();
-	qDebug() << "B: " << menuEssenceB->currentText();
-	qDebug() << "cord A: " << menuCordinalityA->currentText();
-	qDebug() << "cord B: " << menuCordinalityB->currentText();
+	ConsoleOutput::getInstance()->printStartActionInfo("Проверка операций со связями");
+//	qDebug() << "A: " << menuEssenceA->currentText();
+//	qDebug() << "B: " << menuEssenceB->currentText();
+//	qDebug() << "cord A: " << menuCordinalityA->currentText();
+//	qDebug() << "cord B: " << menuCordinalityB->currentText();
 
 	QString A = menuEssenceA->currentText();
 	QString B = menuEssenceB->currentText();
@@ -216,7 +216,7 @@ void RelationOperationWindow::checkSubmossion(bool test)
 
 void RelationOperationWindow::cancelWork(bool check)
 {
-	qDebug() << "Отмена операций со связями";
+	ConsoleOutput::getInstance()->printSystemMassage("Отмена операций со связями");
 	emit cancelRelationOperation(false);
 	close();
 }
