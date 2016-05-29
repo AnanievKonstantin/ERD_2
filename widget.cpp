@@ -126,11 +126,11 @@ void Widget::syncTreeViev()
 
 void Widget::setUpTreeViews()
 {
-	treeVievOneEssence->setMinimumWidth(250);
+	treeVievOneEssence->setMinimumWidth(100);
 	treeVievOneEssence->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
-	treeViev->setGeometry(QRect(0,0, 100, 100));
-	treeViev->setMinimumWidth(200);
+	treeViev->setGeometry(QRect(0,0, 10, 100));
+	treeViev->setMinimumWidth(100);
 	treeViev->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
 	treeViev->setModel(treeModel);

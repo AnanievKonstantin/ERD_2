@@ -49,7 +49,7 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 		{
 			key += ",F";
 		}
-		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+key);
+		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+Support::getStrippedProperty(key));
 
 
 		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
@@ -59,7 +59,7 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 	y+=Support::getTableDeltaRow();
 	foreach (QString attrs, getAttrs())
 	{
-		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+attrs);
+		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+Support::getStrippedProperty(attrs));
 		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 

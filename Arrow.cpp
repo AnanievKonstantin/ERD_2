@@ -84,7 +84,7 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 	if(table_draw_mode == false)
 	{
-		calcConnectPointInERMode(50, 30, line, sTextPos, eTextPos);
+		calcConnectPointInERMode(10, 10, line, sTextPos, eTextPos);
 
 	}
 	else
@@ -121,8 +121,8 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 		line.setP1(start_points.at(2));
 		line.setP2(end_points.at(0));
 
-		sTextPos = {line.p1().x() + indent, line.p1().y() - indent/2};
-		eTextPos = {line.p2().x() - indent*1.1, line.p2().y() - indent/2};
+//		sTextPos = {line.p1().x() + indent, line.p1().y() - indent/2};
+//		eTextPos = {line.p2().x() - indent*1.1, line.p2().y() - indent/2};
 	}
 
 	if(s.x() > e.x())
@@ -130,8 +130,8 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 		line.setP1(start_points.at(0));
 		line.setP2(end_points.at(2));
 
-		sTextPos = {line.p1().x() - indent*1.1, line.p1().y() - indent/2};
-		eTextPos = {line.p2().x() + indent, line.p2().y() - indent/2};
+//		sTextPos = {line.p1().x() - indent*1.1, line.p1().y() - indent/2};
+//		eTextPos = {line.p2().x() + indent, line.p2().y() - indent/2};
 	}
 
 	if(((s.x() + delta) > e.x()) && ((s.x() - delta) < e.x()))
@@ -141,8 +141,8 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 			line.setP1(start_points.at(1));
 			line.setP2(end_points.at(3));
 
-			sTextPos = {line.p1().x() + indent/2, line.p1().y() - indent/2};
-			eTextPos = {line.p2().x() + indent/2, line.p2().y() + indent/2};
+//			sTextPos = {line.p1().x() + indent/2, line.p1().y() - indent/2};
+//			eTextPos = {line.p2().x() + indent/2, line.p2().y() + indent/2};
 		}
 	}
 
@@ -153,9 +153,35 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 			line.setP1(start_points.at(3));
 			line.setP2(end_points.at(1));
 
-			sTextPos = {line.p1().x() + indent/2, line.p1().y() + indent/2};
-			eTextPos = {line.p2().x() + indent/2, line.p2().y() - indent/2};
+//			sTextPos = {line.p1().x() + indent/2, line.p1().y() + indent/2};
+//			eTextPos = {line.p2().x() + indent/2, line.p2().y() - indent/2};
 		}
+	}
+
+	qreal mx = (line.p1().x() + line.p2().x())/2;
+	qreal my = (line.p1().y() + line.p2().y())/2;
+
+
+	if(line.p1().x() >= line.p2().x())
+	{
+		sTextPos.setX(mx + indent);
+		eTextPos.setX(mx - indent);
+	}
+	if(line.p1().x() < line.p2().x())
+	{
+		sTextPos.setX(mx - indent);
+		eTextPos.setX(mx +  indent);
+	}
+
+	if(line.p1().y() >= line.p2().y())
+	{
+		sTextPos.setY(my - indent);
+		eTextPos.setY(my + indent);
+	}
+	if(line.p1().y() < line.p2().y())
+	{
+		sTextPos.setY(my - indent);
+		eTextPos.setY(my + indent);
 	}
 }
 
@@ -191,18 +217,33 @@ void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF
 	line.setP2(e);
 
 
+	qreal mx = (s.x() + e.x())/2;
+	qreal my = (s.y() + e.y())/2;
+
 	if(s.x() >= e.x())
 	{
-		sTextPos.setX(s.x() - indent);
-		eTextPos.setX(e.x() + indent);
+		sTextPos.setX(mx + indent);
+		eTextPos.setX(mx - indent);
 	}
 	if(s.x() < e.x())
 	{
-		sTextPos.setX(s.x() + indent);
-		eTextPos.setX(e.x() -  indent);
+		sTextPos.setX(mx - indent);
+		eTextPos.setX(mx +  indent);
 	}
-	sTextPos.setY(s.y());
-	eTextPos.setY(e.y());
+
+	if(s.y() >= e.y())
+	{
+		sTextPos.setY(my - indent);
+		eTextPos.setY(my + indent);
+	}
+	if(s.y() < e.y())
+	{
+		sTextPos.setY(my - indent);
+		eTextPos.setY(my + indent);
+	}
+
+
+
 
 }
 
