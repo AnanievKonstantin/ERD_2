@@ -49,17 +49,23 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 		{
 			key += ",F";
 		}
-		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+Support::getStrippedProperty(key));
+		QFont font(Support::fontFamilie, Support::fontSizeProperty);
+		font.setUnderline(true);
+		painter->setFont(font);
+		painter->drawText(x+5,y,size().width(),50,Qt::AlignLeft,Support::getStrippedProperty(key));
 
 
 		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 
+	QFont font(Support::fontFamilie, Support::fontSizeProperty);
+	font.setUnderline(false);
+	painter->setFont(font);
 	painter->drawLine(0,y,size().width(),y);
 	y+=Support::getTableDeltaRow();
 	foreach (QString attrs, getAttrs())
 	{
-		painter->drawText(x,y,size().width(),50,Qt::AlignLeft,"    "+Support::getStrippedProperty(attrs));
+		painter->drawText(x+5,y,size().width(),50,Qt::AlignLeft,Support::getStrippedProperty(attrs));
 		y+=Support::getTableHeightRow() + Support::getTableDeltaRow();
 	}
 

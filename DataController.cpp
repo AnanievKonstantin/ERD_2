@@ -857,7 +857,8 @@ bool DataController::saveState(QString path)
 	{
 		path = "save.json";
 	}
-	QFile saveFile(path);
+
+	QFile saveFile(path+".json");
 
 	if (!saveFile.open(QIODevice::WriteOnly))
 	{
