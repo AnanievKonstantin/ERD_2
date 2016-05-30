@@ -58,6 +58,31 @@ QPainterPath Arrow::shape() const
 	return path;
 }
 
+std::pair<QString, QString> Arrow::createCadinalityForAssociation(QString cord_to_split)
+{
+
+	ConsoleOutput::printSystemMassage(cord_to_split);
+	if(cord_to_split == Support::cardinalityToString(cordinalyty::OneOne))
+	{
+		return std::make_pair(Support::cardinalityToString(cordinalyty::OneOne), Support::cardinalityToString(cordinalyty::OneOne));
+	}
+	if(cord_to_split == Support::cardinalityToString(cordinalyty::OneMany))
+	{
+		return std::make_pair(Support::cardinalityToString(cordinalyty::OneOne), Support::cardinalityToString(cordinalyty::OneMany));
+	}
+	if(cord_to_split == Support::cardinalityToString(cordinalyty::ZeroOne))
+	{
+		return std::make_pair(Support::cardinalityToString(cordinalyty::ZeroOne), Support::cardinalityToString(cordinalyty::OneMany));
+	}
+	if(cord_to_split == Support::cardinalityToString(cordinalyty::ZeroMany))
+	{
+		return std::make_pair(Support::cardinalityToString(cordinalyty::ZeroOne), Support::cardinalityToString(cordinalyty::OneMany));
+	}
+
+	ConsoleOutput::printSystemError("std::pair<QString, QString> Arrow::createCadinalityForAssociation(QString & cord_to_split) bad cardinality");
+	return std::make_pair("__ERROR__", "__ERROR__");
+}
+
 
 void Arrow::updatePosition()
 {
@@ -85,21 +110,42 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 	if(table_draw_mode == false)
 	{
 		calcConnectPointInERMode(10, 10, line, sTextPos, eTextPos);
+		if (qFuzzyCompare(line.length(), qreal(0.)))
+			return;
+		painter->setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+		this->setLine(line);
+		painter->drawLine(line);
 
+		painter->drawText(sTextPos, sText);
+		painter->drawText(eTextPos, eText);
 	}
 	else
 	{
+		QString toDrawSTesxt = sText;
+		QString toDrawETesxt = eText;
+		if(myStartItem->getType() == essence_type::Association)
+		{
+			std::pair<QString, QString> new_splited_cord = createCadinalityForAssociation(eText);
+			toDrawSTesxt = std::get<0>(new_splited_cord);
+			toDrawETesxt = std::get<1>(new_splited_cord);
+		}
+		else if(myEndItem->getType() == essence_type::Association)
+		{
+			std::pair<QString, QString> new_splited_cord = createCadinalityForAssociation(sText);
+			toDrawSTesxt = std::get<0>(new_splited_cord);
+			toDrawETesxt = std::get<1>(new_splited_cord);
+		}
 		calcConnectPointInTableMode(line, sTextPos, eTextPos, 30);
+
+		if (qFuzzyCompare(line.length(), qreal(0.)))
+			return;
+		painter->setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+		this->setLine(line);
+		painter->drawLine(line);
+
+		painter->drawText(sTextPos, toDrawSTesxt);
+		painter->drawText(eTextPos, toDrawETesxt);
 	}
-
-	if (qFuzzyCompare(line.length(), qreal(0.)))
-		return;
-	painter->setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	this->setLine(line);
-	painter->drawLine(line);
-
-	painter->drawText(sTextPos, sText);
-	painter->drawText(eTextPos, eText);
 
 }
 
@@ -165,23 +211,29 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 	if(line.p1().x() >= line.p2().x())
 	{
 		sTextPos.setX(mx + indent);
-		eTextPos.setX(mx - indent);
+		eTextPos.setX(mx - indent*2);
 	}
 	if(line.p1().x() < line.p2().x())
 	{
-		sTextPos.setX(mx - indent);
+		sTextPos.setX(mx - indent*2);
 		eTextPos.setX(mx +  indent);
 	}
 
 	if(line.p1().y() >= line.p2().y())
 	{
 		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent);
+		eTextPos.setY(my + indent*2);
+
+		sTextPos.setX(mx + indent);
+		eTextPos.setX(mx - indent*3);
 	}
 	if(line.p1().y() < line.p2().y())
 	{
 		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent);
+		eTextPos.setY(my + indent*2);
+
+		sTextPos.setX(mx - indent*3);
+		eTextPos.setX(mx +  indent);
 	}
 }
 

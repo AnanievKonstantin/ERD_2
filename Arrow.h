@@ -27,6 +27,20 @@ public:
 	EREssence *startItem() const { return myStartItem; }
 	EREssence *endItem() const { return myEndItem; }
 
+
+	/**
+	 * @brief createCadinalityForAssociation
+	 * Получает на вход кардинальность и положение сущности типа не ассоциация(любой другой тип).
+	 * Разделяет кардинальность от не ассоциативной сущности в соотвествии:
+	 * 1/1 -> 1/1 - 1/1
+	 * 1/M -> 1/1 - 1/M
+	 * 0/1 -> 0/1 - 1/M
+	 * 0/M -> 0/1 - 1/M
+	 * @param cord_to_split кадинальность от не ассоциации для разделения на две кардинальности для табличного представления
+	 *
+	 *
+	 */
+	std::pair<QString, QString>	createCadinalityForAssociation(QString cord_to_split);
 	bool isTableDrawMode() const {return table_draw_mode;}
 	void enableTableDrawMode() {table_draw_mode = true;}
 	void updatePosition();

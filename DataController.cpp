@@ -32,13 +32,13 @@ int DataController::checkBeforeCreationEssence(QString id, int type, QList<QStri
 
 	if(keys.length() == 0)
 	{
-		ConsoleOutput::getInstance()->printInfo("Сущность должна сожержать минимум один ключ");
+		ConsoleOutput::getInstance()->printInfo("Сущность должна содержать минимум один ключ");
 		error = true;
 	}
 
 	if(attributes.length() == 0)
 	{
-		ConsoleOutput::getInstance()->printInfo("Сущность должна сожержать минимум один атрибут");
+		ConsoleOutput::getInstance()->printInfo("Сущность должна содержать минимум один атрибут");
 		error = true;
 	}
 
@@ -258,7 +258,7 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 {
 	if(Support::checkTypeCordinality(cord_first) != true || Support::checkTypeCordinality(cord_second) != true)
 	{
-		ConsoleOutput::getInstance()->printInfo("Задана неизвестная кординальность");
+		ConsoleOutput::getInstance()->printInfo("Задана неизвестная кардинальность");
 		return -10;
 	}
 
@@ -270,14 +270,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
 			{
-				ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
+				ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочетания кардинальностей: 1/1 - 1/M или 1/1 - 1/1");
 				return -10;
 			}
 			return 0;
 		}
 		else
 		{
-			ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и характеристик возможны только следующие сочетания кардинальностей: 1/1 - 1/M или 1/1 - 1/1");
 			return -10;
 		}
 	}
@@ -292,7 +292,7 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 		}
 		else
 		{
-			ConsoleOutput::getInstance()->printInfo("Для обозначений и Ассоциации возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1 или 1/M - 1/1");
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и Ассоциации возможны только следующие сочетания кардинальностей: 1/1 - 1/M или 1/1 - 1/1 или 1/M - 1/1");
 			return -20;
 		}
 	}
@@ -306,14 +306,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Designation && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Designation && cord_second != cordinalyty::OneOne))
 			{
-				ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
+				ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочетания кардинальностей: 1/1 - 1/M или 1/1 - 1/1");
 				return -30;
 			}
 			return 0;
 		}
 		else
 		{
-			ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочитания кординальностей: 1/1 - 1/M или 1/1 - 1/1");
+			ConsoleOutput::getInstance()->printInfo("Для обозначений и стержневых сущностей возможны только следующие сочетания кардинальностей: 1/1 - 1/M или 1/1 - 1/1");
 			return -30;
 		}
 	}
@@ -327,14 +327,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Base && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Base && cord_second != cordinalyty::OneOne))
 			{
-				ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
+				ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочетания кардинальностей: 1/M - 1/1 или 1/1 - 1/1");
 				return -40;
 			}
 			return 0;
 		}
 		else
 		{
-			ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
+			ConsoleOutput::getInstance()->printInfo("Для характеристик и стержневых сущностей возможны только следующие сочетания кардинальностей: 1/M - 1/1 или 1/1 - 1/1");
 			return -40;
 		}
 	}
@@ -348,14 +348,14 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			if((first_type == essence_type::Association && cord_first != cordinalyty::OneOne) ||
 			   (second_type == essence_type::Association && cord_second != cordinalyty::OneOne))
 			{
-				ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
+				ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочетания кардинальностей: 1/M - 1/1 или 1/1 - 1/1");
 				return -50;
 			}
 			return 0;
 		}
 		else
 		{
-			ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочитания кординальностей: 1/M - 1/1 или 1/1 - 1/1");
+			ConsoleOutput::getInstance()->printInfo("Для характеристик и ассоцтаций возможны только следующие сочетания кардинальностей: 1/M - 1/1 или 1/1 - 1/1");
 			return -50;
 		}
 	}
@@ -372,13 +372,13 @@ int DataController::checkCordinality(QString first, QString second, int first_ty
 			EREssenceData * e2 = search(second);
 			if(e1->getType() == essence_type::Association)
 			{
-				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + first + " устновлена скрытая кординальность");
+				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + first + " устновлена скрытая кардинальность");
 				cord_first = cordinalyty::hiddenCord;
 				return 0;
 			}
 			if(e2->getType() == essence_type::Association)
 			{
-				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + second + " устновлена скрытая кординальность");
+				ConsoleOutput::getInstance()->printStartActionInfo("Для ассоциации " + second + " устновлена скрытая кардинальность");
 				cord_second = cordinalyty::hiddenCord;
 				return 0;
 			}
