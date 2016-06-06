@@ -5,6 +5,11 @@
 #include <Arrow.h>
 #include <EREssence.h>
 
+
+/**
+ * @brief The EREssenceBase class
+ *	Описывает графический объект представляющий ассоциативную сущность
+ */
 class EREssenceRelation: public EREssence
 {
 	public:

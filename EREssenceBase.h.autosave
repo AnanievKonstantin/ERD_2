@@ -7,7 +7,7 @@
 
 /**
  * @brief The EREssenceBase class
- *	Описывает стрежневую сущность
+ *	Описывает графический объект представляющий стержневую сущность
  */
 class EREssenceBase: public EREssence
 {

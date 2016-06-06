@@ -15,11 +15,31 @@
 #include <QDebug>
 #include <QRegExpValidator>
 
+/**
+ * @brief The EssenceCreateWindow class
+ *	описывает окно для создания и редактирования сущности
+ */
 class EssenceCreateWindow : public QWidget
 {
 		Q_OBJECT
 	public:
+		/**
+		 * @brief EssenceCreateWindow
+		 *	рисует окно, выполняет проверку создаётся сущность или редактируется,
+		 *	вызывает функции проверки корректности данных
+		 * @param id
+		 *	имя сущности
+		 * @param type
+		 *	тип сущности
+		 */
 		explicit EssenceCreateWindow(QString id, int type, QWidget *parent = 0);
+
+		/**
+		 * @brief loadData
+		 *	загружает данные если сущность открытая в окне уже сущенствует
+		 * @param id
+		 *	имя сущности
+		 */
 		bool loadData(QString id);
 	private:
 		QLineEdit name;

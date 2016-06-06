@@ -8,7 +8,10 @@
 
 class TreeItem;
 
-//! [0]
+/**
+ * @brief The TreeModel class
+ * инкапсулирует модель для представления множества сущностей
+ */
 class TreeModel : public QAbstractItemModel
 {
 	Q_OBJECT

@@ -13,10 +13,24 @@
 #include <QWidget>
 #include <QComboBox>
 
+/**
+ * @brief The RelationOperationWindow class
+ *	описывает окно редактирования и создания связи
+ */
 class RelationOperationWindow : public QWidget
 {
 	Q_OBJECT
 public:
+	/**
+	 * @brief RelationOperationWindow
+	 *	создаёт окно, вызывает функции проверки введённыз данных
+	 * @param mode
+	 *	тип операции
+	 *	создание
+	 *	редактирование
+	 *	включение в ассоциацию...
+	 * @param parent
+	 */
 	explicit RelationOperationWindow(int mode, QWidget *parent = 0);
 private:
 	QPushButton * submit;

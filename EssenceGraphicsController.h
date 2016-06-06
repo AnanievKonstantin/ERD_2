@@ -18,6 +18,10 @@
 #include <Support.h>
 #include <DataTable.h>
 
+/**
+ * @brief The EssenceGraphicsController class
+ *	описывает контроллер графических представлений.
+ */
 class EssenceGraphicsController : public QObject
 {
 		Q_OBJECT
@@ -27,16 +31,13 @@ class EssenceGraphicsController : public QObject
 		static void setSceneToDataModel(QGraphicsScene * _scene);
 
 
+		/**
+		 * @brief syncWithDataContriller
+		 *	синхронизирует графическое представление с данными диаграммы
+		 */
 		void syncWithDataContriller();
-//		bool addEssence(EREssence * essence);
-//		bool addProperty(EREssenceProperty * property);
-//		bool addArrow(Arrow * arrow);
 
-//		void renameEssence(QString old_name, QString new_name);
-
-//		EREssence * getEssence(QString id);
-//		EREssence * getProperty(QString parent, QString name_property);
-//		Arrow * getArrow(QString parent1, QString parent2);
+		//debug print in termonal
 		void print();
 	private:
 		EssenceGraphicsController(EssenceGraphicsController const&){}

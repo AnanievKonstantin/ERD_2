@@ -4,6 +4,10 @@
 #include <QList>
 #include <QVariant>
 
+/**
+ * @brief The TreeItem class
+ *	инкапсулирует лепесток дерева древовидных представлений сущности
+ */
 class TreeItem
 {
 public:

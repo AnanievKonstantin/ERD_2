@@ -16,17 +16,7 @@
 
 /**
  * @brief The DataController class
- * Запрещается:
- *	дублирование имен сущностей
- *	дублирование имен атрубутов
- *	дублирование имен ключей
- *		за исключением создания системных дублей при установке связей.
- *	Запрещается ручное редактирование системных ключей и атрубутов. Системный атрибет имеет в имени название родителя. A::id
- *	запрещается характеризовать характеристику
- *  запрещается обозначать обозначение
- *	рекурсивно соединять сущность с собой
- *  Ассоциацию можно создавать при соединении двух сущностей. Затем к ней можно только подключать или отключать сущности
- *
+ * Описывает логику поведение ER и Data моделей
  */
 class DataController
 {
@@ -35,40 +25,189 @@ class DataController
 		static DataController * getInstance();
 
 		QList<std::tuple<QString, QString, int, int> > getRelationTable();
-		//actrions
+
+		/**
+		 * @brief createEssence
+		 *	Создаёт сущность, с учетом правил построения ER модели
+		 * @param id
+		 *	имя сущности
+		 * @param type
+		 *	тип сущности
+		 * @param keys
+		 *	ключи сущности
+		 * @param attributes
+		 *	атрибуты сущности
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int createEssence(QString id, int type, QList<QString> keys, QList<QString> attributes);
+
+		/**
+		 * @brief removeEssence
+		 *	удалит сущность по id
+		 * @param id
+		 *	имя сущности
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 *
+		 */
 		int removeEssence(QString id);
 
+		/**
+		 * @brief createRelation
+		 *	создаёт связь, или простую или сущность ассоциацию, зависит от типов first and second
+		 * @param id_first
+		 *	имя первой сущности
+		 * @param id_second
+		 *	имя второй сущности
+		 * @param cord_one
+		 *	карданальность от 1 -> 2
+		 * @param cord_two
+		 *	*	карданальность от 2 -> 1
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int createRelation(QString id_first, QString id_second, int cord_one, int cord_two);
+
+		/**
+		 * @brief removeRelation
+		 *	удаляет связь
+		 * @param id_first
+		 *	имя первой сущности учавствующей в связи
+		 * @param id_second
+		 *	имя второй сущности учавствующей в связи
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int removeRelation(QString id_first, QString id_second);
 
+		/**
+		 * @brief removeAttribute
+		 *	удаляет существующий атрибут
+		 * @param id
+		 *	имя сущности с атрибутом
+		 * @param attr_name
+		 *	имя атрибута
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int removeAttribute(QString id, QString attr_name);
+
+		/**
+		 * @brief addAttribute
+		 *	вставляет в сущность атрибут
+		 * @param id
+		 *	имя сущности для вставки атрибута
+		 * @param attr_name
+		 *	имя атрибута
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int addAttribute(QString id, QString attr_name);
 
+		/**
+		 * @brief removeKey
+		 * Удаляет ключ из сущности
+		 * @param id
+		 * имя сущности
+		 * @param key_name
+		 *	имя ключа
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int removeKey(QString id, QString key_name);
+
+		/**
+		 * @brief addKey
+		 * вставляет ключ в сущность
+		 * @param id
+		 *	имя сущности для вставки
+		 * @param key_name
+		 *	имя ключа
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int addKey(QString id, QString key_name);
 
+		/**
+		 * @brief joinBaseToExistAssociation
+		 *	производит включание сущности в состав ассоциации
+		 * @param essence
+		 *	стержевая сущность
+		 * @param association
+		 *	ассациация
+		 * @param cord
+		 *	кардинальность от essence to association
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int joinBaseToExistAssociation(QString essence, QString association, int cord);
+
+		/**
+		 * @brief setCordinality
+		 * устанавлявает кардинальнолсть между а и б
+		 * @param id_a
+		 *	имя первой сущности
+		 * @param id_b
+		 *	имя второй сущности
+		 * @param cord_A
+		 *	кардинальность от а к б
+		 * @param cord_B
+		 *	карданальность от б к а
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 *
+		 */
 		int setCordinality(QString id_a, QString id_b, int cord_A, int cord_B);
 
+		/**
+		 * @brief renameEssence
+		 *	переименует сущность
+		 * @param id_to_rename
+		 *	имя сущности для переименования
+		 * @param new_id
+		 *	новое имя
+		 * @return
+		 *	0 если все хорошо
+		 *	!0 если что то пошло не так
+		 */
 		int renameEssence(QString id_to_rename, QString new_id);
-		//debug - print
+
+		//debug - in terminal
 		void printAllEssence();
 		void printEssenceByID(QString id);
 		void printRelations();
 
 		/**
 		 * @brief getConnectionAttributesFor
-		 *
+		 *	расчитывает положение атрибута или ключа в массиве ключей или атрибутов
 		 * std::tuple<QString, int, int, QString, int, int>
-		 * Имя первого, позиция первого в таблице, тоже и для вторго.
+		 *	Имя первого, позиция первого в таблице, тоже и для вторго.
 		 * @param id_first
+		 *	имя первой сущности
 		 * @param id_second
+		 *	имя второй сущности
 		 * @return
-		 *
+		 *	std::tuple<QString, int, int, QString, int, int>
+		 *	Имя первого, позиция первого в таблице, тоже и для вторго.
 		 */
 		std::tuple<QString, int, QString, int> getConnectionAttributesFor(QString id_first, QString id_second);
 
+		/**
+		 * @brief getEssences
+		 *	вернёт список имен всех сущностей диаграммы
+		 * @return
+		 */
 		QList<QString> getEssences();
 
 		/**
@@ -79,14 +218,56 @@ class DataController
 		 *				3 - ключи составные
 		 *
 		 * @return
+		 *	список имен свойств
 		 */
 		QList<QString> getProperties(QString id, int mode);
+
+		/**
+		 * @brief getAjesencyFor
+		 * @param id
+		 *	имя сущности
+		 * @return
+		 *	вернёт список смежных сущностей к id
+		 */
 		QList<QString> getAjesencyFor(QString id);
 
+		/**
+		 * @brief search
+		 * @param id
+		 *	имя сущности
+		 * @return
+		 * вернёт указатель на сущность
+		 * или nullptr id not exist
+		 */
 		EREssenceData * search(QString id);
+
+		/**
+		 * @brief saveState
+		 *	сохраняет класс на диск
+		 * @param path
+		 *	путь для сохранения
+		 * @return
+		 *	true если сохранил
+		 *	false если нет
+		 */
 		bool saveState(QString path);
+
+		/**
+		 * @brief loadState
+		 *	загружает класс с диска
+		 * @param path
+		 *	путь к файлу
+		 * @return
+		 *	true если сохранил
+		 *	false если нет
+		 */
 		bool loadState(QString path);
 
+		/**
+		 * @brief clear
+		 *	отчищает все списки и связи диаграммы
+		 *	это подготовка к загрузке нового файла или отчистка при создании пустого
+		 */
 		void clear();
 
 	private:
@@ -131,10 +312,12 @@ class DataController
 
 		int removeKeyFrom(QString id, QString key);
 
-
-
-
 		QList<EREssenceData*> list_essences;
+
+		/**
+		 * @brief relation_table
+		 * Таблица со связями, кардинальности и имена смежных сущностей
+		 */
 		ERRelationsData relation_table;
 
 };

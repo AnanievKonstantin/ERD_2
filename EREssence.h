@@ -20,14 +20,30 @@
 #include <EREssenceData.h>
 class Arrow;
 
+/**
+ * @brief The EREssence class
+ *	базовый класс для графических обьектов диаграммы
+ */
 class EREssence: public QGraphicsWidget
 {
 	Q_OBJECT
 	public:
 		EREssence(EREssenceData * data, QGraphicsWidget * parent = 0);
 		QString getId() const;
+
+		/**
+		 * @brief getIdWithoutPath
+		 * @return
+		 *	вернёт имя без системного пути
+		 */
 		QString getIdWithoutPath() const;
 		QString & getNonConstId();
+
+		/**
+		 * @brief addArrow
+		 *	добавит стрелку для обновления в список стрелок
+		 * @param arrow
+		 */
 		void addArrow(Arrow *arrow);
 		virtual QPolygonF getPolygon() = 0;
 		QVariant itemChange(GraphicsItemChange change, const QVariant &value);

@@ -3,6 +3,11 @@
 
 #include <EREssence.h>
 #include <QGraphicsGridLayout>
+
+/**
+ * @brief The DataTable class
+ *	описввает графическую таблицу
+ */
 class DataTable: public EREssence
 {
 	public:

@@ -6,6 +6,11 @@
 #include <EREssence.h>
 #include <DataController.h>
 
+/**
+ * @brief The EREssenceBase class
+ *	Описывает графический объект представляющий свойство
+ */
+
 class EREssenceProperty: public EREssence
 {
 	public:

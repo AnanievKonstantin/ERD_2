@@ -5,6 +5,11 @@
 #include <Arrow.h>
 #include <EREssence.h>
 
+/**
+ * @brief The EREssenceBase class
+ *	Описывает графический объект представляющий обозначающую сущность
+ */
+
 class EREssenceDesignation: public EREssence
 {
 	public:

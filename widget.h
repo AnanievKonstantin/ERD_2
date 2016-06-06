@@ -29,7 +29,11 @@
 #include <ConsoleOutput.h>
 #include <QSplitter>
 
-
+/**
+ * @brief The Widget class
+ *	Основной контроллер программы, описывает главное, окно, сигнылы и слоты для предачи данных между
+ *	элементами окна и DataController
+ */
 class Widget : public QWidget
 {
 		Q_OBJECT
@@ -39,9 +43,18 @@ class Widget : public QWidget
 		~Widget();
 
 	private:
+		/**
+		 * @brief initViev
+		 *	устанавливает начальные параметры
+		 */
 		void initViev();
 
+		/**
+		 * @brief syncTreeViev
+		 *	синхронизирует графические представления с данными диаграмм
+		 */
 		void syncTreeViev();
+
 		QHBoxLayout * layoutH;
 		QVBoxLayout * layoutV;
 
@@ -60,9 +73,29 @@ class Widget : public QWidget
 		QTreeView * treeVievOneEssence;
 		QMenuBar * bar;
 
+		/**
+		 * @brief setUpSignalsAndSlots
+		 *	устанавливает сигналы и слоты
+		 * @return
+		 */
 		bool setUpSignalsAndSlots();
+
+		/**
+		 * @brief initBar
+		 *	инициализирует главное меню прграммы
+		 */
 		bool initBar();
+
+		/**
+		 * @brief createWindow
+		 *	создаёт окно
+		 */
 		void createWindow();
+
+		/**
+		 * @brief setUpConsoleProperty
+		 *	настриивает началтные настройки консоли
+		 */
 		void setUpConsoleProperty();
 
 	public slots:

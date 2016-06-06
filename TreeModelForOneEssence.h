@@ -9,7 +9,10 @@
 
 class TreeItem;
 
-//! [0]
+/**
+ * @brief The TreeModelForOneEssence class
+ *	инкапсулирует модель для представления одной сущности
+ */
 class TreeModelForOneEssence : public QAbstractItemModel
 {
 	Q_OBJECT

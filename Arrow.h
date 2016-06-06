@@ -9,8 +9,14 @@
 #include <DataController.h>
 #include <QTextItem>
 
+
 class EREssence;
 class DataController;
+
+/**
+ * @brief The Arrow class
+ * Описывает графическую стрелку, в зависимовти от режима (ER - Data) по-разному
+ */
 class Arrow : public QGraphicsLineItem
 {
 public:
@@ -41,6 +47,7 @@ public:
 	 *
 	 */
 	std::pair<QString, QString>	createCadinalityForAssociation(QString cord_to_split);
+
 	bool isTableDrawMode() const {return table_draw_mode;}
 	void enableTableDrawMode() {table_draw_mode = true;}
 	void updatePosition();

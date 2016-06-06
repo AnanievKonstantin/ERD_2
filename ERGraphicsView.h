@@ -9,15 +9,39 @@
 #include <QDebug>
 #include <EREnums.h>
 
+/**
+ * @brief The ERGraphicsView class
+ *	описывает холст для ER модели
+ */
 class ERGraphicsView: public QGraphicsView
 {
 	Q_OBJECT
 	public:
 		ERGraphicsView(QGraphicsView * parent = 0);
+
+		/**
+		 * @brief initView
+		 *	устанавливает параметры холста
+		 */
 		void initView();
+
+		/**
+		 * @brief initMenu
+		 *	устанавливает меню на холст
+		 */
 		void initMenu();
+
+		/**
+		 * @brief contextMenuEvent
+		 *	активирует контекстное меню
+		 */
 		void contextMenuEvent(QContextMenuEvent *event);
 		QGraphicsScene * getScene() const;
+
+		/**
+		 * @brief wheelEvent
+		 *	масштабирует сцену
+		 */
 		void wheelEvent(QWheelEvent *event);
 	private:
 		QGraphicsScene * scene;
