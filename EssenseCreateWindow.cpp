@@ -177,8 +177,8 @@ void EssenceCreateWindow::createWindow()
 	QObject::connect(&remove, SIGNAL(clicked()), this, SLOT(removeEssence()));
 
 
-	keys.clear();
-	attributes.clear();
+    keys.clearContents();
+    attributes.clearContents();
 
 	for(int i = 0; i < keys.rowCount(); i++)
 	{
