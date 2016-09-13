@@ -38,10 +38,10 @@ void EREssenceDesignation::paint(QPainter * painter, const QStyleOptionGraphicsI
 
 QRectF EREssenceDesignation::boundingRect() const
 {
-	qreal x = -20;
-	qreal y =  -20;
-	qreal w = this->size().width() + 20;
-	qreal h = this->size().height() + 20;
+    qreal x = -50;
+    qreal y =  -50;
+    qreal w = this->size().width() + 50;
+    qreal h = this->size().height() + 50;
 	return QRectF(x,y, w,h);
 }
 

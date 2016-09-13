@@ -233,17 +233,11 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
     {
         sTextPos.setY(line.p1().y() - indent);
         eTextPos.setY(line.p2().y() + indent);
-
-//      sTextPos.setX(mx + indent);
-//		eTextPos.setX(mx - indent*3);
     }
     if(line.p1().y() < line.p2().y())
     {
-        sTextPos.setY(line.p1().y() - indent);
-        eTextPos.setY(line.p2().y() + indent);
-
-//		sTextPos.setX(mx - indent*3);
-//		eTextPos.setX(mx +  indent);
+        sTextPos.setY(line.p1().y() + indent);
+        eTextPos.setY(line.p2().y() - indent);
     }
 
     ///конец расчета
