@@ -39,3 +39,5 @@
     Краш с сохранением файла
     Отреактируй код в std::tuple<QString, int, QString, int> DataController::getConnectionAttributesFor(QString id_first, QString id_second)
     там много лишнего
+
+    ТЫ не удаляешь обьекты после завершения работы программы!!! смотри ~Widget, убери мусор.
