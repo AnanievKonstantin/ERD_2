@@ -109,7 +109,7 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 	if(table_draw_mode == false)
 	{
-		calcConnectPointInERMode(10, 10, line, sTextPos, eTextPos);
+        calcConnectPointInERMode(30, 10, line, sTextPos, eTextPos);
 		if (qFuzzyCompare(line.length(), qreal(0.)))
 			return;
 		painter->setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -162,6 +162,8 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 
 	QPolygonF start_points = startItem()->getPolygon();
 	QPolygonF end_points = endItem()->getPolygon();
+
+    ///расчет точки привязки для линии
 	if(s.x() < e.x())
 	{
 		line.setP1(start_points.at(2));
@@ -203,38 +205,48 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
 //			eTextPos = {line.p2().x() + indent/2, line.p2().y() - indent/2};
 		}
 	}
-
-	qreal mx = (line.p1().x() + line.p2().x())/2;
-	qreal my = (line.p1().y() + line.p2().y())/2;
+    ///конец расчета
 
 
-	if(line.p1().x() >= line.p2().x())
+    ///расчет точек привязки для текста кординальностей
+    qreal mx = (line.p1().x() + line.p2().x())/2;
+    qreal my = (line.p1().y() + line.p2().y())/2;
+
+    qreal dx = sqrt(pow(line.p1().x(), 2) + pow(mx, 2));
+    qreal dy = sqrt(pow(line.p1().y(), 2) + pow(my, 2));
+
+    dx = dx/2.0;
+    dy = dy/2.0;
+
+    if(line.p1().x() > line.p2().x())
 	{
-		sTextPos.setX(mx + indent);
-		eTextPos.setX(mx - indent*2);
+        sTextPos.setX(line.p1().x() - indent);
+        eTextPos.setX(line.p2().x() + indent);
 	}
 	if(line.p1().x() < line.p2().x())
 	{
-		sTextPos.setX(mx - indent*2);
-		eTextPos.setX(mx +  indent);
+        sTextPos.setX(line.p1().x() + indent);
+        eTextPos.setX(line.p2().x() - indent);
 	}
 
-	if(line.p1().y() >= line.p2().y())
-	{
-		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent*2);
+    if(line.p1().y() > line.p2().y())
+    {
+        sTextPos.setY(line.p1().y() - indent);
+        eTextPos.setY(line.p2().y() + indent);
 
-		sTextPos.setX(mx + indent);
-		eTextPos.setX(mx - indent*3);
-	}
-	if(line.p1().y() < line.p2().y())
-	{
-		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent*2);
+//      sTextPos.setX(mx + indent);
+//		eTextPos.setX(mx - indent*3);
+    }
+    if(line.p1().y() < line.p2().y())
+    {
+        sTextPos.setY(line.p1().y() - indent);
+        eTextPos.setY(line.p2().y() + indent);
 
-		sTextPos.setX(mx - indent*3);
-		eTextPos.setX(mx +  indent);
-	}
+//		sTextPos.setX(mx - indent*3);
+//		eTextPos.setX(mx +  indent);
+    }
+
+    ///конец расчета
 }
 
 void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF &eTextPos, qreal indent)
