@@ -212,32 +212,33 @@ void Arrow::calcConnectPointInERMode(int indent, int delta, QLineF & line, QPoin
     qreal mx = (line.p1().x() + line.p2().x())/2;
     qreal my = (line.p1().y() + line.p2().y())/2;
 
-    qreal dx = sqrt(pow(line.p1().x(), 2) + pow(mx, 2));
-    qreal dy = sqrt(pow(line.p1().y(), 2) + pow(my, 2));
+    qreal middle_x_p1_mx = (mx + line.p1().x())/2;
+    qreal middle_y_p1_my = (my + line.p1().y())/2;
 
-    dx = dx/2.0;
-    dy = dy/2.0;
+    qreal middle_x_p2_mx = (mx + line.p2().x())/2;
+    qreal middle_y_p2_my = (my + line.p2().y())/2;
+
 
     if(line.p1().x() > line.p2().x())
 	{
-        sTextPos.setX(line.p1().x() - indent);
-        eTextPos.setX(line.p2().x() + indent);
+        sTextPos.setX(middle_x_p1_mx - indent);
+        eTextPos.setX(middle_x_p2_mx + indent);
 	}
 	if(line.p1().x() < line.p2().x())
 	{
-        sTextPos.setX(line.p1().x() + indent);
-        eTextPos.setX(line.p2().x() - indent);
+        sTextPos.setX(middle_x_p1_mx + indent);
+        eTextPos.setX(middle_x_p2_mx - indent);
 	}
 
     if(line.p1().y() > line.p2().y())
     {
-        sTextPos.setY(line.p1().y() - indent);
-        eTextPos.setY(line.p2().y() + indent);
+        sTextPos.setY(middle_y_p1_my - indent);
+        eTextPos.setY(middle_y_p2_my + indent);
     }
     if(line.p1().y() < line.p2().y())
     {
-        sTextPos.setY(line.p1().y() + indent);
-        eTextPos.setY(line.p2().y() - indent);
+        sTextPos.setY(middle_y_p1_my + indent);
+        eTextPos.setY(middle_y_p2_my - indent);
     }
 
     ///конец расчета
@@ -278,26 +279,31 @@ void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF
 	qreal mx = (s.x() + e.x())/2;
 	qreal my = (s.y() + e.y())/2;
 
+    qreal mx_between_s_mx = (s.x() + mx)/2;
+    qreal my_between_s_my = (s.y() + my)/2;
+    qreal mx_between_e_mx = (e.x() + mx)/2;
+    qreal my_between_e_my = (e.y() + my)/2;
+
 	if(s.x() >= e.x())
 	{
-		sTextPos.setX(mx + indent);
-		eTextPos.setX(mx - indent);
+        sTextPos.setX(mx_between_s_mx + indent);
+        eTextPos.setX(mx_between_e_mx - indent);
 	}
 	if(s.x() < e.x())
 	{
-		sTextPos.setX(mx - indent);
-		eTextPos.setX(mx +  indent);
+        sTextPos.setX(mx_between_s_mx - indent);
+        eTextPos.setX(mx_between_e_mx +  indent);
 	}
 
 	if(s.y() >= e.y())
 	{
-		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent);
+        sTextPos.setY(my_between_s_my - indent);
+        eTextPos.setY(my_between_e_my + indent);
 	}
 	if(s.y() < e.y())
 	{
-		sTextPos.setY(my - indent);
-		eTextPos.setY(my + indent);
+        sTextPos.setY(my_between_s_my - indent);
+        eTextPos.setY(my_between_e_my + indent);
 	}
 
 
