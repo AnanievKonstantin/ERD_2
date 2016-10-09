@@ -63,7 +63,7 @@ QList<std::tuple<QString, QString, int, int> > ERRelationsData::getAllAjasencyFo
 	return ajesency;
 }
 
-QList<QString> ERRelationsData::getAjasencyByName(QString id)
+QList<QString> ERRelationsData::getAjasencyByName(QString id) const
 {
 	QList<std::tuple<QString, QString, int, int>> ajesency;
 	QList<QString> names;

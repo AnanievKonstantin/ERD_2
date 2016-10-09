@@ -42,7 +42,7 @@ QString Support::typeToString(int type)
 		default:
 			return "Error: unexpected type";
 			break;
-	}
+    }
 }
 
 QString Support::cardinalityToString(int cordinals)
@@ -93,7 +93,7 @@ bool Support::checkTypeCordinality(int type)
 	return false;
 }
 
-QString Support::getStrippedProperty(QString nonStrippedProperty)
+QString Support::getStrippedProperty(const QString & nonStrippedProperty)
 {
 	return nonStrippedProperty.right(nonStrippedProperty.length() - nonStrippedProperty.lastIndexOf(":") - 1);
 }

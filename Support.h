@@ -62,13 +62,17 @@ class Support
 
 		/**
 		 * @brief getStrippedProperty
-		 *	вёрнёт имя свойства без системного пути
-		 * @param nonStrippedProperty
+         *	вёрнёт имя свойства без системного пути (без знака :)
+         *  before
+         *   property == hell_key:entytyA:A:Master:key
+         *  after
+         *   property == key
+         * @param nonStrippedProperty
 		 *	имя свойства с системным путём
 		 * @return
 		 * имя свойства без системного пути
 		 */
-		static QString getStrippedProperty(QString nonStrippedProperty);
+        static QString getStrippedProperty(const QString &nonStrippedProperty);
 
 		/**
 		 * @brief getTableHeightRow

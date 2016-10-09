@@ -793,16 +793,16 @@ int DataController::removeKeyFrom(QString id, QString key)
 		return 11;
 	}
 
-
 	foreach (EREssenceData * e, list_essences)
 	{
 		QList<QString> & keys = e->getKeys();
 		foreach (QString k, keys)
 		{
-			if(k.contains(key) == true)
+            QString stripped_k = Support::getStrippedProperty(k);
+            if(key == stripped_k)
 			{
-				e->removeKey(k);
-				//ConsoleOutput::getInstance()->printInfo("удалено: " + k + " из " + e->getId());
+                ConsoleOutput::getInstance()->printSystemMassage("Удаляю " + k);
+                e->removeKey(k);
 			}
 		}
 	}
@@ -873,7 +873,7 @@ bool DataController::saveState(QString path)
 	saveFile.write(saveDoc.toJson());
 	saveFile.close();
 
-
+    ConsoleOutput::getInstance()->printSystemMassage("Файл сохранён");
 	return true;
 }
 
@@ -895,7 +895,21 @@ bool DataController::loadState(QString path)
 void DataController::clear()
 {
 	list_essences.clear();
-	relation_table.clear();
+    relation_table.clear();
+}
+
+bool DataController::saveIsPermit() const
+{
+    for(EREssenceData * essence: list_essences)
+    {
+        if(getAjesencyFor(essence->getId()).length() == 0)
+        {
+            ConsoleOutput::getInstance()->printUserError("Обнаружена висячая сущность: " + essence->getId());
+            return false;
+        }
+    }
+    return true;
+
 }
 
 void DataController::read(const QJsonObject &json)
@@ -1594,7 +1608,7 @@ QList<QString> DataController::getProperties(QString id, int mode)
 
 }
 
-QList<QString> DataController::getAjesencyFor(QString id)
+QList<QString> DataController::getAjesencyFor(QString id) const
 {
 	return relation_table.getAjasencyByName(id);
 }

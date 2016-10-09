@@ -54,7 +54,7 @@ signals:
 
 public slots:
 	void setAEssece(QString name);
-	void checkSubmossion(bool test);
+	void checkSubmission(bool test);
 	void cancelWork(bool );
 };
 

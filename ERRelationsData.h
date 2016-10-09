@@ -67,7 +67,7 @@ class ERRelationsData
 		 * @return
 		 *	получает список смежности
 		 */
-		QList<QString> getAjasencyByName(QString id);
+        QList<QString> getAjasencyByName(QString id) const;
 
 		/**
 		 * @brief isExist

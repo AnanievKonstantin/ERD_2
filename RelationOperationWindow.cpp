@@ -148,7 +148,7 @@ RelationOperationWindow::RelationOperationWindow(int mode, QWidget *parent) : QW
 	this->setLayout(l);
 
 	QObject::connect(cancel, SIGNAL(clicked(bool)), this, SLOT(cancelWork(bool)));
-	QObject::connect(submit, SIGNAL(clicked(bool)), this, SLOT(checkSubmossion(bool)));
+    QObject::connect(submit, SIGNAL(clicked(bool)), this, SLOT(checkSubmission(bool)));
 }
 
 void RelationOperationWindow::setAEssece(QString name)
@@ -156,7 +156,7 @@ void RelationOperationWindow::setAEssece(QString name)
 //	qDebug() << "A essence:" << name;
 }
 
-void RelationOperationWindow::checkSubmossion(bool test)
+void RelationOperationWindow::checkSubmission(bool test)
 {
 	ConsoleOutput::getInstance()->printStartActionInfo("Проверка операций со связями");
 //	qDebug() << "A: " << menuEssenceA->currentText();

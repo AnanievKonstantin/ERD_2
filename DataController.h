@@ -229,7 +229,7 @@ class DataController
 		 * @return
 		 *	вернёт список смежных сущностей к id
 		 */
-		QList<QString> getAjesencyFor(QString id);
+        QList<QString> getAjesencyFor(QString id) const;
 
 		/**
 		 * @brief search
@@ -270,6 +270,16 @@ class DataController
 		 */
 		void clear();
 
+
+        /**
+         * @brief checkPermittionToSave
+         *  Проверяет можно ли сохранить файл.
+         *  Допустим файл нельзя соханить если есть висячие сущности
+         * @return
+         *  true если можно производить сохрание
+         *  false если нельзя
+         */
+        bool saveIsPermit() const;
 	private:
 		void read(const QJsonObject &json);
 		void write(QJsonObject &json) const;
