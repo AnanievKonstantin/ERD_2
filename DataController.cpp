@@ -799,7 +799,8 @@ int DataController::removeKeyFrom(QString id, QString key)
 		foreach (QString k, keys)
 		{
             QString stripped_k = Support::getStrippedProperty(k);
-            if(key == stripped_k)
+            QString stripped_key = Support::getStrippedProperty(key);
+            if(stripped_key == stripped_k)
 			{
                 ConsoleOutput::getInstance()->printSystemMassage("Удаляю " + k);
                 e->removeKey(k);
