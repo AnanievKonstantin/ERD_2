@@ -787,7 +787,6 @@ int DataController::removeKeyFrom(QString id, QString key)
 
 	if(e->getKeys().contains(key) != true)
 	{
-
 		//ConsoleOutput::getInstance()->printInfo("В сущности: " + e->getId() + "нет ключа: +key");
 		//ConsoleOutput::getInstance()->printInfo("Удаление ключа прервано.");
 		return 11;
@@ -798,9 +797,9 @@ int DataController::removeKeyFrom(QString id, QString key)
 		QList<QString> & keys = e->getKeys();
 		foreach (QString k, keys)
 		{
-            QString stripped_k = Support::getStrippedProperty(k);
-            QString stripped_key = Support::getStrippedProperty(key);
-            if(stripped_key == stripped_k)
+//            QString stripped_k = Support::getStrippedProperty(k);
+//            QString stripped_key = Support::getStrippedProperty(key);
+            if(key == k)
 			{
                 ConsoleOutput::getInstance()->printSystemMassage("Удаляю " + k);
                 e->removeKey(k);
@@ -1245,12 +1244,16 @@ int DataController::removeKey(QString id, QString key_name)
 		return 10;
 	}
 
-	if(removeKeyFrom(id, key_name) == 0)
-	{
-		return 0;
-	}
+    removeKeyFrom(id, key_name);
 
-	return 11;
+    QList<QString> adj_list = DataController::getInstance()->getAjesencyFor(id);
+    for(QString & name: adj_list)
+    {
+        removeKeyFrom(name, name+ "::" +key_name);
+    }
+
+
+    return 0;
 }
 
 int DataController::addKey(QString id, QString key_name)
