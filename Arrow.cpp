@@ -279,10 +279,12 @@ void Arrow::calcConnectPointInTableMode(QLineF &line, QPointF &sTextPos, QPointF
 	qreal mx = (s.x() + e.x())/2;
 	qreal my = (s.y() + e.y())/2;
 
-    qreal mx_between_s_mx = (s.x() + mx)/2;
-    qreal my_between_s_my = (s.y() + my)/2;
-    qreal mx_between_e_mx = (e.x() + mx)/2;
-    qreal my_between_e_my = (e.y() + my)/2;
+    qreal mx_between_s_mx = mx;//(s.x() + mx)/2;
+    qreal my_between_s_my = my;//(s.y() + my)/2;
+    qreal mx_between_e_mx = mx;//(e.x() + mx)/2;
+    qreal my_between_e_my = my;//(e.y() + my)/2;
+
+//    indent = 0;
 
 	if(s.x() >= e.x())
 	{
