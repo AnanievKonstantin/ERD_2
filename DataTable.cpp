@@ -73,10 +73,10 @@ void DataTable::paint(QPainter * painter, const QStyleOptionGraphicsItem * optio
 
 QRectF DataTable::boundingRect() const
 {
-    qreal x = -50;
-    qreal y = -50;
-    qreal w = this->size().width()  + 100;
-    qreal h = this->size().height() + 100;
+    qreal x = 0;
+    qreal y = 0;
+    qreal w = this->size().width()  + 10;
+    qreal h = this->size().height() + 10;
 	return QRectF(x,y, w,h);
 }
 
