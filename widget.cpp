@@ -25,7 +25,7 @@ Widget::Widget(QWidget *parent)
 	EssenceGraphicsController::setSceneToErModel(erView->getScene());
 	EssenceGraphicsController::setSceneToDataModel(dataView->getScene());
 
-	setUpSignalsAndSlots();
+    setUpSignalsAndSlots();
 	setUpConsoleProperty();
 
 }
@@ -259,7 +259,15 @@ void Widget::afterPerformRelationOperation(bool test)
 void Widget::quick_save()
 {
 //	qDebug() << "quick save";
-	DataController::getInstance()->saveState("");
+    if(DataController::getInstance()->saveIsPermit() == true)
+    {
+        DataController::getInstance()->saveState("");
+        ConsoleOutput::getInstance()->printInfo("Сохранено в save.json");
+        return;
+    }
+
+    ConsoleOutput::getInstance()->printInfo("Не могу сохранить файл");
+
 }
 
 void Widget::save_as()
@@ -270,7 +278,16 @@ void Widget::save_as()
 			tr("ER Diagram (*.json);;All Files (*)"));
 
 //	qDebug() << fileName;
-	DataController::getInstance()->saveState(fileName);
+
+    if(DataController::getInstance()->saveIsPermit() == true)
+    {
+        DataController::getInstance()->saveState(fileName);
+        ConsoleOutput::getInstance()->printInfo("Сохранено");
+        return;
+    }
+
+    ConsoleOutput::getInstance()->printInfo("Не могу сохранить файл");
+
 }
 
 void Widget::new_file()

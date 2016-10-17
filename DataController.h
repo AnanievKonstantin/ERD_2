@@ -270,6 +270,16 @@ class DataController
 		 */
 		void clear();
 
+        /**
+         * @brief checkPermittionToSave
+         *  Проверяет можно ли сохранить файл.
+         *  Допустим файл нельзя соханить если есть висячие сущности
+         * @return
+         *  true если можно производить сохрание
+         *  false если нельзя
+         */
+        bool saveIsPermit();
+
 	private:
 		void read(const QJsonObject &json);
 		void write(QJsonObject &json) const;

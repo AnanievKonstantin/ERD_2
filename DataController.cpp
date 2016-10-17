@@ -896,7 +896,20 @@ bool DataController::loadState(QString path)
 void DataController::clear()
 {
 	list_essences.clear();
-	relation_table.clear();
+    relation_table.clear();
+}
+
+bool DataController::saveIsPermit()
+{
+    for(EREssenceData * essence: list_essences)
+    {
+        if(getAjesencyFor(essence->getId()).length() == 0)
+        {
+            ConsoleOutput::getInstance()->printUserError("Обнаружена висячая сущность: " + essence->getId());
+            return false;
+        }
+    }
+    return true;
 }
 
 void DataController::read(const QJsonObject &json)
