@@ -801,6 +801,7 @@ int DataController::removeKeyFrom(QString id, QString key)
 		{
 			if(k.contains(key) == true)
 			{
+                if(Support::getStrippedProperty(k) == Support::getStrippedProperty(key))
 				e->removeKey(k);
 				//ConsoleOutput::getInstance()->printInfo("удалено: " + k + " из " + e->getId());
 			}
