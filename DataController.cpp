@@ -856,10 +856,10 @@ bool DataController::saveState(QString path)
 
 	if(path == "")
 	{
-		path = "save.json";
+        path = "quick_save.json";
 	}
 
-	QFile saveFile(path+".json");
+    QFile saveFile(path);
 
 	if (!saveFile.open(QIODevice::WriteOnly))
 	{

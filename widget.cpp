@@ -262,12 +262,11 @@ void Widget::quick_save()
     if(DataController::getInstance()->saveIsPermit() == true)
     {
         DataController::getInstance()->saveState("");
-        ConsoleOutput::getInstance()->printInfo("Сохранено в save.json");
+        ConsoleOutput::getInstance()->printInfo("Сохранено в quick_save.json");
         return;
     }
 
     ConsoleOutput::getInstance()->printInfo("Не могу сохранить файл");
-
 }
 
 void Widget::save_as()
@@ -287,7 +286,6 @@ void Widget::save_as()
     }
 
     ConsoleOutput::getInstance()->printInfo("Не могу сохранить файл");
-
 }
 
 void Widget::new_file()
